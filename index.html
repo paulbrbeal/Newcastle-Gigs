@@ -4,58 +4,53 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>North East Gigs</title>
+<title>Newcastle Gigs</title>
 <style>
-  :root{--bg:#0f1117;--surface:#1a1d27;--card:#22263a;--accent:#7c6af7;--accent2:#f7a26a;--text:#e8eaf0;--muted:#8890a8;--border:#2e3248;--danger:#e05c6e;--success:#4caf82;--radius:10px;--font:'Segoe UI',system-ui,sans-serif}
+  :root {
+    --bg:#0f1117;--surface:#1a1d27;--card:#22263a;--accent:#7c6af7;
+    --accent2:#f7a26a;--text:#e8eaf0;--muted:#8890a8;--border:#2e3248;
+    --danger:#e05c6e;--success:#4caf82;--radius:10px;--font:'Segoe UI',system-ui,sans-serif;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
-  nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;flex-wrap:wrap;gap:0;padding:0 1rem;position:sticky;top:0;z-index:50}
-  .brand{font-weight:700;font-size:1.1rem;color:var(--accent);padding:1rem .5rem 1rem 0;margin-right:auto;white-space:nowrap}
+  /* NAV */
+  nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0;padding:0 1rem;position:sticky;top:0;z-index:50}
+  .brand{font-weight:700;font-size:1.1rem;color:var(--accent);padding:1rem .5rem 1rem 0;margin-right:1rem;white-space:nowrap}
   .tab{background:none;border:none;color:var(--muted);padding:.9rem 1.1rem;cursor:pointer;font-size:.95rem;border-bottom:2px solid transparent;transition:.2s;font-family:var(--font)}
-  .tab:hover{color:var(--text)}.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-  .sync-status{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--muted)}
-  .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.4s}
-  .sync-dot.ok{background:var(--success)}.sync-dot.busy{background:var(--accent2)}.sync-dot.err{background:var(--danger)}
-  @media(max-width:500px){
-    nav{padding:0 .5rem}
-    .brand{font-size:1rem;padding:.75rem .25rem .75rem 0}
-    .tab{padding:.65rem .6rem;font-size:.8rem}
-    .sync-status{width:100%;padding:.3rem .25rem .4rem;border-top:1px solid var(--border);justify-content:flex-end}
-  }
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  /* MAIN */
   main{max-width:1100px;margin:0 auto;padding:1.5rem 1rem}
   .page{display:none}.page.active{display:block}
+  /* CARDS */
   .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem}
   h2{font-size:1.25rem;font-weight:700;margin-bottom:1.25rem;color:var(--text)}
-  h3{font-size:1rem;font-weight:700;color:var(--text)}
+  /* FORM */
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
   @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
   .field{display:flex;flex-direction:column;gap:.4rem}
   .field label{font-size:.85rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
-  .field input,.field textarea,.field select{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.55rem .75rem;font-size:.95rem;font-family:var(--font);transition:.2s;width:100%}
-  .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(124,106,247,.2)}
+  .field input,.field textarea{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.55rem .75rem;font-size:.95rem;font-family:var(--font);transition:.2s;width:100%}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(124,106,247,.2)}
   .field textarea{resize:vertical;min-height:72px}
   .field input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.5)}
-  .field input[type=date]{width:100%;min-height:2.4rem}
-  input[type=date]{-webkit-appearance:none;appearance:none}
   .full{grid-column:1/-1}
+  /* BUTTONS */
   .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:6px;border:none;cursor:pointer;font-size:.9rem;font-weight:600;font-family:var(--font);transition:.2s}
   .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#6857e0}
   .btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
   .btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}.btn-danger:hover{background:var(--danger);color:#fff}
   .btn-sm{padding:.35rem .75rem;font-size:.82rem}
-  .btn:disabled{opacity:.5;cursor:not-allowed}
+  /* ALERTS */
   .alert{padding:.75rem 1rem;border-radius:6px;font-size:.9rem;margin-bottom:1rem}
   .alert-success{background:rgba(76,175,130,.15);border:1px solid var(--success);color:var(--success)}
   .alert-warn{background:rgba(247,162,106,.15);border:1px solid var(--accent2);color:var(--accent2)}
   .alert-err{background:rgba(224,92,110,.15);border:1px solid var(--danger);color:var(--danger)}
+  /* CONTROLS BAR */
   .controls{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
-  .controls input,.controls select{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.45rem .75rem;font-size:.9rem;font-family:var(--font)}
-  .controls input:focus,.controls select:focus{outline:none;border-color:var(--accent)}
-  .filter-box{display:flex;align-items:center;gap:.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.35rem .75rem}
-  .filter-box span{font-size:.85rem;color:var(--muted);white-space:nowrap}
-  .filter-box input[type=number]{width:60px;background:transparent;border:none;color:var(--text);font-size:.9rem;font-family:var(--font);padding:0}
-  .filter-box input[type=number]:focus{outline:none}
-  .filter-box input[type=checkbox]{accent-color:var(--success);width:1rem;height:1rem;cursor:pointer}
+  .controls input{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.45rem .75rem;font-size:.9rem;font-family:var(--font)}
+  .controls input:focus{outline:none;border-color:var(--accent)}
+  /* TABLE */
   .table-wrap{overflow-x:auto}
   table{width:100%;border-collapse:collapse;font-size:.9rem}
   th{text-align:left;padding:.6rem .75rem;color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);white-space:nowrap}
@@ -68,165 +63,116 @@
   .note-cell{color:var(--muted);font-size:.82rem;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .action-btns{display:flex;gap:.4rem}
   .empty-state{text-align:center;padding:3rem;color:var(--muted)}
-  .local-badge{display:inline-block;padding:.1rem .45rem;border-radius:20px;font-size:.72rem;font-weight:700;background:rgba(76,175,130,.15);color:var(--success);margin-left:.4rem;vertical-align:middle}
-  .genre-badge{display:inline-block;padding:.15rem .5rem;border-radius:20px;font-size:.75rem;font-weight:600;background:rgba(124,106,247,.15);color:var(--accent);margin:.1rem .2rem .1rem 0}
-  .toggle-field{display:flex;align-items:center;gap:.6rem;padding:.55rem .75rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:.2s;user-select:none}
-  .toggle-field:hover{border-color:var(--success)}
-  .toggle-field input[type=checkbox]{width:1.1rem;height:1.1rem;accent-color:var(--success);cursor:pointer}
-  .toggle-field span{font-size:.95rem;color:var(--text)}
-  .genre-selector{display:flex;flex-direction:column;gap:.4rem}
-  .genre-selector label{font-size:.85rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
-  .genre-pills{display:flex;flex-wrap:wrap;gap:.4rem;min-height:1rem;align-items:center;margin-bottom:.25rem}
-  .genre-pill{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .65rem;border-radius:20px;background:rgba(124,106,247,.15);color:var(--accent);font-size:.82rem;font-weight:600}
-  .genre-pill button{background:none;border:none;color:var(--accent);cursor:pointer;font-size:.9rem;line-height:1;padding:0;opacity:.7}
-  .genre-pill button:hover{opacity:1}
-  .genre-add-row{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
-  .genre-add-row select{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.55rem .75rem;font-size:.95rem;font-family:var(--font);flex:1;min-width:0;transition:.2s;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238890a8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;padding-right:2rem}
-  .genre-add-row select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(124,106,247,.2)}
-  .genre-hint{font-size:.78rem;color:var(--muted);min-height:.9rem}
+  /* MONTH NAV */
   .month-nav{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
   .month-nav h3{flex:1;text-align:center;font-size:1.1rem}
+  /* CALENDAR */
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
   .cal-header{text-align:center;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;padding:.4rem 0}
-  .cal-day{background:var(--card);border:1px solid var(--border);border-radius:6px;min-height:90px;padding:.5rem;cursor:pointer}
-  .cal-day.other-month{opacity:.35}.cal-day.today{border-color:var(--accent)}
-  .cal-day.has-gigs:hover{border-color:var(--accent)}
-  .cal-day.has-local{border-color:var(--success)}
-  @media(max-width:700px){
-    .cal-day{min-height:60px;padding:.3rem}
-    .cal-gig{display:none}
-    .cal-day-num .badge{font-size:.7rem;padding:.1rem .45rem}
-    .cal-day.has-local{background:rgba(76,175,130,.12);border-color:var(--success)}
-    .cal-day.has-local .cal-day-num{color:var(--success)}
-    .cal-day.has-local .badge{background:var(--success)}
-  }
+  .cal-day{background:var(--card);border:1px solid var(--border);border-radius:6px;min-height:90px;padding:.5rem;position:relative;cursor:default}
+  .cal-day.other-month{opacity:.35}
+  .cal-day.today{border-color:var(--accent)}
   .cal-day-num{font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:.3rem;display:flex;justify-content:space-between;align-items:center}
   .cal-day-num .badge{background:var(--accent);color:#fff;border-radius:20px;font-size:.65rem;padding:.05rem .4rem}
   .cal-gig{background:rgba(124,106,247,.18);border-left:2px solid var(--accent);border-radius:3px;padding:.2rem .35rem;font-size:.72rem;margin-bottom:.25rem;cursor:pointer;line-height:1.3;transition:.15s}
   .cal-gig:hover{background:rgba(124,106,247,.35)}
-  .cal-gig.local{background:rgba(76,175,130,.2);border-left-color:var(--success)}
-  .cal-gig.local:hover{background:rgba(76,175,130,.38)}
-  .day-modal-list{list-style:none;padding:0;margin:0}
-  .day-modal-item{padding:.75rem;border-bottom:1px solid var(--border);cursor:pointer;border-radius:6px;border-left:3px solid transparent;margin-bottom:.25rem}
-  .day-modal-item:last-child{border-bottom:none}
-  .day-modal-item:hover .dmi-artist{color:var(--accent)}
-  .day-modal-item.is-local{background:rgba(76,175,130,.08);border-left:3px solid var(--success)}
-  .day-modal-item.is-local .dmi-artist{color:var(--success)}
-  .dmi-artist{font-weight:700;font-size:.95rem;margin-bottom:.2rem}
-  .dmi-meta{font-size:.82rem;color:var(--muted)}
+  @media(max-width:700px){.cal-day{min-height:60px;padding:.3rem}.cal-gig{display:none}.cal-day.has-gigs .cal-day-num .badge{display:inline}}
+  /* MODAL */
   .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:1rem}
   .modal-bg.open{display:flex}
   .modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto}
   .modal-close{position:absolute;top:.75rem;right:.75rem;background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1}
   .modal-close:hover{color:var(--text)}
-  .modal-img{width:100%;max-height:220px;object-fit:cover;border-radius:6px;margin-bottom:1rem;display:block}
   .detail-row{display:flex;gap:.5rem;margin-bottom:.6rem;font-size:.93rem}
   .detail-label{color:var(--muted);min-width:80px;font-size:.8rem;font-weight:700;text-transform:uppercase;padding-top:.1rem}
+  /* IMPORT/EXPORT */
+  .import-area{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap}
   #importFile{display:none}
-  .setup-banner{background:rgba(124,106,247,.1);border:1px solid var(--accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem;font-size:.9rem;line-height:1.6}
-  .setup-banner strong{color:var(--accent)}
-  .blurb-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1.25rem}
-  @media(max-width:600px){.blurb-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+
 <nav>
-  <div class="brand">North East Gigs</div>
-  <button class="tab" id="tab-add" onclick="showPage('add')">Add a Gig</button>
-  <button class="tab" id="tab-list" onclick="showPage('list')">Gig List</button>
-  <button class="tab active" id="tab-calendar" onclick="showPage('calendar')">Calendar</button>
-  <div class="sync-status">
-    <div class="sync-dot" id="syncDot"></div>
-    <span id="syncLabel">No sheet</span>
-  </div>
+  <div class="brand">🎸 NCL Gigs</div>
+  <button class="tab active" onclick="showPage('add')" id="tab-add">Add a Gig</button>
+  <button class="tab" onclick="showPage('list')" id="tab-list">Gig List</button>
+  <button class="tab" onclick="showPage('calendar')" id="tab-calendar">Calendar</button>
 </nav>
+
 <main>
 
-  <!-- ADD -->
+  <!-- ===== ADD GIG PAGE ===== -->
 
-  <div class="page" id="page-add">
-    <div id="setupBanner" class="setup-banner" style="display:none">
-      <strong>📋 Connect your Google Sheet</strong><br>
-      Paste your Apps Script Web App URL below to enable live sync.<br>
-      <div style="display:flex;gap:.75rem;margin-top:.75rem;flex-wrap:wrap;align-items:center">
-        <input type="url" id="sheetUrlInput" placeholder="https://script.google.com/macros/s/…/exec" style="flex:1;min-width:220px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.45rem .75rem;font-size:.88rem;font-family:var(--font)"/>
-        <button class="btn btn-primary btn-sm" onclick="connectSheet()">Connect</button>
-        <button class="btn btn-secondary btn-sm" onclick="disconnectSheet()">Disconnect</button>
-      </div>
-    </div>
+  <div class="page active" id="page-add">
     <div class="card">
       <h2>Add a Gig</h2>
       <div id="add-msg"></div>
-      <div class="form-grid">
-        <div class="field"><label for="f-artist">Artist / Act *</label><input type="text" id="f-artist" placeholder="e.g. The Unthanks"/></div>
-        <div class="field"><label for="f-date">Date *</label><input type="date" id="f-date"/></div>
-        <div class="field"><label for="f-venue">Venue *</label><input type="text" id="f-venue" placeholder="e.g. Sage Gateshead"/></div>
-        <div class="field"><label for="f-cost">Cost (£) *</label><input type="number" id="f-cost" placeholder="0" min="0" step="0.01"/></div>
-        <div class="field"><label for="f-link">Ticket / Event Link</label><input type="url" id="f-link" placeholder="https://..."/></div>
-        <div class="field"><label for="f-image">Image URL <span style="font-weight:400;text-transform:none;letter-spacing:0">(auto-filled from link)</span></label><input type="url" id="f-image" placeholder="https://... (optional)"/></div>
-        <div class="field" style="justify-content:flex-end">
-          <label style="visibility:hidden;font-size:.85rem">spacer</label>
-          <label class="toggle-field" for="f-isLocal"><input type="checkbox" id="f-isLocal"/><span>Local / Mates Band</span></label>
-        </div>
-        <div class="field"><label for="f-submittedBy">Your Name (optional)</label><input type="text" id="f-submittedBy" placeholder="Anonymous"/></div>
-        <div class="field full">
-          <div class="genre-selector">
-            <label>Genres <span style="font-weight:400;text-transform:none;letter-spacing:0">(up to 3)</span></label>
-            <div class="genre-pills" id="f-genre-pills"></div>
-            <div class="genre-add-row">
-              <select id="f-genre-select"><option value="">— Select a genre —</option></select>
-              <button class="btn btn-secondary btn-sm" type="button" onclick="addGenrePill('f')">Add</button>
-              <button class="btn btn-secondary btn-sm" type="button" onclick="promptNewGenre('f')">+ New</button>
-            </div>
-            <span class="genre-hint" id="f-genre-hint"></span>
+      <form id="addForm" novalidate>
+        <div class="form-grid">
+          <div class="field">
+            <label for="f-artist">Artist / Act *</label>
+            <input type="text" id="f-artist" placeholder="e.g. The Unthanks" required/>
+          </div>
+          <div class="field">
+            <label for="f-date">Date *</label>
+            <input type="date" id="f-date" required/>
+          </div>
+          <div class="field">
+            <label for="f-venue">Venue *</label>
+            <input type="text" id="f-venue" placeholder="e.g. Sage Gateshead" required/>
+          </div>
+          <div class="field">
+            <label for="f-cost">Cost (£) *</label>
+            <input type="number" id="f-cost" placeholder="0" min="0" step="0.01" required/>
+          </div>
+          <div class="field">
+            <label for="f-link">Ticket / Event Link</label>
+            <input type="url" id="f-link" placeholder="https://..."/>
+          </div>
+          <div class="field">
+            <label for="f-submittedBy">Your Name (optional)</label>
+            <input type="text" id="f-submittedBy" placeholder="Anonymous"/>
+          </div>
+          <div class="field full">
+            <label for="f-notes">Notes</label>
+            <textarea id="f-notes" placeholder="Doors, support acts, age restrictions…"></textarea>
           </div>
         </div>
-        <div class="field full"><label for="f-notes">Notes</label><textarea id="f-notes" placeholder="Doors, support acts, age restrictions…"></textarea></div>
-      </div>
-      <div style="margin-top:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap">
-        <button class="btn btn-primary" id="addBtn">＋ Add Gig</button>
-        <button class="btn btn-secondary" onclick="resetAddForm()">Clear</button>
-      </div>
+        <div style="margin-top:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap">
+          <button type="submit" class="btn btn-primary">＋ Add Gig</button>
+          <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- LIST -->
+  <!-- ===== GIG LIST PAGE ===== -->
 
   <div class="page" id="page-list">
     <div class="card">
       <h2>Gig List</h2>
       <div class="controls">
-        <input type="search" id="searchBox" placeholder="🔍 Artist or venue…" oninput="renderList()" style="flex:1;min-width:140px"/>
-        <select id="genreFilter" onchange="renderList()" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.45rem .75rem;font-size:.9rem;font-family:var(--font);-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22%3E%3Cpath fill=%22%238890a8%22 d=%22M6 8L1 3h10z%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right .75rem center;padding-right:2rem">
-          <option value="">All Genres</option>
-        </select>
-        <div class="filter-box">
-          <span>Max £</span>
-          <input type="number" id="maxPrice" min="0" step="1" placeholder="Any" oninput="renderList()"/>
-        </div>
-        <label class="filter-box" style="cursor:pointer">
-          <input type="checkbox" id="localOnly" onchange="renderList()"/>
-          <span style="font-size:.88rem;color:var(--muted);white-space:nowrap">Local only</span>
-        </label>
-      </div>
-      <div class="controls">
-        <button class="btn btn-secondary btn-sm" onclick="shiftListMonth(-1)">‹ Prev</button>
-        <span id="listMonthLabel" style="font-size:.9rem;white-space:nowrap">All dates</span>
-        <button class="btn btn-secondary btn-sm" onclick="shiftListMonth(1)">Next ›</button>
+        <input type="search" id="searchBox" placeholder="🔍 Search artist or venue…" oninput="renderList()" style="flex:1;min-width:160px"/>
+        <button class="btn btn-secondary btn-sm" onclick="prevMonth('list')">‹ Prev</button>
+        <span id="listMonthLabel" style="font-size:.9rem;white-space:nowrap"></span>
+        <button class="btn btn-secondary btn-sm" onclick="nextMonth('list')">Next ›</button>
         <button class="btn btn-secondary btn-sm" onclick="clearMonthFilter()">All Dates</button>
         <button class="btn btn-secondary btn-sm" onclick="toggleSort()">Sort: <span id="sortLabel">Date ↑</span></button>
-        <button class="btn btn-secondary btn-sm" onclick="clearAllFilters()">✕ Clear filters</button>
       </div>
       <div class="controls" style="margin-bottom:1.25rem">
         <button class="btn btn-secondary btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
         <button class="btn btn-secondary btn-sm" onclick="document.getElementById('importFile').click()">⬆ Import CSV</button>
-        <button class="btn btn-secondary btn-sm" onclick="fetchFromSheet()">↻ Refresh from Sheet</button>
         <input type="file" id="importFile" accept=".csv,text/csv" onchange="importCSV(this)"/>
       </div>
       <div id="import-msg"></div>
       <div class="table-wrap">
         <table id="gigTable">
-          <thead><tr><th>Date</th><th>Artist</th><th>Venue</th><th>Cost</th><th>Link</th><th>Notes</th><th>Actions</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Date</th><th>Artist</th><th>Venue</th><th>Cost</th>
+              <th>Link</th><th>Notes</th><th>Actions</th>
+            </tr>
+          </thead>
           <tbody id="gigTableBody"></tbody>
         </table>
         <div id="listEmpty" class="empty-state" style="display:none">No gigs found. Add one!</div>
@@ -234,623 +180,563 @@
     </div>
   </div>
 
-  <!-- CALENDAR -->
+  <!-- ===== CALENDAR PAGE ===== -->
 
-  <div class="page active" id="page-calendar">
+  <div class="page" id="page-calendar">
     <div class="card">
       <div class="month-nav">
-        <button class="btn btn-secondary btn-sm" onclick="shiftCalMonth(-1)">‹</button>
-        <h3 id="calMonthLabel" style="flex:1;text-align:center;font-size:1.1rem"></h3>
-        <button class="btn btn-secondary btn-sm" onclick="shiftCalMonth(1)">›</button>
+        <button class="btn btn-secondary btn-sm" onclick="prevMonth('cal')">‹</button>
+        <h3 id="calMonthLabel"></h3>
+        <button class="btn btn-secondary btn-sm" onclick="nextMonth('cal')">›</button>
         <button class="btn btn-secondary btn-sm" onclick="jumpToday()">Today</button>
       </div>
       <div class="cal-grid" id="calGrid"></div>
     </div>
-
-```
-<!-- INFO BLURB -->
-<div class="card">
-  <h2 style="margin-bottom:.6rem">North East Gigs</h2>
-  <p style="color:var(--muted);line-height:1.7;font-size:.95rem">A community-maintained guide to live music happening in and around the North East of England. From headline acts to local heroes, this is your one-stop calendar for what's on, where, and how much it'll cost you.</p>
-
-  <div class="blurb-grid">
-    <div>
-      <h3 style="margin-bottom:.75rem">How to use</h3>
-      <ul style="color:var(--muted);font-size:.9rem;line-height:1.8;padding-left:1.1rem">
-        <li>Browse the <strong style="color:var(--text)">Calendar</strong> to see what's on each day</li>
-        <li>Tap or click a date to see all gigs that day</li>
-        <li>Use the <strong style="color:var(--text)">Gig List</strong> to search, filter by month, or export</li>
-        <li>Hit <strong style="color:var(--text)">Add a Gig</strong> to submit something we've missed</li>
-      </ul>
-    </div>
-    <div>
-      <h3 style="margin-bottom:.75rem">Colour key</h3>
-      <div style="display:flex;flex-direction:column;gap:.6rem">
-        <div style="display:flex;align-items:center;gap:.75rem">
-          <div style="width:14px;height:14px;border-radius:3px;background:rgba(124,106,247,.18);border-left:3px solid var(--accent);flex-shrink:0"></div>
-          <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Purple</strong> — Standard gig listing</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:.75rem">
-          <div style="width:14px;height:14px;border-radius:3px;background:rgba(76,175,130,.2);border-left:3px solid var(--success);flex-shrink:0"></div>
-          <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Green</strong> — Local / mates band worth supporting!</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div style="border-top:1px solid var(--border);margin-top:1.5rem;padding-top:1.5rem">
-    <h3 style="margin-bottom:.5rem">Get Notified</h3>
-    <p style="color:var(--muted);font-size:.92rem;margin-bottom:1rem;line-height:1.6">Enter your email address below to receive a notification whenever a new gig is added to North East Gigs.</p>
-    <div id="sub-msg"></div>
-    <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
-      <div class="field" style="flex:1;min-width:200px">
-        <label for="subEmail">Email Address</label>
-        <input type="email" id="subEmail" placeholder="your@email.com"/>
-      </div>
-      <button class="btn btn-primary" id="subBtn">Subscribe</button>
-    </div>
-  </div>
-</div>
-```
-
   </div>
 
 </main>
 
-<!-- Day Modal -->
+<!-- MODAL -->
 
-<div class="modal-bg" id="dayModalBg" role="dialog" aria-modal="true">
-  <div class="modal">
-    <button class="modal-close" onclick="closeDayModal()" aria-label="Close">×</button>
-    <h2 id="dayModalTitle" style="margin-bottom:1rem"></h2>
-    <ul class="day-modal-list" id="dayModalList"></ul>
-  </div>
-</div>
-
-<!-- Detail Modal -->
-
-<div class="modal-bg" id="modalBg" role="dialog" aria-modal="true">
+<div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
     <h2 id="modalTitle" style="margin-bottom:1rem"></h2>
     <div id="modalBody"></div>
     <div style="margin-top:1.25rem;display:flex;gap:.75rem">
       <button class="btn btn-secondary btn-sm" id="modalEditBtn">Edit</button>
-      <button class="btn btn-danger btn-sm" id="modalDelBtn">Delete</button>
+      <button class="btn btn-danger btn-sm" id="modalDeleteBtn">Delete</button>
     </div>
   </div>
 </div>
 
-<!-- Edit Modal -->
+<!-- EDIT MODAL -->
 
-<div class="modal-bg" id="editModalBg" role="dialog" aria-modal="true">
+<div class="modal-bg" id="editModalBg" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
   <div class="modal">
     <button class="modal-close" onclick="closeEditModal()" aria-label="Close">×</button>
-    <h2 style="margin-bottom:1rem">Edit Gig</h2>
+    <h2 id="editModalTitle" style="margin-bottom:1rem">Edit Gig</h2>
     <div id="edit-msg"></div>
-    <div class="form-grid">
+    <form id="editForm" novalidate>
       <input type="hidden" id="e-id"/>
-      <div class="field"><label for="e-artist">Artist *</label><input type="text" id="e-artist"/></div>
-      <div class="field"><label for="e-date">Date *</label><input type="date" id="e-date"/></div>
-      <div class="field"><label for="e-venue">Venue *</label><input type="text" id="e-venue"/></div>
-      <div class="field"><label for="e-cost">Cost (£) *</label><input type="number" id="e-cost" min="0" step="0.01"/></div>
-      <div class="field"><label for="e-link">Link</label><input type="url" id="e-link"/></div>
-      <div class="field"><label for="e-image">Image URL</label><input type="url" id="e-image" placeholder="https://... (optional)"/></div>
-      <div class="field" style="justify-content:flex-end">
-        <label style="visibility:hidden;font-size:.85rem">spacer</label>
-                  <label class="toggle-field" for="e-isLocal"><input type="checkbox" id="e-isLocal"/><span>Local / Mates Band</span></label>
+      <div class="form-grid">
+        <div class="field"><label for="e-artist">Artist *</label><input type="text" id="e-artist" required/></div>
+        <div class="field"><label for="e-date">Date *</label><input type="date" id="e-date" required/></div>
+        <div class="field"><label for="e-venue">Venue *</label><input type="text" id="e-venue" required/></div>
+        <div class="field"><label for="e-cost">Cost (£) *</label><input type="number" id="e-cost" min="0" step="0.01" required/></div>
+        <div class="field"><label for="e-link">Link</label><input type="url" id="e-link"/></div>
+        <div class="field"><label for="e-submittedBy">Your Name</label><input type="text" id="e-submittedBy"/></div>
+        <div class="field full"><label for="e-notes">Notes</label><textarea id="e-notes"></textarea></div>
       </div>
-      <div class="field"><label for="e-submittedBy">Your Name</label><input type="text" id="e-submittedBy"/></div>
-      <div class="field full">
-        <div class="genre-selector">
-          <label>Genres <span style="font-weight:400;text-transform:none;letter-spacing:0">(up to 3)</span></label>
-          <div class="genre-pills" id="e-genre-pills"></div>
-          <div class="genre-add-row">
-            <select id="e-genre-select"><option value="">— Select a genre —</option></select>
-            <button class="btn btn-secondary btn-sm" type="button" onclick="addGenrePill('e')">Add</button>
-            <button class="btn btn-secondary btn-sm" type="button" onclick="promptNewGenre('e')">+ New</button>
-          </div>
-          <span class="genre-hint" id="e-genre-hint"></span>
-        </div>
+      <div style="margin-top:1.25rem;display:flex;gap:.75rem">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
       </div>
-      <div class="field full"><label for="e-notes">Notes</label><textarea id="e-notes"></textarea></div>
-    </div>
-    <div style="margin-top:1.25rem;display:flex;gap:.75rem">
-      <button class="btn btn-primary" id="editSaveBtn">Save Changes</button>
-      <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
-    </div>
+    </form>
   </div>
 </div>
 
 <script>
-// ── CONFIGURATION ─────────────────────────────────────────────
-let SHEET_URL = 'https://script.google.com/macros/s/AKfycbxD-cwiXgPJL4wBGWWUWxtINfwTPfSrrPwL60WRlDufyC_vDbehTJz31MkZuhr9vwTfMg/exec';
+/* ===================================================
+   STORAGE HELPERS
+   All data lives in localStorage under this key.
+=================================================== */
+const STORE_KEY = 'newcastle_gigs_v1';
 
-// ── STATE ─────────────────────────────────────────────────────
-let gigs = [];
-let genres = [];
-let pendingDup = null;
-let listSortAsc = true;
-let listMonthFilter = null;
-let listNavDate = new Date();
-let calDate = new Date();
-let currentPage = 'calendar';
-let sheetConnected = false;
-
-// ── SYNC INDICATOR ────────────────────────────────────────────
-function setSync(state, label) {
-  document.getElementById('syncDot').className = 'sync-dot ' + state;
-  document.getElementById('syncLabel').textContent = label;
+// Read gigs array from localStorage; return [] if missing/corrupt
+function loadGigs() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
+  catch { return []; }
 }
 
-// ── SHEET URL MANAGEMENT ──────────────────────────────────────
-function toggleSetup() {
-  const b = document.getElementById('setupBanner');
-  b.style.display = b.style.display === 'none' ? '' : 'none';
-  if (b.style.display !== 'none' && SHEET_URL)
-    document.getElementById('sheetUrlInput').value = SHEET_URL;
-}
-function connectSheet() {
-  const url = document.getElementById('sheetUrlInput').value.trim();
-  if (!url.startsWith('https://script.google.com'))
-    return showMsg('add-msg','That doesn\'t look like a valid Apps Script URL.','err');
-  SHEET_URL = url; sheetConnected = true;
-  try { localStorage.setItem('ncl_gigs_sheet_url', url); } catch(e) {}
-  document.getElementById('setupBanner').style.display = 'none';
-  showMsg('add-msg','✓ Sheet URL saved. Fetching gigs…','success');
-  fetchFromSheet();
-}
-function disconnectSheet() {
-  SHEET_URL = ''; sheetConnected = false;
-  try { localStorage.removeItem('ncl_gigs_sheet_url'); } catch(e) {}
-  setSync('','No sheet');
-  showMsg('add-msg','Disconnected from Google Sheet.','warn');
+// Write gigs array back to localStorage, sorted by date ascending
+function saveGigs(arr) {
+  const sorted = [...arr].sort((a,b) => a.date.localeCompare(b.date));
+  localStorage.setItem(STORE_KEY, JSON.stringify(sorted));
+  return sorted;
 }
 
-// ── FETCH FROM SHEET ──────────────────────────────────────────
-function fetchFromSheet() {
-  if (!SHEET_URL) return;
-  setSync('busy','Syncing…');
-  function applyData(data) {
-    gigs = data.gigs || [];
-    genres = data.genres || [];
-    sortGigs(gigs);
-    renderGenreDropdowns();
-    setSync('ok','Synced');
-    sheetConnected = true;
-    if (currentPage==='list') renderList();
-    if (currentPage==='calendar') renderCalendar();
-  }
-  let settled = false;
-  const jsonpPromise = new Promise((resolve, reject) => {
-    const cbName = 'nclCb' + Date.now();
-    const script = document.createElement('script');
-    const tid = setTimeout(() => { cleanup(); reject(new Error('JSONP timeout')); }, 12000);
-    window[cbName] = (data) => { cleanup(); data.error ? reject(new Error(data.error)) : resolve(data); };
-    function cleanup() { clearTimeout(tid); delete window[cbName]; try { document.head.removeChild(script); } catch(e) {} }
-    script.src = SHEET_URL + '?callback=' + cbName;
-    script.onerror = () => { cleanup(); reject(new Error('JSONP failed')); };
-    document.head.appendChild(script);
-  });
-  const timedDirect = new Promise((resolve, reject) => {
-    fetch(SHEET_URL, {method:'GET',redirect:'follow'})
-      .then(res => { if (!res.ok) throw new Error('HTTP '+res.status); return res.json(); })
-      .then(resolve).catch(reject);
-    setTimeout(() => reject(new Error('direct fetch too slow')), 800);
-  });
-  timedDirect
-    .then(data => { settled=true; applyData(data); })
-    .catch(() => {
-      if (!settled) {
-        jsonpPromise
-          .then(data => { settled=true; applyData(data); })
-          .catch(() => { setSync('err','Failed'); showMsg('add-msg','⚠️ Could not load from Sheet.','err'); });
-      }
-    });
-}
-
-// ── SYNC TO SHEET ─────────────────────────────────────────────
-async function syncToSheet(action, gig, genre, email) {
-  if (!SHEET_URL) return;
-  setSync('busy','Saving…');
-  try {
-    await fetch(SHEET_URL, {
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'text/plain'},
-      body: JSON.stringify({action, gig, genre, email})
-    });
-    setSync('ok','Saved ✓');
-    setTimeout(() => setSync('ok','Synced'), 2000);
-  } catch(err) {
-    setSync('err','Save failed');
-    showMsg('add-msg','⚠️ Save failed: ' + err.message,'warn');
-  }
-}
-
-// ── UTILITIES ─────────────────────────────────────────────────
+/* ===================================================
+   ID / DATE UTILITIES
+=================================================== */
+// Generate a simple unique ID
 const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36);
-const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// Format ISO date (yyyy-mm-dd) as friendly "Sat 12 Jul 2025"
 function friendlyDate(iso) {
+  // Parse as local date to avoid timezone shifts
   const [y,m,d] = iso.split('-').map(Number);
   return new Date(y,m-1,d).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
 }
-function fmtCost(n) { return n===0 ? 'Free' : '£'+Number(n).toFixed(2).replace(/\.00$/,''); }
-function toISO(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-function sortGigs(arr) { return arr.sort((a,b) => a.date.localeCompare(b.date)); }
-function showMsg(id, text, type) {
-  const el = document.getElementById(id); if (!el) return;
-  el.innerHTML = `<div class="alert alert-${type}">${text}</div>`;
-  if (type==='success') setTimeout(()=>{ if(el) el.innerHTML=''; }, 4000);
-}
-function clearMsg(id) { const el=document.getElementById(id); if(el) el.innerHTML=''; }
-const gv = id => (document.getElementById(id)||{}).value||'';
-const sv = (id,val) => { const el=document.getElementById(id); if(el) el.value=val??''; };
 
-// ── PAGE NAVIGATION ───────────────────────────────────────────
+// Format cost: £0 → "Free", else "£12.50"
+function formatCost(n) {
+  return n === 0 ? 'Free' : '£' + Number(n).toFixed(2).replace(/\.00$/,'');
+}
+
+/* ===================================================
+   PAGE NAVIGATION
+=================================================== */
+let currentPage = 'add';
 function showPage(id) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
   currentPage = id;
-  if (id==='list') renderList();
-  if (id==='calendar') renderCalendar();
+  if (id === 'list') renderList();
+  if (id === 'calendar') renderCalendar();
 }
 
-// ── GENRES ────────────────────────────────────────────────────
-function renderGenreDropdowns() {
-  ['f-genre-select','e-genre-select'].forEach(id => {
-    const sel = document.getElementById(id); if (!sel) return;
-    const cur = sel.value;
-    sel.innerHTML = '<option value="">— Select a genre —</option>';
-    genres.forEach(g => { const o=document.createElement('option'); o.value=g; o.textContent=g; sel.appendChild(o); });
-    sel.value = cur;
-  });
-  const gf = document.getElementById('genreFilter');
-  if (gf) {
-    const cur = gf.value;
-    gf.innerHTML = '<option value="">All Genres</option>';
-    genres.forEach(g => { const o=document.createElement('option'); o.value=g; o.textContent=g; gf.appendChild(o); });
-    gf.value = cur;
-  }
-}
-function getGenrePills(prefix) {
-  return Array.from(document.getElementById(prefix+'-genre-pills').querySelectorAll('.genre-pill')).map(p=>p.dataset.genre);
-}
-function addGenrePill(prefix) {
-  const sel = document.getElementById(prefix+'-genre-select');
-  const val = sel.value.trim();
-  const hint = document.getElementById(prefix+'-genre-hint');
-  if (!val) return;
-  const current = getGenrePills(prefix);
-  if (current.length >= 3) { hint.textContent='Maximum 3 genres allowed.'; return; }
-  if (current.includes(val)) { hint.textContent='Already added.'; return; }
-  hint.textContent='';
-  const pills = document.getElementById(prefix+'-genre-pills');
-  const pill = document.createElement('span');
-  pill.className='genre-pill'; pill.dataset.genre=val;
-  pill.innerHTML=`${esc(val)}<button type="button" aria-label="Remove ${esc(val)}" onclick="removeGenrePill(this)">×</button>`;
-  pills.appendChild(pill); sel.value='';
-}
-function removeGenrePill(btn) { btn.closest('.genre-pill').remove(); }
-async function promptNewGenre(prefix) {
-  const name = prompt('Enter new genre name:');
-  if (!name||!name.trim()) return;
-  const trimmed = name.trim();
-  if (genres.some(g=>g.toLowerCase()===trimmed.toLowerCase())) { alert('That genre already exists!'); return; }
-  await syncToSheet('addGenre', null, trimmed);
-  genres.push(trimmed); genres.sort((a,b)=>a.localeCompare(b));
-  renderGenreDropdowns();
-  const sel = document.getElementById(prefix+'-genre-select');
-  if (sel) { sel.value=trimmed; addGenrePill(prefix); }
-}
-function setGenrePills(prefix, genreVal) {
-  const pills = document.getElementById(prefix+'-genre-pills'); pills.innerHTML='';
-  if (!genreVal) return;
-  const arr = Array.isArray(genreVal) ? genreVal : String(genreVal).split(',').map(g=>g.trim()).filter(Boolean);
-  arr.slice(0,3).forEach(g => {
-    if (!genres.includes(g)) genres.push(g);
-    const pill=document.createElement('span'); pill.className='genre-pill'; pill.dataset.genre=g;
-    pill.innerHTML=`${esc(g)}<button type="button" aria-label="Remove ${esc(g)}" onclick="removeGenrePill(this)">×</button>`;
-    pills.appendChild(pill);
-  });
-}
-
-// ── ADD GIG ───────────────────────────────────────────────────
-document.getElementById('addBtn').addEventListener('click', async function() {
+/* ===================================================
+   ADD GIG FORM
+=================================================== */
+document.getElementById('addForm').addEventListener('submit', function(e) {
+  e.preventDefault();
   clearMsg('add-msg');
-  const artist=gv('f-artist').trim(), date=gv('f-date').trim();
-  const venue=gv('f-venue').trim(), costRaw=gv('f-cost');
-  if (!artist||!date||!venue||costRaw==='') return showMsg('add-msg','Please fill in all required fields (Artist, Date, Venue, Cost).','err');
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return showMsg('add-msg','Please enter a valid date.','err');
-  const cost=parseFloat(costRaw);
-  if (isNaN(cost)||cost<0) return showMsg('add-msg','Cost must be 0 or more.','err');
-  const candidate={
-    id:uid(), artist, date, venue, cost,
-    link:gv('f-link').trim(), notes:gv('f-notes').trim(),
-    submittedBy:gv('f-submittedBy').trim(),
-    isLocal:document.getElementById('f-isLocal').checked,
-    genres:getGenrePills('f').join(','),
-    image:gv('f-image').trim(),
-    createdAt:new Date().toISOString()
-  };
-  const isDup=gigs.some(g=>g.artist.toLowerCase()===artist.toLowerCase()&&g.date===date&&g.venue.toLowerCase()===venue.toLowerCase());
-  if (isDup) {
-    if (pendingDup&&pendingDup.artist===artist&&pendingDup.date===date&&pendingDup.venue===venue) { pendingDup=null; }
-    else { pendingDup={artist,date,venue}; return showMsg('add-msg','⚠️ This gig already exists. Click "Add Gig" again to add anyway.','warn'); }
-  } else { pendingDup=null; }
-  gigs.push(candidate); sortGigs(gigs);
-  await syncToSheet('add', candidate);
-  resetAddForm();
-  showMsg('add-msg',`✓ "${esc(artist)}" on ${friendlyDate(date)} added!`,'success');
+
+  // Gather + validate
+  const artist = v('f-artist').trim();
+  const date   = v('f-date').trim();
+  const venue  = v('f-venue').trim();
+  const costRaw = v('f-cost');
+  const link   = v('f-link').trim();
+  const notes  = v('f-notes').trim();
+  const submittedBy = v('f-submittedBy').trim();
+
+  if (!artist || !date || !venue || costRaw === '') {
+    return showMsg('add-msg', 'Please fill in all required fields.', 'err');
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return showMsg('add-msg', 'Invalid date.', 'err');
+  }
+  const cost = parseFloat(costRaw);
+  if (isNaN(cost) || cost < 0) {
+    return showMsg('add-msg', 'Cost must be 0 or more.', 'err');
+  }
+
+  // Duplicate check: same artist + date + venue (case-insensitive)
+  const gigs = loadGigs();
+  const dup = gigs.find(g =>
+    g.artist.toLowerCase() === artist.toLowerCase() &&
+    g.date === date &&
+    g.venue.toLowerCase() === venue.toLowerCase()
+  );
+  if (dup && !this.dataset.override) {
+    this.dataset.override = '1';
+    return showMsg('add-msg', '⚠️ A gig with this artist, date, and venue already exists. Submit again to add anyway.', 'warn');
+  }
+  delete this.dataset.override;
+
+  // Build record
+  const gig = { id: uid(), artist, date, venue, cost, link, notes, submittedBy, createdAt: new Date().toISOString() };
+  gigs.push(gig);
+  saveGigs(gigs);
+  resetForm();
+  showMsg('add-msg', `✓ "${artist}" on ${friendlyDate(date)} added!`, 'success');
 });
 
-function resetAddForm() {
-  ['f-artist','f-date','f-venue','f-cost','f-link','f-image','f-notes','f-submittedBy'].forEach(id=>sv(id,''));
-  document.getElementById('f-isLocal').checked=false;
-  document.getElementById('f-genre-pills').innerHTML='';
-  document.getElementById('f-genre-hint').textContent='';
-  pendingDup=null; clearMsg('add-msg');
+function resetForm() {
+  document.getElementById('addForm').reset();
+  delete document.getElementById('addForm').dataset.override;
 }
 
-// ── GIG LIST ──────────────────────────────────────────────────
+/* ===================================================
+   GIG LIST PAGE
+=================================================== */
+let listSortAsc = true;
+let listMonthFilter = null; // null = all, or {year,month}
+
 function renderList() {
-  let filtered=[...gigs];
-  const q=(document.getElementById('searchBox')?.value||'').toLowerCase();
-  if (q) filtered=filtered.filter(g=>g.artist.toLowerCase().includes(q)||g.venue.toLowerCase().includes(q));
-  const genreFilter=document.getElementById('genreFilter')?.value||'';
-  if (genreFilter) filtered=filtered.filter(g=>g.genres&&g.genres.split(',').map(x=>x.trim()).includes(genreFilter));
-  const maxPriceVal=document.getElementById('maxPrice')?.value;
-  if (maxPriceVal!==''&&maxPriceVal!==null&&maxPriceVal!==undefined) {
-    const max=parseFloat(maxPriceVal);
-    if (!isNaN(max)) filtered=filtered.filter(g=>g.cost<=max);
-  }
-  if (document.getElementById('localOnly')?.checked) filtered=filtered.filter(g=>g.isLocal);
+  let gigs = loadGigs();
+
+  // Filter by search
+  const q = (document.getElementById('searchBox')?.value || '').toLowerCase();
+  if (q) gigs = gigs.filter(g =>
+    g.artist.toLowerCase().includes(q) || g.venue.toLowerCase().includes(q)
+  );
+
+  // Filter by month
   if (listMonthFilter) {
-    const {year,month}=listMonthFilter;
-    filtered=filtered.filter(g=>{ const [y,m]=g.date.split('-').map(Number); return y===year&&m===month; });
-    document.getElementById('listMonthLabel').textContent=new Date(year,month-1,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
-  } else { document.getElementById('listMonthLabel').textContent='All dates'; }
-  if (!listSortAsc) filtered.reverse();
-  const tbody=document.getElementById('gigTableBody'); tbody.innerHTML='';
-  if (!filtered.length) { document.getElementById('listEmpty').style.display=''; document.getElementById('gigTable').style.display='none'; return; }
-  document.getElementById('listEmpty').style.display='none'; document.getElementById('gigTable').style.display='';
-  filtered.forEach(g=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
+    const {year, month} = listMonthFilter;
+    gigs = gigs.filter(g => {
+      const [y,m] = g.date.split('-').map(Number);
+      return y === year && m === month;
+    });
+    document.getElementById('listMonthLabel').textContent =
+      new Date(year, month-1, 1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  } else {
+    document.getElementById('listMonthLabel').textContent = 'All dates';
+  }
+
+  // Sort
+  if (!listSortAsc) gigs = [...gigs].reverse();
+
+  const tbody = document.getElementById('gigTableBody');
+  tbody.innerHTML = '';
+
+  if (!gigs.length) {
+    document.getElementById('listEmpty').style.display = '';
+    document.getElementById('gigTable').style.display = 'none';
+    return;
+  }
+  document.getElementById('listEmpty').style.display = 'none';
+  document.getElementById('gigTable').style.display = '';
+
+  gigs.forEach(g => {
+    const tr = document.createElement('tr');
+    const isFree = g.cost === 0;
+    tr.innerHTML = `
       <td style="white-space:nowrap">${friendlyDate(g.date)}</td>
-      <td><strong>${esc(g.artist)}</strong>${g.isLocal?'<span class="local-badge">Local</span>':''}${g.genres?g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join(''):''}${g.submittedBy?`<br><small style="color:var(--muted)">by ${esc(g.submittedBy)}</small>`:''}</td>
+      <td><strong>${esc(g.artist)}</strong>${g.submittedBy ? `<br><small style="color:var(--muted)">by ${esc(g.submittedBy)}</small>`:''}</td>
       <td>${esc(g.venue)}</td>
-      <td><span class="cost-badge${g.cost>0?' paid':''}">${fmtCost(g.cost)}</span></td>
-      <td>${g.link?`<a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Tickets ↗</a>`:''}</td>
-      <td class="note-cell" title="${esc(g.notes)}">${esc(g.notes)}</td>
+      <td><span class="cost-badge${isFree?'':' paid'}">${formatCost(g.cost)}</span></td>
+      <td>${g.link ? `<a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Tickets ↗</a>` : ''}</td>
+      <td class="note-cell" title="${esc(g.notes||'')}">${esc(g.notes||'')}</td>
       <td><div class="action-btns">
-        <button class="btn btn-secondary btn-sm" data-edit="${g.id}">Edit</button>
-        <button class="btn btn-danger btn-sm" data-del="${g.id}">Del</button>
+        <button class="btn btn-secondary btn-sm" onclick="openEdit('${g.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteGig('${g.id}')">Del</button>
       </div></td>`;
     tbody.appendChild(tr);
   });
-  tbody.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>openEdit(b.dataset.edit)));
-  tbody.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>deleteGig(b.dataset.del)));
 }
 
-function toggleSort() { listSortAsc=!listSortAsc; document.getElementById('sortLabel').textContent=listSortAsc?'Date ↑':'Date ↓'; renderList(); }
-function shiftListMonth(dir) { listNavDate=new Date(listNavDate.getFullYear(),listNavDate.getMonth()+dir,1); listMonthFilter={year:listNavDate.getFullYear(),month:listNavDate.getMonth()+1}; renderList(); }
-function clearMonthFilter() { listMonthFilter=null; listNavDate=new Date(); renderList(); }
-function clearAllFilters() {
-  const sb=document.getElementById('searchBox'); if(sb) sb.value='';
-  const gf=document.getElementById('genreFilter'); if(gf) gf.value='';
-  const mp=document.getElementById('maxPrice'); if(mp) mp.value='';
-  const lo=document.getElementById('localOnly'); if(lo) lo.checked=false;
-  listMonthFilter=null; listNavDate=new Date(); renderList();
+function toggleSort() {
+  listSortAsc = !listSortAsc;
+  document.getElementById('sortLabel').textContent = listSortAsc ? 'Date ↑' : 'Date ↓';
+  renderList();
 }
 
-// ── EDIT GIG ──────────────────────────────────────────────────
+// Month navigation for list
+let listNavDate = new Date();
+function prevMonth(ctx) {
+  if (ctx === 'list') {
+    listNavDate = new Date(listNavDate.getFullYear(), listNavDate.getMonth()-1, 1);
+    listMonthFilter = {year: listNavDate.getFullYear(), month: listNavDate.getMonth()+1};
+    renderList();
+  } else {
+    calDate = new Date(calDate.getFullYear(), calDate.getMonth()-1, 1);
+    renderCalendar();
+  }
+}
+function nextMonth(ctx) {
+  if (ctx === 'list') {
+    listNavDate = new Date(listNavDate.getFullYear(), listNavDate.getMonth()+1, 1);
+    listMonthFilter = {year: listNavDate.getFullYear(), month: listNavDate.getMonth()+1};
+    renderList();
+  } else {
+    calDate = new Date(calDate.getFullYear(), calDate.getMonth()+1, 1);
+    renderCalendar();
+  }
+}
+function clearMonthFilter() {
+  listMonthFilter = null;
+  document.getElementById('listMonthLabel').textContent = 'All dates';
+  renderList();
+}
+
+/* ===================================================
+   EDIT GIG
+=================================================== */
 function openEdit(id) {
-  const g=gigs.find(x=>x.id===id); if(!g) return;
-  sv('e-id',id); sv('e-artist',g.artist); sv('e-date',g.date);
-  sv('e-venue',g.venue); sv('e-cost',g.cost);
-  sv('e-link',g.link||''); sv('e-image',g.image||'');
-  sv('e-notes',g.notes||''); sv('e-submittedBy',g.submittedBy||'');
-  document.getElementById('e-isLocal').checked=!!g.isLocal;
-  setGenrePills('e',g.genres||'');
+  const g = loadGigs().find(x => x.id === id);
+  if (!g) return;
+  sv('e-id', id); sv('e-artist', g.artist); sv('e-date', g.date);
+  sv('e-venue', g.venue); sv('e-cost', g.cost);
+  sv('e-link', g.link||''); sv('e-notes', g.notes||''); sv('e-submittedBy', g.submittedBy||'');
   clearMsg('edit-msg');
   document.getElementById('editModalBg').classList.add('open');
 }
 function closeEditModal() { document.getElementById('editModalBg').classList.remove('open'); }
 
-document.getElementById('editSaveBtn').addEventListener('click', async function() {
-  const id=gv('e-id'), artist=gv('e-artist').trim(), date=gv('e-date').trim();
-  const venue=gv('e-venue').trim(), costRaw=gv('e-cost');
-  if (!artist||!date||!venue||costRaw==='') return showMsg('edit-msg','Fill in all required fields.','err');
-  const cost=parseFloat(costRaw);
+document.getElementById('editForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const id = v('e-id');
+  const artist = v('e-artist').trim();
+  const date   = v('e-date').trim();
+  const venue  = v('e-venue').trim();
+  const costRaw = v('e-cost');
+  if (!artist||!date||!venue||costRaw==='') return showMsg('edit-msg','Fill all required fields.','err');
+  const cost = parseFloat(costRaw);
   if (isNaN(cost)||cost<0) return showMsg('edit-msg','Cost must be ≥ 0.','err');
-  const idx=gigs.findIndex(g=>g.id===id); if(idx===-1) return;
-  gigs[idx]={...gigs[idx], artist, date, venue, cost,
-    link:gv('e-link').trim(), image:gv('e-image').trim(),
-    notes:gv('e-notes').trim(), submittedBy:gv('e-submittedBy').trim(),
-    isLocal:document.getElementById('e-isLocal').checked,
-    genres:getGenrePills('e').join(',')};
-  sortGigs(gigs);
-  await syncToSheet('update', gigs[idx]);
-  closeEditModal(); closeModal();
-  if (currentPage==='list') renderList();
-  if (currentPage==='calendar') renderCalendar();
+
+  let gigs = loadGigs();
+  const idx = gigs.findIndex(g => g.id === id);
+  if (idx === -1) return;
+  gigs[idx] = {...gigs[idx], artist, date, venue, cost,
+    link: v('e-link').trim(), notes: v('e-notes').trim(), submittedBy: v('e-submittedBy').trim()};
+  saveGigs(gigs);
+  closeEditModal();
+  closeModal();
+  if (currentPage === 'list') renderList();
+  if (currentPage === 'calendar') renderCalendar();
 });
 
-// ── DELETE GIG ────────────────────────────────────────────────
-async function deleteGig(id, fromModal=false) {
+/* ===================================================
+   DELETE GIG
+=================================================== */
+function deleteGig(id, fromModal=false) {
   if (!confirm('Delete this gig?')) return;
-  const gig=gigs.find(g=>g.id===id);
-  gigs=gigs.filter(g=>g.id!==id);
-  if (gig) await syncToSheet('delete', gig);
+  saveGigs(loadGigs().filter(g => g.id !== id));
   if (fromModal) closeModal();
-  if (currentPage==='list') renderList();
-  if (currentPage==='calendar') renderCalendar();
+  if (currentPage === 'list') renderList();
+  if (currentPage === 'calendar') renderCalendar();
 }
 
-// ── CALENDAR ──────────────────────────────────────────────────
-function jumpToday() { calDate=new Date(); renderCalendar(); }
-function shiftCalMonth(dir) { calDate=new Date(calDate.getFullYear(),calDate.getMonth()+dir,1); renderCalendar(); }
+/* ===================================================
+   CALENDAR
+=================================================== */
+let calDate = new Date();
+
+function jumpToday() { calDate = new Date(); renderCalendar(); }
 
 function renderCalendar() {
-  const yr=calDate.getFullYear(), mo=calDate.getMonth();
-  document.getElementById('calMonthLabel').textContent=new Date(yr,mo,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
-  const byDate={};
-  gigs.forEach(g=>{ const [gy,gm]=g.date.split('-').map(Number); if(gy===yr&&gm===mo+1)(byDate[g.date]=byDate[g.date]||[]).push(g); });
-  const grid=document.getElementById('calGrid'); grid.innerHTML='';
-  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d=>{ const h=document.createElement('div'); h.className='cal-header'; h.textContent=d; grid.appendChild(h); });
-  const firstDow=(new Date(yr,mo,1).getDay()+6)%7;
-  const daysInMo=new Date(yr,mo+1,0).getDate();
-  const prevDays=new Date(yr,mo,0).getDate();
-  const todayISO=toISO(new Date());
-  for(let i=firstDow-1;i>=0;i--) grid.appendChild(buildCalDay(prevDays-i,false,null,[]));
-  for(let d=1;d<=daysInMo;d++){
-    const iso=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    grid.appendChild(buildCalDay(d,true,iso,byDate[iso]||[],iso===todayISO));
+  const year = calDate.getFullYear();
+  const month = calDate.getMonth(); // 0-indexed
+  document.getElementById('calMonthLabel').textContent =
+    new Date(year, month, 1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+
+  // Index gigs by date string for this month
+  const gigs = loadGigs();
+  const gigsByDate = {};
+  gigs.forEach(g => {
+    const [gy,gm] = g.date.split('-').map(Number);
+    if (gy === year && gm === month+1) {
+      (gigsByDate[g.date] = gigsByDate[g.date]||[]).push(g);
+    }
+  });
+
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  // Day headers Mon–Sun
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'cal-header'; h.textContent = d; grid.appendChild(h);
+  });
+
+  // First day of month; getDay() is 0=Sun, adjust to Mon=0
+  const firstDay = new Date(year, month, 1).getDay();
+  const startOffset = (firstDay + 6) % 7; // cells to pad before day 1
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const todayISO = toISO(new Date());
+
+  // Pad with previous month days
+  const prevDays = new Date(year, month, 0).getDate();
+  for (let i = startOffset - 1; i >= 0; i--) {
+    grid.appendChild(makeCalDay(prevDays - i, false, null, null));
   }
-  const tail=(7-((firstDow+daysInMo)%7))%7;
-  for(let d=1;d<=tail;d++) grid.appendChild(buildCalDay(d,false,null,[]));
+
+  // Current month days
+  for (let d = 1; d <= daysInMonth; d++) {
+    const iso = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayGigs = gigsByDate[iso] || [];
+    const cell = makeCalDay(d, true, iso, dayGigs, iso === todayISO);
+    grid.appendChild(cell);
+  }
+
+  // Fill remaining cells
+  const total = startOffset + daysInMonth;
+  const remainder = (7 - (total % 7)) % 7;
+  for (let d = 1; d <= remainder; d++) {
+    grid.appendChild(makeCalDay(d, false, null, null));
+  }
 }
 
-function buildCalDay(num,inMonth,iso,dayGigs,isToday=false){
-  const cell=document.createElement('div');
-  const hasLocal=dayGigs.some(g=>g.isLocal);
-  cell.className='cal-day'+(!inMonth?' other-month':'')+(isToday?' today':'')+(dayGigs.length?' has-gigs':'')+(hasLocal?' has-local':'');
-  const numRow=document.createElement('div'); numRow.className='cal-day-num';
-  numRow.innerHTML=`<span>${num}</span>`+(dayGigs.length?`<span class="badge">${dayGigs.length}</span>`:'');
-  cell.appendChild(numRow);
-  if (dayGigs.length) cell.addEventListener('click',(e)=>{ if(!e.target.closest('.cal-gig')) openDayModal(iso,dayGigs); });
-  dayGigs.forEach(g=>{
-    const chip=document.createElement('div'); chip.className='cal-gig'+(g.isLocal?' local':'');
-    chip.textContent=`${g.artist} @ ${g.venue}`;
-    chip.setAttribute('role','button'); chip.setAttribute('tabindex','0');
-    chip.addEventListener('click',(e)=>{ e.stopPropagation(); openModal(g.id); });
-    chip.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ')openModal(g.id); });
-    cell.appendChild(chip);
-  });
+// Build a single calendar day cell
+function makeCalDay(dayNum, inMonth, iso, gigs, isToday=false) {
+  const cell = document.createElement('div');
+  cell.className = 'cal-day' + (!inMonth?' other-month':'') + (isToday?' today':'') + (gigs&&gigs.length?' has-gigs':'');
+
+  const numDiv = document.createElement('div');
+  numDiv.className = 'cal-day-num';
+  numDiv.innerHTML = `<span>${dayNum}</span>`;
+  if (gigs && gigs.length) {
+    numDiv.innerHTML += `<span class="badge">${gigs.length}</span>`;
+  }
+  cell.appendChild(numDiv);
+
+  if (gigs) {
+    gigs.forEach(g => {
+      const el = document.createElement('div');
+      el.className = 'cal-gig';
+      el.textContent = `${g.artist} @ ${g.venue}`;
+      el.setAttribute('role','button');
+      el.setAttribute('tabindex','0');
+      el.setAttribute('aria-label',`${g.artist} at ${g.venue}, ${formatCost(g.cost)}`);
+      el.onclick = () => openModal(g.id);
+      el.onkeydown = e => { if(e.key==='Enter'||e.key===' ') openModal(g.id); };
+      cell.appendChild(el);
+    });
+  }
   return cell;
 }
 
-// ── DAY MODAL ─────────────────────────────────────────────────
-function openDayModal(iso, dayGigs) {
-  if (!dayGigs.length) return;
-  const [y,m,d]=iso.split('-').map(Number);
-  document.getElementById('dayModalTitle').textContent=new Date(y,m-1,d).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
-  const list=document.getElementById('dayModalList'); list.innerHTML='';
-  dayGigs.forEach(g=>{
-    const li=document.createElement('li');
-    li.className='day-modal-item'+(g.isLocal?' is-local':'');
-    li.innerHTML=`<div class="dmi-artist">${esc(g.artist)}${g.isLocal?'<span class="local-badge">Local</span>':''}</div>
-      <div class="dmi-meta">${esc(g.venue)} · ${fmtCost(g.cost)}${g.genres?` · ${g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join('')}`:''}</div>`;
-    li.addEventListener('click',()=>{ closeDayModal(); openModal(g.id); });
-    list.appendChild(li);
-  });
-  document.getElementById('dayModalBg').classList.add('open');
-}
-function closeDayModal() { document.getElementById('dayModalBg').classList.remove('open'); }
-
-// ── DETAIL MODAL ──────────────────────────────────────────────
-function openModal(id){
-  const g=gigs.find(x=>x.id===id); if(!g) return;
-  document.getElementById('modalTitle').textContent=g.artist;
-  document.getElementById('modalBody').innerHTML=`
-    ${g.image?`<img class="modal-img" src="${esc(g.image)}" alt="${esc(g.artist)}" onerror="this.style.display='none'"/>`:''}
+/* ===================================================
+   DETAIL MODAL (calendar click + list)
+=================================================== */
+function openModal(id) {
+  const g = loadGigs().find(x => x.id === id);
+  if (!g) return;
+  document.getElementById('modalTitle').textContent = g.artist;
+  document.getElementById('modalBody').innerHTML = `
     <div class="detail-row"><span class="detail-label">Date</span><span>${friendlyDate(g.date)}</span></div>
     <div class="detail-row"><span class="detail-label">Venue</span><span>${esc(g.venue)}</span></div>
-    <div class="detail-row"><span class="detail-label">Cost</span><span>${fmtCost(g.cost)}</span></div>
-    ${g.isLocal?'<div class="detail-row"><span class="detail-label">Type</span><span><span class="local-badge">Local Band</span></span></div>':''}
-    ${g.genres?`<div class="detail-row"><span class="detail-label">Genres</span><span>${g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join('')}</span></div>`:''}
+    <div class="detail-row"><span class="detail-label">Cost</span><span>${formatCost(g.cost)}</span></div>
     ${g.link?`<div class="detail-row"><span class="detail-label">Link</span><a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Open ↗</a></div>`:''}
     ${g.notes?`<div class="detail-row"><span class="detail-label">Notes</span><span>${esc(g.notes)}</span></div>`:''}
-    ${g.submittedBy?`<div class="detail-row"><span class="detail-label">Added by</span><span>${esc(g.submittedBy)}</span></div>`:''}`;
-  document.getElementById('modalEditBtn').onclick=()=>{ closeModal(); openEdit(id); };
-  document.getElementById('modalDelBtn').onclick=()=>deleteGig(id,true);
+    ${g.submittedBy?`<div class="detail-row"><span class="detail-label">Added by</span><span>${esc(g.submittedBy)}</span></div>`:''}
+  `;
+  document.getElementById('modalEditBtn').onclick = () => { closeModal(); openEdit(id); };
+  document.getElementById('modalDeleteBtn').onclick = () => deleteGig(id, true);
   document.getElementById('modalBg').classList.add('open');
 }
-function closeModal(){ document.getElementById('modalBg').classList.remove('open'); }
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
 
-document.getElementById('dayModalBg').addEventListener('click',e=>{ if(e.target===e.currentTarget)closeDayModal(); });
-document.getElementById('modalBg').addEventListener('click',e=>{ if(e.target===e.currentTarget)closeModal(); });
-document.getElementById('editModalBg').addEventListener('click',e=>{ if(e.target===e.currentTarget)closeEditModal(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeModal();closeEditModal();closeDayModal();} });
+// Close modal on backdrop click
+document.getElementById('modalBg').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+document.getElementById('editModalBg').addEventListener('click', e => { if(e.target===e.currentTarget) closeEditModal(); });
 
-// ── EMAIL SUBSCRIBE ───────────────────────────────────────────
-document.getElementById('subBtn').addEventListener('click', async function() {
-  const email=(document.getElementById('subEmail').value||'').trim();
-  if (!email||!email.includes('@')) return showMsg('sub-msg','Please enter a valid email address.','err');
-  this.disabled=true;
-  await syncToSheet('subscribe', null, null, email);
-  showMsg('sub-msg','✓ You\'re subscribed! You\'ll receive an email when new gigs are added.','success');
-  document.getElementById('subEmail').value='';
-  this.disabled=false;
+// Close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeEditModal(); }
 });
 
-// ── CSV EXPORT ────────────────────────────────────────────────
-function exportCSV(){
-  let data=[...gigs];
-  const q=(document.getElementById('searchBox')?.value||'').toLowerCase();
-  if(q) data=data.filter(g=>g.artist.toLowerCase().includes(q)||g.venue.toLowerCase().includes(q));
-  if(listMonthFilter){const{year,month}=listMonthFilter;data=data.filter(g=>{const[y,m]=g.date.split('-').map(Number);return y===year&&m===month;});}
-  if(!listSortAsc) data.reverse();
-  const cols=['artist','date','venue','cost','link','notes','submittedBy','isLocal','image','genres','createdAt'];
-  const rows=[cols.join(','),...data.map(g=>cols.map(c=>csvCell(g[c]??'')).join(','))];
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([rows.join('\r\n')],{type:'text/csv'}));
-  a.download='north_east_gigs.csv'; a.click();
-}
-function csvCell(val){const s=String(val);return/[,"\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:`${s}`;}
+/* ===================================================
+   CSV EXPORT
+   Downloads current filtered/sorted list as CSV
+=================================================== */
+function exportCSV() {
+  let gigs = loadGigs();
+  const q = (document.getElementById('searchBox')?.value||'').toLowerCase();
+  if (q) gigs = gigs.filter(g => g.artist.toLowerCase().includes(q)||g.venue.toLowerCase().includes(q));
+  if (listMonthFilter) {
+    const {year,month} = listMonthFilter;
+    gigs = gigs.filter(g => { const [y,m]=g.date.split('-').map(Number); return y===year&&m===month; });
+  }
+  if (!listSortAsc) gigs = [...gigs].reverse();
 
-// ── CSV IMPORT ────────────────────────────────────────────────
-function importCSV(input){
-  const file=input.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=async e=>{
-    const lines=e.target.result.split(/\r?\n/).filter(l=>l.trim());
-    if(!lines.length) return showMsg('import-msg','Empty file.','err');
-    const headers=parseCSVRow(lines[0]).map(h=>h.trim().toLowerCase());
-    const col=key=>headers.indexOf(key);
-    let added=0,skipped=0; const newGigs=[];
-    for(let i=1;i<lines.length;i++){
-      const row=parseCSVRow(lines[i]);
-      const get=key=>col(key)>=0?(row[col(key)]||'').trim():'';
-      const artist=get('artist'),date=get('date'),venue=get('venue'),costRaw=get('cost');
-      if(!artist||!date||!venue){skipped++;continue;}
-      if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){skipped++;continue;}
-      const cost=parseFloat(costRaw); if(isNaN(cost)||cost<0){skipped++;continue;}
-      const dup=gigs.some(g=>g.artist.toLowerCase()===artist.toLowerCase()&&g.date===date&&g.venue.toLowerCase()===venue.toLowerCase());
-      if(dup){skipped++;continue;}
-      const ng={id:uid(),artist,date,venue,cost,link:get('link'),notes:get('notes'),
-        submittedBy:get('submittedby')||get('submitted_by'),
-        isLocal:get('islocal')==='true', genres:get('genres'), image:get('image'),
-        createdAt:new Date().toISOString()};
-      gigs.push(ng); newGigs.push(ng); added++;
+  const headers = ['artist','date','venue','cost','link','notes','submittedBy','createdAt'];
+  const rows = [headers.join(',')];
+  gigs.forEach(g => {
+    rows.push(headers.map(h => csvCell(g[h]??'')).join(','));
+  });
+  download('newcastle_gigs.csv', rows.join('\r\n'), 'text/csv');
+}
+
+// Wrap value in quotes if it contains comma/quote/newline
+function csvCell(val) {
+  const s = String(val);
+  return /[,"\n\r]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+}
+
+function download(filename, text, mime) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text],{type:mime}));
+  a.download = filename; a.click();
+}
+
+/* ===================================================
+   CSV IMPORT
+   Accepts case-insensitive headers; merges by artist+date+venue dedup
+=================================================== */
+function importCSV(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const text = e.target.result;
+    const lines = text.split(/\r?\n/).filter(l => l.trim());
+    if (!lines.length) return showMsg('import-msg','Empty file.','err');
+
+    // Parse header row (normalise to lowercase)
+    const headers = parseCSVRow(lines[0]).map(h => h.trim().toLowerCase());
+    const get = (row, key) => {
+      const i = headers.indexOf(key);
+      return i >= 0 ? (row[i]||'').trim() : '';
+    };
+
+    let added=0, skipped=0;
+    const existing = loadGigs();
+    const newGigs = [...existing];
+
+    for (let i = 1; i < lines.length; i++) {
+      const row = parseCSVRow(lines[i]);
+      const artist = get(row,'artist');
+      const date   = get(row,'date');
+      const venue  = get(row,'venue');
+      const costRaw= get(row,'cost');
+      if (!artist||!date||!venue) { skipped++; continue; }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) { skipped++; continue; }
+      const cost = parseFloat(costRaw);
+      if (isNaN(cost)||cost<0) { skipped++; continue; }
+
+      // Deduplicate
+      const dup = newGigs.find(g =>
+        g.artist.toLowerCase()===artist.toLowerCase()&&
+        g.date===date&&g.venue.toLowerCase()===venue.toLowerCase()
+      );
+      if (dup) { skipped++; continue; }
+
+      newGigs.push({ id: uid(), artist, date, venue, cost,
+        link: get(row,'link'), notes: get(row,'notes'),
+        submittedBy: get(row,'submittedby')||get(row,'submitted_by'),
+        createdAt: new Date().toISOString() });
+      added++;
     }
-    sortGigs(gigs);
-    for(const g of newGigs) await syncToSheet('add',g);
-    showMsg('import-msg',`Import complete: ${added} added, ${skipped} skipped.`,added>0?'success':'warn');
+
+    saveGigs(newGigs);
+    showMsg('import-msg',`Import complete: ${added} added, ${skipped} skipped.`, added>0?'success':'warn');
     renderList();
   };
-  reader.readAsText(file); input.value='';
+  reader.readAsText(file);
+  input.value=''; // reset so same file can be re-imported
 }
 
-function parseCSVRow(line){
-  const cells=[]; let cur=''; let inQ=false;
-  for(let i=0;i<line.length;i++){
+// Minimal CSV row parser supporting quoted fields
+function parseCSVRow(line) {
+  const cells = []; let cur=''; let inQ=false;
+  for (let i=0;i<line.length;i++) {
     const c=line[i];
-    if(c==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
-    else if(c===','&&!inQ){cells.push(cur);cur='';}
+    if (c==='"') { if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }
+    else if (c===','&&!inQ){cells.push(cur);cur='';}
     else cur+=c;
   }
-  cells.push(cur); return cells;
+  cells.push(cur);
+  return cells;
 }
 
-// ── INIT ──────────────────────────────────────────────────────
-(function init(){
-  try { const saved=localStorage.getItem('ncl_gigs_sheet_url'); if(saved) SHEET_URL=saved; } catch(e) {}
-  if (SHEET_URL) { sheetConnected=true; fetchFromSheet(); }
-  else { setSync('','No sheet'); renderCalendar(); }
-}());
+/* ===================================================
+   UTILITY HELPERS
+=================================================== */
+// Get input value by id
+const v = id => document.getElementById(id)?.value ?? '';
+// Set input value by id
+const sv = (id,val) => { const el=document.getElementById(id); if(el) el.value=val??''; };
+// Escape HTML to prevent XSS
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+// Convert Date to yyyy-mm-dd local
+function toISO(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+// Show a message in a container div
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = `<div class="alert alert-${type}">${text}</div>`;
+  if (type==='success') setTimeout(()=>{if(el) el.innerHTML='';},4000);
+}
+function clearMsg(id) { const el=document.getElementById(id); if(el) el.innerHTML=''; }
+
+/* ===================================================
+   INIT – hydrate on load
+=================================================== */
+// Ensure storage is readable on first load
+loadGigs();
+// Pre-set list month nav to current month
+listNavDate = new Date();
+renderList();
 </script>
 
 </body>
