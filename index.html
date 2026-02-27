@@ -126,12 +126,12 @@
   .modal.slide-in-left{transform:translateX(80px);opacity:0}
   .modal.slide-in-right{transform:translateX(-80px);opacity:0}
   .modal-stack{position:relative;max-width:480px;width:100%}
-  .modal-peek-right{position:absolute;top:50%;transform:translateY(-50%);right:-20px;width:0;height:0;border-top:20px solid transparent;border-bottom:20px solid transparent;border-left:20px solid rgba(124,106,247,.35);pointer-events:none;z-index:1;transition:transform .25s ease .08s,opacity .25s ease .08s}
-  .modal-peek-left{position:absolute;top:50%;transform:translateY(-50%);left:-20px;width:0;height:0;border-top:20px solid transparent;border-bottom:20px solid transparent;border-right:20px solid rgba(76,175,130,.35);pointer-events:none;z-index:1;transition:transform .25s ease .08s,opacity .25s ease .08s}
-  .modal-peek-right.peek-exit{transform:translateY(-50%) translateX(40px);opacity:0}
-  .modal-peek-left.peek-exit{transform:translateY(-50%) translateX(-40px);opacity:0}
-  .modal-peek-right.peek-enter{transform:translateY(-50%) translateX(40px);opacity:0}
-  .modal-peek-left.peek-enter{transform:translateY(-50%) translateX(-40px);opacity:0}
+  .modal-peek-right{position:absolute;top:50%;transform:translateY(-50%) translateX(-20px);opacity:0;right:-20px;width:0;height:0;border-top:20px solid transparent;border-bottom:20px solid transparent;border-left:20px solid rgba(124,106,247,.35);pointer-events:none;z-index:1;transition:transform .3s ease .2s,opacity .3s ease .2s}
+  .modal-peek-left{position:absolute;top:50%;transform:translateY(-50%) translateX(20px);opacity:0;left:-20px;width:0;height:0;border-top:20px solid transparent;border-bottom:20px solid transparent;border-right:20px solid rgba(76,175,130,.35);pointer-events:none;z-index:1;transition:transform .3s ease .2s,opacity .3s ease .2s}
+  .modal-peek-right.visible{transform:translateY(-50%) translateX(0);opacity:1}
+  .modal-peek-left.visible{transform:translateY(-50%) translateX(0);opacity:1}
+  .modal-peek-right.peek-exit{transform:translateY(-50%) translateX(-20px);opacity:0;transition:transform .15s ease,opacity .15s ease}
+  .modal-peek-left.peek-exit{transform:translateY(-50%) translateX(20px);opacity:0;transition:transform .15s ease,opacity .15s ease}
   .modal-close{position:absolute;top:.75rem;right:.75rem;background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1}
   .modal-close:hover{color:var(--text)}
   .modal-img{width:100%;max-height:220px;object-fit:cover;border-radius:6px;margin-bottom:1rem;display:block}
@@ -785,6 +785,15 @@ function openModal(id, dir) {
     const peekRight = document.getElementById('modalPeekRight');
     peekLeft.style.display = hasPrev ? '' : 'none';
     peekRight.style.display = hasNext ? '' : 'none';
+    // Trigger slide-out-from-behind animation
+    requestAnimationFrame(() => {
+      peekLeft.classList.remove('visible');
+      peekRight.classList.remove('visible');
+      requestAnimationFrame(() => {
+        if (hasPrev) peekLeft.classList.add('visible');
+        if (hasNext) peekRight.classList.add('visible');
+      });
+    });
   }
 
   function populate() {
@@ -807,24 +816,20 @@ function openModal(id, dir) {
   if (dir) {
     const peekLeft = document.getElementById('modalPeekLeft');
     const peekRight = document.getElementById('modalPeekRight');
-    // Exit: arrows slide out with the modal
+    // Arrows retract back behind the modal first
     peekLeft.classList.add('peek-exit');
     peekRight.classList.add('peek-exit');
     modal.classList.add(dir === 1 ? 'slide-out-left' : 'slide-out-right');
     setTimeout(() => {
       modal.classList.remove('slide-out-left','slide-out-right');
       modal.classList.add(dir === 1 ? 'slide-in-left' : 'slide-in-right');
-      peekLeft.classList.remove('peek-exit');
-      peekRight.classList.remove('peek-exit');
-      peekLeft.classList.add('peek-enter');
-      peekRight.classList.add('peek-enter');
+      peekLeft.classList.remove('peek-exit','visible');
+      peekRight.classList.remove('peek-exit','visible');
       populate();
       updatePeeks();
       modal.scrollTop = 0;
       modal.offsetHeight;
       modal.classList.remove('slide-in-left','slide-in-right');
-      peekLeft.classList.remove('peek-enter');
-      peekRight.classList.remove('peek-enter');
     }, 220);
   } else {
     populate();
