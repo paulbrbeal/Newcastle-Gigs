@@ -249,6 +249,8 @@ function connectSheet() {
   }
   SHEET_URL = url;
   sheetConnected = true;
+  // Persist URL in localStorage so it survives page reloads
+  try { localStorage.setItem('ncl_gigs_sheet_url', url); } catch(e) {}
   document.getElementById('setupBanner').style.display = 'none';
   showMsg('add-msg', '✓ Sheet URL saved. Fetching gigs…', 'success');
   fetchFromSheet();
@@ -257,6 +259,7 @@ function connectSheet() {
 function disconnectSheet() {
   SHEET_URL = '';
   sheetConnected = false;
+  try { localStorage.removeItem('ncl_gigs_sheet_url'); } catch(e) {}
   setSync('', 'No sheet');
   showMsg('add-msg', 'Disconnected from Google Sheet. Data remains in memory.', 'warn');
 }
@@ -663,10 +666,18 @@ function parseCSVRow(line){
 // INIT
 // ═══════════════════════════════════════════════════════════════
 (function init(){
-  setSync('','No sheet');
+  // Restore saved Sheet URL from localStorage on every page load
+  try {
+    const saved = localStorage.getItem('ncl_gigs_sheet_url');
+    if (saved) {
+      SHEET_URL = saved;
+      sheetConnected = true;
+      fetchFromSheet(); // auto-load gigs immediately
+      return;
+    }
+  } catch(e) {}
+  setSync('', 'No sheet');
   renderList();
-  // If a URL was hardcoded above, connect automatically
-  if(SHEET_URL) { sheetConnected=true; fetchFromSheet(); }
 })();
 </script>
 </body>
