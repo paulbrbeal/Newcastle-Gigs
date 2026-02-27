@@ -153,6 +153,20 @@
             <span>🎸 Local / Mates Band</span>
           </label>
         </div>
+        <div class="field full">
+          <div class="genre-selector">
+            <label>Genres <span style="font-weight:400;text-transform:none;letter-spacing:0">(up to 3)</span></label>
+            <div class="genre-pills" id="f-genre-pills"></div>
+            <div class="genre-add-row">
+              <select id="f-genre-select">
+                <option value="">— Select a genre —</option>
+              </select>
+              <button class="btn btn-secondary btn-sm" type="button" onclick="addGenrePill('f')">Add</button>
+              <button class="btn btn-secondary btn-sm" type="button" onclick="promptNewGenre('f')">+ New</button>
+            </div>
+            <span class="genre-hint" id="f-genre-hint"></span>
+          </div>
+        </div>
         <div class="field full"><label for="f-notes">Notes</label><textarea id="f-notes" placeholder="Doors, support acts, age restrictions…"></textarea></div>
       </div>
       <div style="margin-top:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap">
@@ -288,6 +302,20 @@
           <span>🎸 Local / Mates Band</span>
         </label>
       </div>
+      <div class="field full">
+        <div class="genre-selector">
+          <label>Genres <span style="font-weight:400;text-transform:none;letter-spacing:0">(up to 3)</span></label>
+          <div class="genre-pills" id="e-genre-pills"></div>
+          <div class="genre-add-row">
+            <select id="e-genre-select">
+              <option value="">— Select a genre —</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" type="button" onclick="addGenrePill('e')">Add</button>
+            <button class="btn btn-secondary btn-sm" type="button" onclick="promptNewGenre('e')">+ New</button>
+          </div>
+          <span class="genre-hint" id="e-genre-hint"></span>
+        </div>
+      </div>
       <div class="field full"><label for="e-notes">Notes</label><textarea id="e-notes"></textarea></div>
     </div>
     <div style="margin-top:1.25rem;display:flex;gap:.75rem">
@@ -353,7 +381,9 @@ async function fetchFromSheet() {
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     gigs = data.gigs || [];
+    genres = data.genres || [];
     sortGigs(gigs);
+    renderGenreDropdowns();
     setSync('ok','Synced');
     sheetConnected = true;
     if (currentPage==='list') renderList();
@@ -380,7 +410,9 @@ function fetchFromSheetJSONP() {
         showMsg('add-msg','⚠️ Sheet error: ' + data.error,'err');
       } else {
         gigs = data.gigs || [];
+        genres = data.genres || [];
         sortGigs(gigs);
+        renderGenreDropdowns();
         setSync('ok','Synced');
         sheetConnected = true;
         if (currentPage==='list') renderList();
@@ -405,14 +437,14 @@ function fetchFromSheetJSONP() {
 }
 
 // ── SYNC TO SHEET ─────────────────────────────────────────────
-async function syncToSheet(action, gig) {
+async function syncToSheet(action, gig, genre) {
   if (!SHEET_URL) return;
   setSync('busy','Saving…');
   try {
     await fetch(SHEET_URL, {
       method:'POST', mode:'no-cors',
       headers:{'Content-Type':'text/plain'},
-      body: JSON.stringify({action, gig})
+      body: JSON.stringify({action, gig, genre})
     });
     setSync('ok','Saved ✓');
     setTimeout(() => setSync('ok','Synced'), 2000);
@@ -441,7 +473,87 @@ function clearMsg(id) { const el=document.getElementById(id); if(el) el.innerHTM
 const gv = id => (document.getElementById(id)||{}).value||'';
 const sv = (id,val) => { const el=document.getElementById(id); if(el) el.value=val??''; };
 
-// ── PAGE NAVIGATION ───────────────────────────────────────────
+// ── GENRES ────────────────────────────────────────────────────
+let genres = []; // loaded from sheet on init
+
+// Populate both genre dropdowns from the genres array
+function renderGenreDropdowns() {
+  ['f-genre-select','e-genre-select'].forEach(id => {
+    const sel = document.getElementById(id); if (!sel) return;
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— Select a genre —</option>';
+    genres.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g; opt.textContent = g;
+      sel.appendChild(opt);
+    });
+    sel.value = cur;
+  });
+}
+
+// Get currently selected genre pills for a form prefix (f or e)
+function getGenrePills(prefix) {
+  const pills = document.getElementById(prefix+'-genre-pills');
+  return Array.from(pills.querySelectorAll('.genre-pill')).map(p => p.dataset.genre);
+}
+
+// Add a genre pill to the form
+function addGenrePill(prefix) {
+  const sel = document.getElementById(prefix+'-genre-select');
+  const val = sel.value.trim();
+  const hint = document.getElementById(prefix+'-genre-hint');
+  if (!val) return;
+  const current = getGenrePills(prefix);
+  if (current.length >= 3) { hint.textContent = 'Maximum 3 genres allowed.'; return; }
+  if (current.includes(val)) { hint.textContent = 'Already added.'; return; }
+  hint.textContent = '';
+  const pills = document.getElementById(prefix+'-genre-pills');
+  const pill = document.createElement('span');
+  pill.className = 'genre-pill'; pill.dataset.genre = val;
+  pill.innerHTML = `${esc(val)}<button type="button" aria-label="Remove ${esc(val)}" onclick="removeGenrePill(this)">×</button>`;
+  pills.appendChild(pill);
+  sel.value = '';
+}
+
+function removeGenrePill(btn) {
+  btn.closest('.genre-pill').remove();
+}
+
+// Add a brand new genre to the sheet and refresh dropdowns
+async function promptNewGenre(prefix) {
+  const name = prompt('Enter new genre name:');
+  if (!name || !name.trim()) return;
+  const trimmed = name.trim();
+  if (genres.some(g => g.toLowerCase() === trimmed.toLowerCase())) {
+    alert('That genre already exists!'); return;
+  }
+  await syncToSheet('addGenre', null, trimmed);
+  genres.push(trimmed);
+  genres.sort((a,b) => a.localeCompare(b));
+  renderGenreDropdowns();
+  // Auto-select the new genre
+  const sel = document.getElementById(prefix+'-genre-select');
+  if (sel) { sel.value = trimmed; addGenrePill(prefix); }
+}
+
+// Set pills on a form from a genres array or comma string
+function setGenrePills(prefix, genreVal) {
+  const pills = document.getElementById(prefix+'-genre-pills');
+  pills.innerHTML = '';
+  if (!genreVal) return;
+  const arr = Array.isArray(genreVal)
+    ? genreVal
+    : String(genreVal).split(',').map(g=>g.trim()).filter(Boolean);
+  arr.slice(0,3).forEach(g => {
+    if (!genres.includes(g)) genres.push(g); // add unknown genres locally
+    const pill = document.createElement('span');
+    pill.className = 'genre-pill'; pill.dataset.genre = g;
+    pill.innerHTML = `${esc(g)}<button type="button" aria-label="Remove ${esc(g)}" onclick="removeGenrePill(this)">×</button>`;
+    pills.appendChild(pill);
+  });
+}
+
+
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -471,6 +583,7 @@ document.getElementById('addBtn').addEventListener('click', async function() {
     link: gv('f-link').trim(), notes: gv('f-notes').trim(),
     submittedBy: gv('f-submittedBy').trim(),
     isLocal: document.getElementById('f-isLocal').checked,
+    genres: getGenrePills('f').join(','),
     image: gv('f-image').trim(),
     createdAt: new Date().toISOString()
   };
@@ -496,6 +609,8 @@ document.getElementById('addBtn').addEventListener('click', async function() {
 function resetAddForm() {
   ['f-artist','f-date','f-venue','f-cost','f-link','f-image','f-notes','f-submittedBy'].forEach(id=>sv(id,''));
   document.getElementById('f-isLocal').checked = false;
+  document.getElementById('f-genre-pills').innerHTML = '';
+  document.getElementById('f-genre-hint').textContent = '';
   pendingDup = null; clearMsg('add-msg');
 }
 
@@ -527,7 +642,7 @@ function renderList() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td style="white-space:nowrap">${friendlyDate(g.date)}</td>
-      <td><strong>${esc(g.artist)}</strong>${g.isLocal?'<span class="local-badge">Local</span>':''}${g.submittedBy?`<br><small style="color:var(--muted)">by ${esc(g.submittedBy)}</small>`:''}</td>
+      <td><strong>${esc(g.artist)}</strong>${g.isLocal?'<span class="local-badge">Local</span>':''}${g.genres?g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join(''):''}${g.submittedBy?`<br><small style="color:var(--muted)">by ${esc(g.submittedBy)}</small>`:''}</td>
       <td>${esc(g.venue)}</td>
       <td><span class="cost-badge${g.cost>0?' paid':''}">${fmtCost(g.cost)}</span></td>
       <td>${g.link?`<a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Tickets ↗</a>`:''}</td>
@@ -561,6 +676,7 @@ function openEdit(id) {
   sv('e-venue',g.venue); sv('e-cost',g.cost);
   sv('e-link',g.link||''); sv('e-image',g.image||''); sv('e-notes',g.notes||''); sv('e-submittedBy',g.submittedBy||'');
   document.getElementById('e-isLocal').checked = !!g.isLocal;
+  setGenrePills('e', g.genres||'');
   clearMsg('edit-msg');
   document.getElementById('editModalBg').classList.add('open');
 }
@@ -577,7 +693,8 @@ document.getElementById('editSaveBtn').addEventListener('click', async function(
   gigs[idx] = {...gigs[idx], artist, date, venue, cost,
     link:gv('e-link').trim(), image:gv('e-image').trim(),
     notes:gv('e-notes').trim(), submittedBy:gv('e-submittedBy').trim(),
-    isLocal: document.getElementById('e-isLocal').checked};
+    isLocal: document.getElementById('e-isLocal').checked,
+    genres: getGenrePills('e').join(',')};
   sortGigs(gigs);
   await syncToSheet('update', gigs[idx]);
   closeEditModal(); closeModal();
@@ -679,6 +796,7 @@ function openModal(id){
     <div class="detail-row"><span class="detail-label">Venue</span><span>${esc(g.venue)}</span></div>
     <div class="detail-row"><span class="detail-label">Cost</span><span>${fmtCost(g.cost)}</span></div>
     ${g.isLocal?'<div class="detail-row"><span class="detail-label">Type</span><span><span class="local-badge">🎸 Local Band</span></span></div>':''}
+    ${g.genres?`<div class="detail-row"><span class="detail-label">Genres</span><span>${g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join('')}</span></div>`:''}
     ${g.link?`<div class="detail-row"><span class="detail-label">Link</span><a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Open ↗</a></div>`:''}
     ${g.notes?`<div class="detail-row"><span class="detail-label">Notes</span><span>${esc(g.notes)}</span></div>`:''}
     ${g.submittedBy?`<div class="detail-row"><span class="detail-label">Added by</span><span>${esc(g.submittedBy)}</span></div>`:''}`;
