@@ -626,7 +626,7 @@ function openDayModal(iso, dayGigs) {
 }
 function closeDayModal() { document.getElementById('dayModalBg').classList.remove('open'); }
 
-
+function openModal(id){
   const g=gigs.find(x=>x.id===id); if(!g) return;
   document.getElementById('modalTitle').textContent=g.artist;
   document.getElementById('modalBody').innerHTML=`
@@ -726,7 +726,7 @@ function parseCSVRow(line){
     setSync('', 'No sheet');
     renderList();
   }
-})();
+}());
 </script>
 </body>
 </html>
