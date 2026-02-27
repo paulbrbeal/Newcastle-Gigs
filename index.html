@@ -98,9 +98,9 @@ input[type=date]{-webkit-appearance:none;appearance:none;}
 <body>
 <nav>
   <div class="brand">🎸 NCL Gigs</div>
-  <button class="tab active" id="tab-add" onclick="showPage('add')">Add a Gig</button>
+  <button class="tab" id="tab-add" onclick="showPage('add')">Add a Gig</button>
   <button class="tab" id="tab-list" onclick="showPage('list')">Gig List</button>
-  <button class="tab" id="tab-calendar" onclick="showPage('calendar')">Calendar</button>
+  <button class="tab active" id="tab-calendar" onclick="showPage('calendar')">Calendar</button>
   <div class="sync-status">
     <div class="sync-dot" id="syncDot"></div>
     <span id="syncLabel">No sheet</span>
@@ -109,7 +109,7 @@ input[type=date]{-webkit-appearance:none;appearance:none;}
 <main>
 
   <!-- ADD -->
-  <div class="page active" id="page-add">
+  <div class="page" id="page-add">
     <div id="setupBanner" class="setup-banner" style="display:none">
       <strong>📋 Connect your Google Sheet</strong><br>
       Paste your Apps Script Web App URL below to enable live sync.<br>
@@ -168,7 +168,7 @@ input[type=date]{-webkit-appearance:none;appearance:none;}
   </div>
 
   <!-- CALENDAR -->
-  <div class="page" id="page-calendar">
+  <div class="page active" id="page-calendar">
     <div class="card">
       <div class="month-nav">
         <button class="btn btn-secondary btn-sm" onclick="shiftCalMonth(-1)">‹</button>
@@ -239,7 +239,7 @@ let listSortAsc = true;
 let listMonthFilter = null;
 let listNavDate = new Date();
 let calDate = new Date();
-let currentPage = 'add';
+let currentPage = 'calendar';
 let sheetConnected = false;
 
 // ── SYNC INDICATOR ────────────────────────────────────────────
