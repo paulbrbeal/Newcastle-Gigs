@@ -223,6 +223,7 @@
       </div>
       <div class="controls" style="margin-bottom:1.25rem">
         <button class="btn btn-secondary btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+        <button class="btn btn-secondary btn-sm" onclick="exportICal()">⬇ Export iCal</button>
         <button class="btn btn-secondary btn-sm" onclick="document.getElementById('importFile').click()">⬆ Import CSV</button>
         <button class="btn btn-secondary btn-sm" onclick="fetchFromSheet()">↻ Refresh from Sheet</button>
         <input type="file" id="importFile" accept=".csv,text/csv" onchange="importCSV(this)"/>
@@ -765,6 +766,7 @@ function openModal(id) {
   if (g.notes) html += `<div class="detail-row"><span class="detail-label">Notes</span><span>${esc(g.notes)}</span></div>`;
   if (g.submittedBy) html += `<div class="detail-row"><span class="detail-label">Added by</span><span>${esc(g.submittedBy)}</span></div>`;
   if (g.link) html += `<div style="margin-top:1.25rem"><a href="${esc(g.link)}" target="_blank" rel="noopener" class="btn btn-primary" style="width:100%;justify-content:center;display:flex;text-decoration:none">Get Tickets</a></div>`;
+  html += `<div style="margin-top:.75rem"><button onclick="exportSingleICal('${esc(g.id)}')" class="btn btn-secondary" style="width:100%;justify-content:center">Add to Calendar</button></div>`;
   document.getElementById('modalBody').innerHTML = html;
   document.getElementById('modalEditBtn').onclick = () => { closeModal(); openEdit(id); };
   document.getElementById('modalDelBtn').onclick = () => deleteGig(id, true);
@@ -788,7 +790,84 @@ document.getElementById('subBtn').addEventListener('click', async function() {
   this.disabled=false;
 });
 
-// ── CSV EXPORT ────────────────────────────────────────────────
+// ── ICAL EXPORT ───────────────────────────────────────────────
+
+// Format a date as iCal YYYYMMDD
+function toICalDate(iso) {
+  return iso.replace(/-/g, '');
+}
+
+// Build a single VEVENT block from a gig
+function buildVEvent(gig) {
+  const [y,m,d] = gig.date.split('-').map(Number);
+  const dateStr = toICalDate(gig.date);
+  // Next day for DTEND (all-day event)
+  const end = new Date(y, m-1, d+1);
+  const endStr = `${end.getFullYear()}${String(end.getMonth()+1).padStart(2,'0')}${String(end.getDate()).padStart(2,'0')}`;
+  const cost = parseFloat(gig.cost)||0;
+  const costStr = cost===0 ? 'Free' : '£'+cost.toFixed(2).replace(/\.00$/,'');
+  const desc = [
+    `Venue: ${gig.venue}`,
+    `Cost: ${costStr}`,
+    gig.genres ? `Genres: ${gig.genres}` : null,
+    gig.notes ? `Notes: ${gig.notes}` : null,
+    gig.link ? `Tickets: ${gig.link}` : null,
+  ].filter(Boolean).join('\\n');
+  return [
+    'BEGIN:VEVENT',
+    `UID:${gig.id}@northeastgigs`,
+    `DTSTART;VALUE=DATE:${dateStr}`,
+    `DTEND;VALUE=DATE:${endStr}`,
+    `SUMMARY:${gig.artist} @ ${gig.venue}`,
+    `DESCRIPTION:${desc}`,
+    gig.link ? `URL:${gig.link}` : null,
+    `LOCATION:${gig.venue}`,
+    'END:VEVENT',
+  ].filter(Boolean).join('\r\n');
+}
+
+// Wrap VEVENTs in a VCALENDAR
+function buildICal(events) {
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//North East Gigs//northeastgigs//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    ...events,
+    'END:VCALENDAR',
+  ].join('\r\n');
+}
+
+// Download an .ics file
+function downloadICal(filename, icalContent) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([icalContent], {type:'text/calendar;charset=utf-8'}));
+  a.download = filename;
+  a.click();
+}
+
+// Bulk export — current filtered list
+function exportICal() {
+  let data = [...gigs];
+  const q = (document.getElementById('searchBox')?.value||'').toLowerCase();
+  if (q) data = data.filter(g => g.artist.toLowerCase().includes(q)||g.venue.toLowerCase().includes(q));
+  const genreFilter = document.getElementById('genreFilter')?.value||'';
+  if (genreFilter) data = data.filter(g => g.genres&&g.genres.split(',').map(x=>x.trim()).includes(genreFilter));
+  const maxPriceVal = document.getElementById('maxPrice')?.value;
+  if (maxPriceVal!==''&&maxPriceVal!==null) { const max=parseFloat(maxPriceVal); if(!isNaN(max)) data=data.filter(g=>g.cost<=max); }
+  if (document.getElementById('localOnly')?.checked) data = data.filter(g=>g.isLocal);
+  if (listMonthFilter) { const {year,month}=listMonthFilter; data=data.filter(g=>{ const [y,m]=g.date.split('-').map(Number); return y===year&&m===month; }); }
+  if (!data.length) return;
+  downloadICal('north_east_gigs.ics', buildICal(data.map(buildVEvent)));
+}
+
+// Single gig export
+function exportSingleICal(id) {
+  const g = gigs.find(x=>x.id===id); if (!g) return;
+  downloadICal(`${g.artist.replace(/\s+/g,'_')}.ics`, buildICal([buildVEvent(g)]));
+}
+
 function exportCSV(){
   let data=[...gigs];
   const q=(document.getElementById('searchBox')?.value||'').toLowerCase();
