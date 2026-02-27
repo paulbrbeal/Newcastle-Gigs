@@ -8,14 +8,19 @@
   :root{--bg:#0f1117;--surface:#1a1d27;--card:#22263a;--accent:#7c6af7;--accent2:#f7a26a;--text:#e8eaf0;--muted:#8890a8;--border:#2e3248;--danger:#e05c6e;--success:#4caf82;--radius:10px;--font:'Segoe UI',system-ui,sans-serif}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
-  nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1rem;position:sticky;top:0;z-index:50;flex-wrap:wrap;gap:0}
-.brand{font-weight:700;font-size:1.1rem;color:var(--accent);padding:1rem .5rem 1rem 0;margin-right:auto;white-space:nowrap}
-  .brand{font-weight:700;font-size:1.1rem;color:var(--accent);padding:1rem .5rem 1rem 0;margin-right:1rem;white-space:nowrap}
+  nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;flex-wrap:wrap;gap:0;padding:0 1rem;position:sticky;top:0;z-index:50}
+  .brand{font-weight:700;font-size:1.1rem;color:var(--accent);padding:1rem .5rem 1rem 0;margin-right:auto;white-space:nowrap}
   .tab{background:none;border:none;color:var(--muted);padding:.9rem 1.1rem;cursor:pointer;font-size:.95rem;border-bottom:2px solid transparent;transition:.2s;font-family:var(--font)}
   .tab:hover{color:var(--text)}.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
   .sync-status{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--muted)}
   .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.4s}
   .sync-dot.ok{background:var(--success)}.sync-dot.busy{background:var(--accent2)}.sync-dot.err{background:var(--danger)}
+  @media(max-width:500px){
+    nav{padding:0 .5rem}
+    .brand{font-size:1rem;padding:.75rem .25rem .75rem 0}
+    .tab{padding:.65rem .6rem;font-size:.8rem}
+    .sync-status{width:100%;padding:.3rem .25rem .4rem;border-top:1px solid var(--border);justify-content:flex-end}
+  }
   main{max-width:1100px;margin:0 auto;padding:1.5rem 1rem}
   .page{display:none}.page.active{display:block}
   .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem}
@@ -27,8 +32,9 @@
   .field input,.field textarea{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.55rem .75rem;font-size:.95rem;font-family:var(--font);transition:.2s;width:100%}
   .field input:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(124,106,247,.2)}
   .field textarea{resize:vertical;min-height:72px}
-  .field input[type=date]{width:100%;min-height:2.4rem;}
-input[type=date]{-webkit-appearance:none;appearance:none;}
+  .field input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.5)}
+  .field input[type=date]{width:100%;min-height:2.4rem}
+  input[type=date]{-webkit-appearance:none;appearance:none}
   .full{grid-column:1/-1}
   .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:6px;border:none;cursor:pointer;font-size:.9rem;font-weight:600;font-family:var(--font);transition:.2s}
   .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#6857e0}
@@ -55,6 +61,11 @@ input[type=date]{-webkit-appearance:none;appearance:none;}
   .note-cell{color:var(--muted);font-size:.82rem;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .action-btns{display:flex;gap:.4rem}
   .empty-state{text-align:center;padding:3rem;color:var(--muted)}
+  .local-badge{display:inline-block;padding:.1rem .45rem;border-radius:20px;font-size:.72rem;font-weight:700;background:rgba(76,175,130,.15);color:var(--success);margin-left:.4rem;vertical-align:middle}
+  .toggle-field{display:flex;align-items:center;gap:.6rem;padding:.55rem .75rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:.2s;user-select:none}
+  .toggle-field:hover{border-color:var(--success)}
+  .toggle-field input[type=checkbox]{width:1.1rem;height:1.1rem;accent-color:var(--success);cursor:pointer}
+  .toggle-field span{font-size:.95rem;color:var(--text)}
   .month-nav{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
   .month-nav h3{flex:1;text-align:center;font-size:1.1rem}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
@@ -66,6 +77,8 @@ input[type=date]{-webkit-appearance:none;appearance:none;}
   .cal-day-num .badge{background:var(--accent);color:#fff;border-radius:20px;font-size:.65rem;padding:.05rem .4rem}
   .cal-gig{background:rgba(124,106,247,.18);border-left:2px solid var(--accent);border-radius:3px;padding:.2rem .35rem;font-size:.72rem;margin-bottom:.25rem;cursor:pointer;line-height:1.3;transition:.15s}
   .cal-gig:hover{background:rgba(124,106,247,.35)}
+  .cal-gig.local{background:rgba(76,175,130,.2);border-left-color:var(--success)}
+  .cal-gig.local:hover{background:rgba(76,175,130,.38)}
   @media(max-width:700px){
     .cal-day{min-height:60px;padding:.3rem}
     .cal-gig{display:none}
@@ -87,12 +100,6 @@ input[type=date]{-webkit-appearance:none;appearance:none;}
   #importFile{display:none}
   .setup-banner{background:rgba(124,106,247,.1);border:1px solid var(--accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem;font-size:.9rem;line-height:1.6}
   .setup-banner strong{color:var(--accent)}
-  @media(max-width:500px){
-  nav{padding:0 .5rem}
-  .brand{font-size:1rem;padding:.75rem .25rem .75rem 0}
-  .tab{padding:.65rem .6rem;font-size:.8rem}
-  .sync-status{width:100%;padding:.3rem .25rem .4rem;border-top:1px solid var(--border);justify-content:flex-end}
-}
 </style>
 </head>
 <body>
@@ -129,6 +136,13 @@ input[type=date]{-webkit-appearance:none;appearance:none;}
         <div class="field"><label for="f-cost">Cost (£) *</label><input type="number" id="f-cost" placeholder="0" min="0" step="0.01"/></div>
         <div class="field"><label for="f-link">Ticket / Event Link</label><input type="url" id="f-link" placeholder="https://..."/></div>
         <div class="field"><label for="f-submittedBy">Your Name (optional)</label><input type="text" id="f-submittedBy" placeholder="Anonymous"/></div>
+        <div class="field" style="justify-content:flex-end">
+          <label style="visibility:hidden;font-size:.85rem">spacer</label>
+          <label class="toggle-field" for="f-isLocal">
+            <input type="checkbox" id="f-isLocal"/>
+            <span>🎸 Local / Mates Band</span>
+          </label>
+        </div>
         <div class="field full"><label for="f-notes">Notes</label><textarea id="f-notes" placeholder="Doors, support acts, age restrictions…"></textarea></div>
       </div>
       <div style="margin-top:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap">
@@ -218,6 +232,13 @@ input[type=date]{-webkit-appearance:none;appearance:none;}
       <div class="field"><label for="e-cost">Cost (£) *</label><input type="number" id="e-cost" min="0" step="0.01"/></div>
       <div class="field"><label for="e-link">Link</label><input type="url" id="e-link"/></div>
       <div class="field"><label for="e-submittedBy">Your Name</label><input type="text" id="e-submittedBy"/></div>
+      <div class="field" style="justify-content:flex-end">
+        <label style="visibility:hidden;font-size:.85rem">spacer</label>
+        <label class="toggle-field" for="e-isLocal">
+          <input type="checkbox" id="e-isLocal"/>
+          <span>🎸 Local / Mates Band</span>
+        </label>
+      </div>
       <div class="field full"><label for="e-notes">Notes</label><textarea id="e-notes"></textarea></div>
     </div>
     <div style="margin-top:1.25rem;display:flex;gap:.75rem">
@@ -229,7 +250,6 @@ input[type=date]{-webkit-appearance:none;appearance:none;}
 
 <script>
 // ── CONFIGURATION ─────────────────────────────────────────────
-// Sheet URL is hardcoded here and also persisted in localStorage
 let SHEET_URL = 'https://script.google.com/macros/s/AKfycbxD-cwiXgPJL4wBGWWUWxtINfwTPfSrrPwL60WRlDufyC_vDbehTJz31MkZuhr9vwTfMg/exec';
 
 // ── STATE ─────────────────────────────────────────────────────
@@ -255,45 +275,41 @@ function toggleSetup() {
   if (b.style.display !== 'none' && SHEET_URL)
     document.getElementById('sheetUrlInput').value = SHEET_URL;
 }
-
 function connectSheet() {
   const url = document.getElementById('sheetUrlInput').value.trim();
   if (!url.startsWith('https://script.google.com'))
-    return showMsg('add-msg', 'That doesn\'t look like a valid Apps Script URL.', 'err');
+    return showMsg('add-msg','That doesn\'t look like a valid Apps Script URL.','err');
   SHEET_URL = url;
   sheetConnected = true;
   try { localStorage.setItem('ncl_gigs_sheet_url', url); } catch(e) {}
   document.getElementById('setupBanner').style.display = 'none';
-  showMsg('add-msg', '✓ Sheet URL saved. Fetching gigs…', 'success');
+  showMsg('add-msg','✓ Sheet URL saved. Fetching gigs…','success');
   fetchFromSheet();
 }
-
 function disconnectSheet() {
   SHEET_URL = '';
   sheetConnected = false;
   try { localStorage.removeItem('ncl_gigs_sheet_url'); } catch(e) {}
-  setSync('', 'No sheet');
-  showMsg('add-msg', 'Disconnected from Google Sheet.', 'warn');
+  setSync('','No sheet');
+  showMsg('add-msg','Disconnected from Google Sheet.','warn');
 }
 
 // ── FETCH FROM SHEET ──────────────────────────────────────────
-// Tries direct fetch first; falls back to JSONP for mobile/CORS issues
 async function fetchFromSheet() {
   if (!SHEET_URL) return;
-  setSync('busy', 'Syncing…');
+  setSync('busy','Syncing…');
   try {
-    const res = await fetch(SHEET_URL, { method: 'GET', redirect: 'follow' });
+    const res = await fetch(SHEET_URL, { method:'GET', redirect:'follow' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     gigs = data.gigs || [];
     sortGigs(gigs);
-    setSync('ok', 'Synced');
+    setSync('ok','Synced');
     sheetConnected = true;
-    if (currentPage === 'list') renderList();
-    if (currentPage === 'calendar') renderCalendar();
+    if (currentPage==='list') renderList();
+    if (currentPage==='calendar') renderCalendar();
   } catch(err) {
-    // Fall back to JSONP
     fetchFromSheetJSONP();
   }
 }
@@ -304,22 +320,22 @@ function fetchFromSheetJSONP() {
     const script = document.createElement('script');
     const tid = setTimeout(() => {
       cleanup();
-      setSync('err', 'Timeout');
-      showMsg('add-msg', '⚠️ Sheet request timed out. Check your URL.', 'err');
+      setSync('err','Timeout');
+      showMsg('add-msg','⚠️ Sheet request timed out. Check your URL.','err');
       resolve();
     }, 12000);
     window[cbName] = (data) => {
       cleanup();
       if (data.error) {
-        setSync('err', 'Error');
-        showMsg('add-msg', '⚠️ Sheet error: ' + data.error, 'err');
+        setSync('err','Error');
+        showMsg('add-msg','⚠️ Sheet error: ' + data.error,'err');
       } else {
         gigs = data.gigs || [];
         sortGigs(gigs);
-        setSync('ok', 'Synced');
+        setSync('ok','Synced');
         sheetConnected = true;
-        if (currentPage === 'list') renderList();
-        if (currentPage === 'calendar') renderCalendar();
+        if (currentPage==='list') renderList();
+        if (currentPage==='calendar') renderCalendar();
       }
       resolve();
     };
@@ -331,8 +347,8 @@ function fetchFromSheetJSONP() {
     script.src = SHEET_URL + '?callback=' + cbName;
     script.onerror = () => {
       cleanup();
-      setSync('err', 'Failed');
-      showMsg('add-msg', '⚠️ Could not load from Sheet.', 'err');
+      setSync('err','Failed');
+      showMsg('add-msg','⚠️ Could not load from Sheet.','err');
       resolve();
     };
     document.head.appendChild(script);
@@ -342,19 +358,18 @@ function fetchFromSheetJSONP() {
 // ── SYNC TO SHEET ─────────────────────────────────────────────
 async function syncToSheet(action, gig) {
   if (!SHEET_URL) return;
-  setSync('busy', 'Saving…');
+  setSync('busy','Saving…');
   try {
     await fetch(SHEET_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action, gig })
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({action, gig})
     });
-    setSync('ok', 'Saved ✓');
-    setTimeout(() => setSync('ok', 'Synced'), 2000);
+    setSync('ok','Saved ✓');
+    setTimeout(() => setSync('ok','Synced'), 2000);
   } catch(err) {
-    setSync('err', 'Save failed');
-    showMsg('add-msg', '⚠️ Save failed: ' + err.message, 'warn');
+    setSync('err','Save failed');
+    showMsg('add-msg','⚠️ Save failed: ' + err.message,'warn');
   }
 }
 
@@ -406,6 +421,7 @@ document.getElementById('addBtn').addEventListener('click', async function() {
     id: uid(), artist, date, venue, cost,
     link: gv('f-link').trim(), notes: gv('f-notes').trim(),
     submittedBy: gv('f-submittedBy').trim(),
+    isLocal: document.getElementById('f-isLocal').checked,
     createdAt: new Date().toISOString()
   };
   const isDup = gigs.some(g =>
@@ -429,6 +445,7 @@ document.getElementById('addBtn').addEventListener('click', async function() {
 
 function resetAddForm() {
   ['f-artist','f-date','f-venue','f-cost','f-link','f-notes','f-submittedBy'].forEach(id=>sv(id,''));
+  document.getElementById('f-isLocal').checked = false;
   pendingDup = null; clearMsg('add-msg');
 }
 
@@ -460,7 +477,7 @@ function renderList() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td style="white-space:nowrap">${friendlyDate(g.date)}</td>
-      <td><strong>${esc(g.artist)}</strong>${g.submittedBy?`<br><small style="color:var(--muted)">by ${esc(g.submittedBy)}</small>`:''}</td>
+      <td><strong>${esc(g.artist)}</strong>${g.isLocal?'<span class="local-badge">Local</span>':''}${g.submittedBy?`<br><small style="color:var(--muted)">by ${esc(g.submittedBy)}</small>`:''}</td>
       <td>${esc(g.venue)}</td>
       <td><span class="cost-badge${g.cost>0?' paid':''}">${fmtCost(g.cost)}</span></td>
       <td>${g.link?`<a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Tickets ↗</a>`:''}</td>
@@ -493,6 +510,7 @@ function openEdit(id) {
   sv('e-id',id); sv('e-artist',g.artist); sv('e-date',g.date);
   sv('e-venue',g.venue); sv('e-cost',g.cost);
   sv('e-link',g.link||''); sv('e-notes',g.notes||''); sv('e-submittedBy',g.submittedBy||'');
+  document.getElementById('e-isLocal').checked = !!g.isLocal;
   clearMsg('edit-msg');
   document.getElementById('editModalBg').classList.add('open');
 }
@@ -507,7 +525,9 @@ document.getElementById('editSaveBtn').addEventListener('click', async function(
   if (isNaN(cost)||cost<0) return showMsg('edit-msg','Cost must be ≥ 0.','err');
   const idx = gigs.findIndex(g=>g.id===id); if (idx===-1) return;
   gigs[idx] = {...gigs[idx], artist, date, venue, cost,
-    link:gv('e-link').trim(), notes:gv('e-notes').trim(), submittedBy:gv('e-submittedBy').trim()};
+    link:gv('e-link').trim(), notes:gv('e-notes').trim(),
+    submittedBy:gv('e-submittedBy').trim(),
+    isLocal: document.getElementById('e-isLocal').checked};
   sortGigs(gigs);
   await syncToSheet('update', gigs[idx]);
   closeEditModal(); closeModal();
@@ -562,15 +582,14 @@ function buildCalDay(num,inMonth,iso,dayGigs,isToday=false){
   const numRow=document.createElement('div'); numRow.className='cal-day-num';
   numRow.innerHTML=`<span>${num}</span>`+(dayGigs.length?`<span class="badge">${dayGigs.length}</span>`:'');
   cell.appendChild(numRow);
-  // Tapping/clicking the day cell opens the day summary modal
   if (dayGigs.length) {
     cell.addEventListener('click', (e) => {
       if (!e.target.closest('.cal-gig')) openDayModal(iso, dayGigs);
     });
   }
-  // Desktop: individual gig chips open the detail modal directly
   dayGigs.forEach(g=>{
-    const chip=document.createElement('div'); chip.className='cal-gig';
+    const chip=document.createElement('div');
+    chip.className='cal-gig'+(g.isLocal?' local':'');
     chip.textContent=`${g.artist} @ ${g.venue}`;
     chip.setAttribute('role','button'); chip.setAttribute('tabindex','0');
     chip.addEventListener('click',(e)=>{ e.stopPropagation(); openModal(g.id); });
@@ -580,7 +599,7 @@ function buildCalDay(num,inMonth,iso,dayGigs,isToday=false){
   return cell;
 }
 
-// ── DAY MODAL (mobile calendar tap) ──────────────────────────
+// ── DAY MODAL ─────────────────────────────────────────────────
 function openDayModal(iso, dayGigs) {
   if (!dayGigs.length) return;
   const [y,m,d] = iso.split('-').map(Number);
@@ -591,7 +610,7 @@ function openDayModal(iso, dayGigs) {
   dayGigs.forEach(g => {
     const li = document.createElement('li');
     li.className = 'day-modal-item';
-    li.innerHTML = `<div class="dmi-artist">${esc(g.artist)}</div>
+    li.innerHTML = `<div class="dmi-artist">${esc(g.artist)}${g.isLocal?'<span class="local-badge">Local</span>':''}</div>
       <div class="dmi-meta">${esc(g.venue)} · ${fmtCost(g.cost)}</div>`;
     li.addEventListener('click', () => { closeDayModal(); openModal(g.id); });
     list.appendChild(li);
@@ -608,6 +627,7 @@ function openModal(id){
     <div class="detail-row"><span class="detail-label">Date</span><span>${friendlyDate(g.date)}</span></div>
     <div class="detail-row"><span class="detail-label">Venue</span><span>${esc(g.venue)}</span></div>
     <div class="detail-row"><span class="detail-label">Cost</span><span>${fmtCost(g.cost)}</span></div>
+    ${g.isLocal?'<div class="detail-row"><span class="detail-label">Type</span><span><span class="local-badge">🎸 Local Band</span></span></div>':''}
     ${g.link?`<div class="detail-row"><span class="detail-label">Link</span><a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Open ↗</a></div>`:''}
     ${g.notes?`<div class="detail-row"><span class="detail-label">Notes</span><span>${esc(g.notes)}</span></div>`:''}
     ${g.submittedBy?`<div class="detail-row"><span class="detail-label">Added by</span><span>${esc(g.submittedBy)}</span></div>`:''}`;
@@ -629,7 +649,7 @@ function exportCSV(){
   if(q) data=data.filter(g=>g.artist.toLowerCase().includes(q)||g.venue.toLowerCase().includes(q));
   if(listMonthFilter){const{year,month}=listMonthFilter;data=data.filter(g=>{const[y,m]=g.date.split('-').map(Number);return y===year&&m===month;});}
   if(!listSortAsc) data.reverse();
-  const cols=['artist','date','venue','cost','link','notes','submittedBy','createdAt'];
+  const cols=['artist','date','venue','cost','link','notes','submittedBy','isLocal','createdAt'];
   const rows=[cols.join(','),...data.map(g=>cols.map(c=>csvCell(g[c]??'')).join(','))];
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([rows.join('\r\n')],{type:'text/csv'}));
@@ -659,7 +679,9 @@ function importCSV(input){
       const dup=gigs.some(g=>g.artist.toLowerCase()===artist.toLowerCase()&&g.date===date&&g.venue.toLowerCase()===venue.toLowerCase());
       if(dup){skipped++;continue;}
       const ng={id:uid(),artist,date,venue,cost,link:get('link'),notes:get('notes'),
-        submittedBy:get('submittedby')||get('submitted_by'),createdAt:new Date().toISOString()};
+        submittedBy:get('submittedby')||get('submitted_by'),
+        isLocal: get('islocal')==='true',
+        createdAt:new Date().toISOString()};
       gigs.push(ng); newGigs.push(ng); added++;
     }
     sortGigs(gigs);
@@ -683,7 +705,6 @@ function parseCSVRow(line){
 
 // ── INIT ──────────────────────────────────────────────────────
 (function init(){
-  // localStorage URL overrides hardcoded URL if set (allows manual reconnect)
   try {
     const saved = localStorage.getItem('ncl_gigs_sheet_url');
     if (saved) SHEET_URL = saved;
@@ -692,8 +713,8 @@ function parseCSVRow(line){
     sheetConnected = true;
     fetchFromSheet();
   } else {
-    setSync('', 'No sheet');
-    renderList();
+    setSync('','No sheet');
+    renderCalendar();
   }
 }());
 </script>
