@@ -372,68 +372,41 @@ function disconnectSheet() {
 }
 
 // ── FETCH FROM SHEET ──────────────────────────────────────────
-async function fetchFromSheet() {
+// Races direct fetch against JSONP — uses whichever responds first
+function fetchFromSheet() {
   if (!SHEET_URL) return;
   setSync('busy','Syncing…');
-  try {
-    const res = await fetch(SHEET_URL, { method:'GET', redirect:'follow' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    gigs = data.gigs || [];
-    genres = data.genres || [];
-    sortGigs(gigs);
-    renderGenreDropdowns();
-    setSync('ok','Synced');
-    sheetConnected = true;
-    if (currentPage==='list') renderList();
-    if (currentPage==='calendar') renderCalendar();
-  } catch(err) {
-    fetchFromSheetJSONP();
-  }
-}
 
-function fetchFromSheetJSONP() {
-  return new Promise((resolve) => {
+  const directFetch = fetch(SHEET_URL, { method:'GET', redirect:'follow' })
+    .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); });
+
+  const jsonpFetch = new Promise((resolve, reject) => {
     const cbName = 'nclCb' + Date.now();
     const script = document.createElement('script');
-    const tid = setTimeout(() => {
-      cleanup();
-      setSync('err','Timeout');
-      showMsg('add-msg','⚠️ Sheet request timed out. Check your URL.','err');
-      resolve();
-    }, 12000);
-    window[cbName] = (data) => {
-      cleanup();
-      if (data.error) {
-        setSync('err','Error');
-        showMsg('add-msg','⚠️ Sheet error: ' + data.error,'err');
-      } else {
-        gigs = data.gigs || [];
-        genres = data.genres || [];
-        sortGigs(gigs);
-        renderGenreDropdowns();
-        setSync('ok','Synced');
-        sheetConnected = true;
-        if (currentPage==='list') renderList();
-        if (currentPage==='calendar') renderCalendar();
-      }
-      resolve();
-    };
-    function cleanup() {
-      clearTimeout(tid);
-      delete window[cbName];
-      try { document.head.removeChild(script); } catch(e) {}
-    }
+    const tid = setTimeout(() => { cleanup(); reject(new Error('JSONP timeout')); }, 12000);
+    window[cbName] = (data) => { cleanup(); data.error ? reject(new Error(data.error)) : resolve(data); };
+    function cleanup() { clearTimeout(tid); delete window[cbName]; try { document.head.removeChild(script); } catch(e) {} }
     script.src = SHEET_URL + '?callback=' + cbName;
-    script.onerror = () => {
-      cleanup();
-      setSync('err','Failed');
-      showMsg('add-msg','⚠️ Could not load from Sheet.','err');
-      resolve();
-    };
+    script.onerror = () => { cleanup(); reject(new Error('JSONP failed')); };
     document.head.appendChild(script);
   });
+
+  // Use whichever resolves first
+  Promise.any([directFetch, jsonpFetch])
+    .then(data => {
+      gigs = data.gigs || [];
+      genres = data.genres || [];
+      sortGigs(gigs);
+      renderGenreDropdowns();
+      setSync('ok','Synced');
+      sheetConnected = true;
+      if (currentPage==='list') renderList();
+      if (currentPage==='calendar') renderCalendar();
+    })
+    .catch(() => {
+      setSync('err','Failed');
+      showMsg('add-msg','⚠️ Could not load from Sheet. Check your URL.','err');
+    });
 }
 
 // ── SYNC TO SHEET ─────────────────────────────────────────────
