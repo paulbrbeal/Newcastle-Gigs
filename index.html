@@ -86,7 +86,11 @@
   .genre-hint{font-size:.78rem;color:var(--muted);min-height:.9rem}
   .month-nav{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
   .month-nav h3{flex:1;text-align:center;font-size:1.1rem}
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;transition:transform .25s ease,opacity .25s ease}
+  .cal-grid.slide-out-left{transform:translateX(-60px);opacity:0}
+  .cal-grid.slide-out-right{transform:translateX(60px);opacity:0}
+  .cal-grid.slide-in-left{transform:translateX(60px);opacity:0}
+  .cal-grid.slide-in-right{transform:translateX(-60px);opacity:0}
   .cal-header{text-align:center;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;padding:.4rem 0}
   .cal-day{background:var(--card);border:1px solid var(--border);border-radius:6px;min-height:90px;padding:.5rem;cursor:pointer}
   .cal-day.other-month{opacity:.35}.cal-day.today{border-color:var(--accent)}
@@ -669,7 +673,21 @@ async function deleteGig(id, fromModal=false) {
 
 // ── CALENDAR ──────────────────────────────────────────────────
 function jumpToday() { calDate=new Date(); renderCalendar(); }
-function shiftCalMonth(dir) { calDate=new Date(calDate.getFullYear(),calDate.getMonth()+dir,1); renderCalendar(); }
+function shiftCalMonth(dir) {
+  const grid = document.getElementById('calGrid');
+  // Slide out current month
+  grid.classList.add(dir > 0 ? 'slide-out-left' : 'slide-out-right');
+  setTimeout(() => {
+    calDate = new Date(calDate.getFullYear(), calDate.getMonth() + dir, 1);
+    // Prepare slide-in position before rendering
+    grid.classList.remove('slide-out-left','slide-out-right');
+    grid.classList.add(dir > 0 ? 'slide-in-left' : 'slide-in-right');
+    renderCalendar();
+    // Force reflow then animate in
+    grid.offsetHeight;
+    grid.classList.remove('slide-in-left','slide-in-right');
+  }, 220);
+}
 
 function renderCalendar() {
   const yr=calDate.getFullYear(), mo=calDate.getMonth();
