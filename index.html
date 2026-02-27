@@ -381,12 +381,28 @@ function disconnectSheet() {
 }
 
 // ── FETCH FROM SHEET ──────────────────────────────────────────
+// On mobile, direct fetch often fails silently causing delays.
+// We start JSONP immediately and give direct fetch 800ms to respond first.
+// Whichever resolves first wins.
 function fetchFromSheet() {
   if (!SHEET_URL) return;
   setSync('busy','Syncing…');
-  const directFetch = fetch(SHEET_URL, {method:'GET',redirect:'follow'})
-    .then(res => { if (!res.ok) throw new Error('HTTP '+res.status); return res.json(); });
-  const jsonpFetch = new Promise((resolve, reject) => {
+
+  function applyData(data) {
+    gigs = data.gigs || [];
+    genres = data.genres || [];
+    sortGigs(gigs);
+    renderGenreDropdowns();
+    setSync('ok','Synced');
+    sheetConnected = true;
+    if (currentPage==='list') renderList();
+    if (currentPage==='calendar') renderCalendar();
+  }
+
+  let settled = false;
+
+  // JSONP — starts immediately, works on all browsers
+  const jsonpPromise = new Promise((resolve, reject) => {
     const cbName = 'nclCb' + Date.now();
     const script = document.createElement('script');
     const tid = setTimeout(() => { cleanup(); reject(new Error('JSONP timeout')); }, 12000);
@@ -396,20 +412,26 @@ function fetchFromSheet() {
     script.onerror = () => { cleanup(); reject(new Error('JSONP failed')); };
     document.head.appendChild(script);
   });
-  Promise.any([directFetch, jsonpFetch])
-    .then(data => {
-      gigs = data.gigs || [];
-      genres = data.genres || [];
-      sortGigs(gigs);
-      renderGenreDropdowns();
-      setSync('ok','Synced');
-      sheetConnected = true;
-      if (currentPage==='list') renderList();
-      if (currentPage==='calendar') renderCalendar();
-    })
+
+  // Direct fetch — gets an 800ms head start before JSONP can win
+  // This means desktop (where fetch works) stays fast
+  const directPromise = fetch(SHEET_URL, {method:'GET', redirect:'follow'})
+    .then(res => { if (!res.ok) throw new Error('HTTP '+res.status); return res.json(); });
+
+  // Direct fetch wins if it resolves within 800ms, otherwise JSONP takes over
+  const timedDirect = new Promise((resolve, reject) => {
+    directPromise.then(resolve).catch(reject);
+    setTimeout(() => reject(new Error('direct fetch too slow')), 800);
+  });
+
+  timedDirect
+    .then(data => { settled=true; applyData(data); })
     .catch(() => {
-      setSync('err','Failed');
-      showMsg('add-msg','⚠️ Could not load from Sheet. Check your URL.','err');
+      if (!settled) {
+        jsonpPromise
+          .then(data => { settled=true; applyData(data); })
+          .catch(() => { setSync('err','Failed'); showMsg('add-msg','⚠️ Could not load from Sheet.','err'); });
+      }
     });
 }
 
