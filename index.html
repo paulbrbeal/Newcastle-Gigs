@@ -755,13 +755,12 @@ function closeDayModal() { document.getElementById('dayModalBg').classList.remov
 // ── DETAIL MODAL ──────────────────────────────────────────────
 function openModal(id) {
   const g = gigs.find(x => x.id === id); if (!g) return;
-  document.getElementById('modalTitle').textContent = g.artist;
+  document.getElementById('modalTitle').innerHTML = esc(g.artist) + (g.isLocal ? ' <span class="local-badge" style="font-size:.8rem;vertical-align:middle">Local Band</span>' : '');
   let html = '';
   if (g.image) html += `<img class="modal-img" src="${esc(g.image)}" alt="${esc(g.artist)}" onerror="this.style.display='none'"/>`;
   html += `<div class="detail-row"><span class="detail-label">Date</span><span>${friendlyDate(g.date)}</span></div>`;
   html += `<div class="detail-row"><span class="detail-label">Venue</span><span>${esc(g.venue)}</span></div>`;
   html += `<div class="detail-row"><span class="detail-label">Cost</span><span>${fmtCost(g.cost)}</span></div>`;
-  if (g.isLocal) html += `<div class="detail-row"><span class="detail-label">Type</span><span><span class="local-badge">Local Band</span></span></div>`;
   if (g.genres) html += `<div class="detail-row"><span class="detail-label">Genres</span><span>${g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join('')}</span></div>`;
   if (g.notes) html += `<div class="detail-row"><span class="detail-label">Notes</span><span>${esc(g.notes)}</span></div>`;
   if (g.submittedBy) html += `<div class="detail-row"><span class="detail-label">Added by</span><span>${esc(g.submittedBy)}</span></div>`;
