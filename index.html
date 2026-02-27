@@ -268,47 +268,71 @@ function disconnectSheet() {
 // ═══════════════════════════════════════════════════════════════
 
 // Route all requests through corsproxy.io to bypass sandbox restrictions
-const PROXY = 'https://corsproxy.io/?';
-
-// Load all gigs from sheet via proxied GET
-async function fetchFromSheet() {
-  if (!SHEET_URL) return;
+// Load all gigs via JSONP — works cross-origin without CORS headers
+function fetchFromSheet() {
+  if (!SHEET_URL) return Promise.resolve();
   setSync('busy', 'Syncing…');
-  try {
-    const res = await fetch(PROXY + encodeURIComponent(SHEET_URL), { method: 'GET' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    gigs = data.gigs || [];
-    sortGigs(gigs);
-    setSync('ok', 'Synced');
-    sheetConnected = true;
-    if (currentPage === 'list') renderList();
-    if (currentPage === 'calendar') renderCalendar();
-  } catch (err) {
-    setSync('err', 'Sync error');
-    showMsg('add-msg', '⚠️ Could not reach Google Sheet: ' + err.message, 'err');
-  }
+  return new Promise((resolve) => {
+    const cbName = 'nclCb' + Date.now();
+    const script = document.createElement('script');
+    const tid = setTimeout(() => {
+      cleanup();
+      setSync('err', 'Timeout');
+      showMsg('add-msg', '⚠️ Sheet request timed out. Check your URL.', 'err');
+      resolve();
+    }, 12000);
+
+    window[cbName] = (data) => {
+      cleanup();
+      if (data.error) {
+        setSync('err', 'Error'); 
+        showMsg('add-msg', '⚠️ Sheet error: ' + data.error, 'err');
+      } else {
+        gigs = data.gigs || [];
+        sortGigs(gigs);
+        setSync('ok', 'Synced');
+        sheetConnected = true;
+        if (currentPage === 'list') renderList();
+        if (currentPage === 'calendar') renderCalendar();
+      }
+      resolve();
+    };
+
+    function cleanup() {
+      clearTimeout(tid);
+      delete window[cbName];
+      try { document.head.removeChild(script); } catch(e) {}
+    }
+
+    // Append ?callback=fnName — Apps Script will wrap response in fn(...)
+    script.src = SHEET_URL + '?callback=' + cbName;
+    script.onerror = () => {
+      cleanup();
+      setSync('err', 'Failed');
+      showMsg('add-msg', '⚠️ Could not load from Sheet. Check URL and deployment.', 'err');
+      resolve();
+    };
+    document.head.appendChild(script);
+  });
 }
 
-// Write to sheet via proxied POST
+// Write via no-cors POST — Apps Script processes it, we don't need the response
 async function syncToSheet(action, gig) {
   if (!SHEET_URL) return;
   setSync('busy', 'Saving…');
   try {
-    const res = await fetch(PROXY + encodeURIComponent(SHEET_URL), {
+    await fetch(SHEET_URL, {
       method: 'POST',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ action, gig })
     });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
+    // no-cors means we can't read the response but Apps Script still processes it
     setSync('ok', 'Saved ✓');
     setTimeout(() => setSync('ok', 'Synced'), 2000);
   } catch (err) {
     setSync('err', 'Save failed');
-    showMsg('add-msg', '⚠️ Sheet sync failed: ' + err.message + '. Data saved in app only.', 'warn');
+    showMsg('add-msg', '⚠️ Save failed: ' + err.message, 'warn');
   }
 }
 
