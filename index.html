@@ -240,7 +240,17 @@
       <div class="cal-grid" id="calGrid"></div>
     </div>
     <div class="card" style="margin-top:1.25rem">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem">
+      <h2>Get Notified</h2>
+      <p style="color:var(--muted);font-size:.92rem;margin-bottom:1rem;line-height:1.6">Enter your email address below to receive a notification whenever a new gig is added to NCL Gigs.</p>
+      <div id="sub-msg"></div>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
+        <div class="field" style="flex:1;min-width:200px">
+          <label for="subEmail">Email Address</label>
+          <input type="email" id="subEmail" placeholder="your@email.com"/>
+        </div>
+        <button class="btn btn-primary" id="subBtn" style="margin-bottom:.05rem">Subscribe</button>
+      </div>
+    </div>
         <div style="grid-column:1/-1">
           <h2 style="margin-bottom:.6rem">🎸 Newcastle Gigs</h2>
           <p style="color:var(--muted);line-height:1.7;font-size:.95rem">A community-maintained guide to live music happening in and around Newcastle upon Tyne. From headline acts to local heroes, this is your one-stop calendar for what's on, where, and how much it'll cost you.</p>
@@ -436,14 +446,14 @@ function fetchFromSheet() {
 }
 
 // ── SYNC TO SHEET ─────────────────────────────────────────────
-async function syncToSheet(action, gig, genre) {
+async function syncToSheet(action, gig, genre, email) {
   if (!SHEET_URL) return;
   setSync('busy','Saving…');
   try {
     await fetch(SHEET_URL, {
       method:'POST', mode:'no-cors',
       headers:{'Content-Type':'text/plain'},
-      body: JSON.stringify({action, gig, genre})
+      body: JSON.stringify({action, gig, genre, email})
     });
     setSync('ok','Saved ✓');
     setTimeout(() => setSync('ok','Synced'), 2000);
@@ -821,7 +831,19 @@ function parseCSVRow(line){
   cells.push(cur); return cells;
 }
 
-// ── INIT ──────────────────────────────────────────────────────
+// ── EMAIL SUBSCRIBE ───────────────────────────────────────────
+document.getElementById('subBtn').addEventListener('click', async function() {
+  const email = (document.getElementById('subEmail').value||'').trim();
+  if (!email || !email.includes('@'))
+    return showMsg('sub-msg','Please enter a valid email address.','err');
+  this.disabled = true;
+  await syncToSheet('subscribe', null, null, email);
+  showMsg('sub-msg','✓ You\'re subscribed! You\'ll receive an email when new gigs are added.','success');
+  document.getElementById('subEmail').value = '';
+  this.disabled = false;
+});
+
+
 (function init(){
   try { const saved=localStorage.getItem('ncl_gigs_sheet_url'); if(saved) SHEET_URL=saved; } catch(e) {}
   if (SHEET_URL) { sheetConnected=true; fetchFromSheet(); }
