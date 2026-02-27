@@ -26,7 +26,8 @@
   .field input,.field textarea{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.55rem .75rem;font-size:.95rem;font-family:var(--font);transition:.2s;width:100%}
   .field input:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(124,106,247,.2)}
   .field textarea{resize:vertical;min-height:72px}
-  .field input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.5)}
+  .field input[type=date]{width:100%;min-height:2.4rem;}
+input[type=date]{-webkit-appearance:none;appearance:none;}
   .full{grid-column:1/-1}
   .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:6px;border:none;cursor:pointer;font-size:.9rem;font-weight:600;font-family:var(--font);transition:.2s}
   .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#6857e0}
