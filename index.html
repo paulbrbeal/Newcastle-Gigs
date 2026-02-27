@@ -181,12 +181,26 @@
     <div class="card">
       <h2>Gig List</h2>
       <div class="controls">
-        <input type="search" id="searchBox" placeholder="🔍 Search artist or venue…" oninput="renderList()" style="flex:1;min-width:160px"/>
+        <input type="search" id="searchBox" placeholder="🔍 Artist or venue…" oninput="renderList()" style="flex:1;min-width:140px"/>
+        <select id="genreFilter" onchange="renderList()" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.45rem .75rem;font-size:.9rem;font-family:var(--font);-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 12 12\'%3E%3Cpath fill=\'%238890a8\' d=\'M6 8L1 3h10z\'/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right .75rem center;padding-right:2rem">
+          <option value="">All Genres</option>
+        </select>
+        <div style="display:flex;align-items:center;gap:.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.35rem .75rem">
+          <span style="font-size:.85rem;color:var(--muted);white-space:nowrap">Max £</span>
+          <input type="number" id="maxPrice" min="0" step="1" placeholder="Any" oninput="renderList()" style="width:60px;background:transparent;border:none;color:var(--text);font-size:.9rem;font-family:var(--font);padding:0"/>
+        </div>
+        <label style="display:flex;align-items:center;gap:.4rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.35rem .75rem;cursor:pointer;white-space:nowrap;font-size:.88rem;color:var(--muted)">
+          <input type="checkbox" id="localOnly" onchange="renderList()" style="accent-color:var(--success);width:1rem;height:1rem"/>
+          <span>🎸 Local only</span>
+        </label>
+      </div>
+      <div class="controls">
         <button class="btn btn-secondary btn-sm" onclick="shiftListMonth(-1)">‹ Prev</button>
         <span id="listMonthLabel" style="font-size:.9rem;white-space:nowrap">All dates</span>
         <button class="btn btn-secondary btn-sm" onclick="shiftListMonth(1)">Next ›</button>
         <button class="btn btn-secondary btn-sm" onclick="clearMonthFilter()">All Dates</button>
         <button class="btn btn-secondary btn-sm" onclick="toggleSort()">Sort: <span id="sortLabel">Date ↑</span></button>
+        <button class="btn btn-secondary btn-sm" onclick="clearAllFilters()">✕ Clear filters</button>
       </div>
       <div class="controls" style="margin-bottom:1.25rem">
         <button class="btn btn-secondary btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
@@ -449,7 +463,7 @@ const sv = (id,val) => { const el=document.getElementById(id); if(el) el.value=v
 // ── GENRES ────────────────────────────────────────────────────
 let genres = []; // loaded from sheet on init
 
-// Populate both genre dropdowns from the genres array
+// Populate both genre form dropdowns and the list filter dropdown
 function renderGenreDropdowns() {
   ['f-genre-select','e-genre-select'].forEach(id => {
     const sel = document.getElementById(id); if (!sel) return;
@@ -457,11 +471,21 @@ function renderGenreDropdowns() {
     sel.innerHTML = '<option value="">— Select a genre —</option>';
     genres.forEach(g => {
       const opt = document.createElement('option');
-      opt.value = g; opt.textContent = g;
-      sel.appendChild(opt);
+      opt.value = g; opt.textContent = g; sel.appendChild(opt);
     });
     sel.value = cur;
   });
+  // Also populate the list filter dropdown
+  const gf = document.getElementById('genreFilter');
+  if (gf) {
+    const cur = gf.value;
+    gf.innerHTML = '<option value="">All Genres</option>';
+    genres.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g; opt.textContent = g; gf.appendChild(opt);
+    });
+    gf.value = cur;
+  }
 }
 
 // Get currently selected genre pills for a form prefix (f or e)
@@ -640,6 +664,7 @@ function shiftListMonth(dir) {
   listMonthFilter = {year:listNavDate.getFullYear(),month:listNavDate.getMonth()+1};
   renderList();
 }
+function clearMonthFilter() { listMonthFilter=null; listNavDate=new Date(); renderList(); }
 function clearMonthFilter() { listMonthFilter=null; listNavDate=new Date(); renderList(); }
 
 // ── EDIT GIG ──────────────────────────────────────────────────
