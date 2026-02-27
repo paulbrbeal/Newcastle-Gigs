@@ -120,18 +120,22 @@
   .dmi-meta{font-size:.82rem;color:var(--muted)}
   .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:1rem}
   .modal-bg.open{display:flex}
-  .modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto;transition:transform .25s ease,opacity .25s ease}
+  .modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto;transition:transform .25s ease,opacity .25s ease;z-index:1}
   .modal.slide-out-left{transform:translateX(-80px);opacity:0}
   .modal.slide-out-right{transform:translateX(80px);opacity:0}
   .modal.slide-in-left{transform:translateX(80px);opacity:0}
   .modal.slide-in-right{transform:translateX(-80px);opacity:0}
   .modal-stack{position:relative;max-width:480px;width:100%}
-  .modal-peek-right{position:absolute;top:50%;transform:translateY(-50%) translateX(-20px);opacity:0;right:-20px;width:0;height:0;border-top:20px solid transparent;border-bottom:20px solid transparent;border-left:20px solid rgba(124,106,247,.35);pointer-events:none;z-index:1;transition:transform .3s ease .2s,opacity .3s ease .2s}
-  .modal-peek-left{position:absolute;top:50%;transform:translateY(-50%) translateX(20px);opacity:0;left:-20px;width:0;height:0;border-top:20px solid transparent;border-bottom:20px solid transparent;border-right:20px solid rgba(76,175,130,.35);pointer-events:none;z-index:1;transition:transform .3s ease .2s,opacity .3s ease .2s}
+  .modal-peek-right{position:absolute;top:50%;right:-28px;transform:translateY(-50%) translateX(-28px);opacity:0;pointer-events:none;z-index:-1;transition:transform .3s ease .22s,opacity .3s ease .22s}
+  .modal-peek-left{position:absolute;top:50%;left:-28px;transform:translateY(-50%) translateX(28px);opacity:0;pointer-events:none;z-index:-1;transition:transform .3s ease .22s,opacity .3s ease .22s}
+  .modal-peek-right .peek-arrow{width:0;height:0;border-top:18px solid transparent;border-bottom:18px solid transparent;border-left:18px solid rgba(124,106,247,.18);position:relative}
+  .modal-peek-right .peek-arrow::after{content:'';position:absolute;top:-14px;left:-22px;width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:14px solid var(--accent)}
+  .modal-peek-left .peek-arrow{width:0;height:0;border-top:18px solid transparent;border-bottom:18px solid transparent;border-right:18px solid rgba(76,175,130,.18);position:relative}
+  .modal-peek-left .peek-arrow::after{content:'';position:absolute;top:-14px;right:-22px;width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-right:14px solid var(--success)}
   .modal-peek-right.visible{transform:translateY(-50%) translateX(0);opacity:1}
   .modal-peek-left.visible{transform:translateY(-50%) translateX(0);opacity:1}
-  .modal-peek-right.peek-exit{transform:translateY(-50%) translateX(-20px);opacity:0;transition:transform .15s ease,opacity .15s ease}
-  .modal-peek-left.peek-exit{transform:translateY(-50%) translateX(20px);opacity:0;transition:transform .15s ease,opacity .15s ease}
+  .modal-peek-right.peek-exit{transform:translateY(-50%) translateX(-28px);opacity:0;transition:transform .15s ease,opacity .15s ease}
+  .modal-peek-left.peek-exit{transform:translateY(-50%) translateX(28px);opacity:0;transition:transform .15s ease,opacity .15s ease}
   .modal-close{position:absolute;top:.75rem;right:.75rem;background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1}
   .modal-close:hover{color:var(--text)}
   .modal-img{width:100%;max-height:220px;object-fit:cover;border-radius:6px;margin-bottom:1rem;display:block}
@@ -320,8 +324,8 @@
 
 <div class="modal-bg" id="modalBg" role="dialog" aria-modal="true">
   <div class="modal-stack">
-    <div class="modal-peek modal-peek-left" id="modalPeekLeft"></div>
-    <div class="modal-peek modal-peek-right" id="modalPeekRight"></div>
+    <div class="modal-peek modal-peek-left" id="modalPeekLeft"><div class="peek-arrow"></div></div>
+    <div class="modal-peek modal-peek-right" id="modalPeekRight"><div class="peek-arrow"></div></div>
     <div class="modal" id="modalCard">
       <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
       <h2 id="modalTitle" style="margin-bottom:1rem"></h2>
