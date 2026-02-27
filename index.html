@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Newcastle Gigs</title>
+<style>
+  :root{--bg:#0f1117;--surface:#1a1d27;--card:#22263a;--accent:#7c6af7;--accent2:#f7a26a;--text:#e8eaf0;--muted:#8890a8;--border:#2e3248;--danger:#e05c6e;--success:#4caf82;--radius:10px;--font:'Segoe UI',system-ui,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+  nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1rem;position:sticky;top:0;z-index:50}
+  .brand{font-weight:700;font-size:1.1rem;color:var(--accent);padding:1rem .5rem 1rem 0;margin-right:1rem;white-space:nowrap}
+  .tab{background:none;border:none;color:var(--muted);padding:.9rem 1.1rem;cursor:pointer;font-size:.95rem;border-bottom:2px solid transparent;transition:.2s;font-family:var(--font)}
+  .tab:hover{color:var(--text)}.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .sync-status{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--muted)}
+  .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.4s}
+  .sync-dot.ok{background:var(--success)}.sync-dot.busy{background:var(--accent2)}.sync-dot.err{background:var(--danger)}
+  main{max-width:1100px;margin:0 auto;padding:1.5rem 1rem}
+  .page{display:none}.page.active{display:block}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem}
+  h2{font-size:1.25rem;font-weight:700;margin-bottom:1.25rem;color:var(--text)}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+  .field{display:flex;flex-direction:column;gap:.4rem}
+  .field label{font-size:.85rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .field input,.field textarea{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.55rem .75rem;font-size:.95rem;font-family:var(--font);transition:.2s;width:100%}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(124,106,247,.2)}
+  .field textarea{resize:vertical;min-height:72px}
+  .field input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.5)}
+  .full{grid-column:1/-1}
+  .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;border-radius:6px;border:none;cursor:pointer;font-size:.9rem;font-weight:600;font-family:var(--font);transition:.2s}
+  .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#6857e0}
+  .btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}.btn-danger:hover{background:var(--danger);color:#fff}
+  .btn-sm{padding:.35rem .75rem;font-size:.82rem}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .alert{padding:.75rem 1rem;border-radius:6px;font-size:.9rem;margin-bottom:1rem}
+  .alert-success{background:rgba(76,175,130,.15);border:1px solid var(--success);color:var(--success)}
+  .alert-warn{background:rgba(247,162,106,.15);border:1px solid var(--accent2);color:var(--accent2)}
+  .alert-err{background:rgba(224,92,110,.15);border:1px solid var(--danger);color:var(--danger)}
+  .controls{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+  .controls input{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.45rem .75rem;font-size:.9rem;font-family:var(--font)}
+  .controls input:focus{outline:none;border-color:var(--accent)}
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  th{text-align:left;padding:.6rem .75rem;color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);white-space:nowrap}
+  td{padding:.65rem .75rem;border-bottom:1px solid var(--border);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:rgba(255,255,255,.02)}
+  .cost-badge{display:inline-block;padding:.2rem .55rem;border-radius:20px;font-size:.8rem;font-weight:700;background:rgba(76,175,130,.15);color:var(--success)}
+  .cost-badge.paid{background:rgba(247,162,106,.12);color:var(--accent2)}
+  .link-out{color:var(--accent);font-size:.82rem;text-decoration:none}.link-out:hover{text-decoration:underline}
+  .note-cell{color:var(--muted);font-size:.82rem;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .action-btns{display:flex;gap:.4rem}
+  .empty-state{text-align:center;padding:3rem;color:var(--muted)}
+  .month-nav{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+  .month-nav h3{flex:1;text-align:center;font-size:1.1rem}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .cal-header{text-align:center;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;padding:.4rem 0}
+  .cal-day{background:var(--card);border:1px solid var(--border);border-radius:6px;min-height:90px;padding:.5rem}
+  .cal-day.other-month{opacity:.35}.cal-day.today{border-color:var(--accent)}
+  .cal-day-num{font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:.3rem;display:flex;justify-content:space-between;align-items:center}
+  .cal-day-num .badge{background:var(--accent);color:#fff;border-radius:20px;font-size:.65rem;padding:.05rem .4rem}
+  .cal-gig{background:rgba(124,106,247,.18);border-left:2px solid var(--accent);border-radius:3px;padding:.2rem .35rem;font-size:.72rem;margin-bottom:.25rem;cursor:pointer;line-height:1.3;transition:.15s}
+  .cal-gig:hover{background:rgba(124,106,247,.35)}
+  @media(max-width:700px){.cal-day{min-height:60px;padding:.3rem}.cal-gig{display:none}}
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:1rem}
+  .modal-bg.open{display:flex}
+  .modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto}
+  .modal-close{position:absolute;top:.75rem;right:.75rem;background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1}
+  .modal-close:hover{color:var(--text)}
+  .detail-row{display:flex;gap:.5rem;margin-bottom:.6rem;font-size:.93rem}
+  .detail-label{color:var(--muted);min-width:80px;font-size:.8rem;font-weight:700;text-transform:uppercase;padding-top:.1rem}
+  #importFile{display:none}
+  /* Setup banner */
+  .setup-banner{background:rgba(124,106,247,.1);border:1px solid var(--accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem;font-size:.9rem;line-height:1.6}
+  .setup-banner strong{color:var(--accent)}
+  .setup-banner code{background:var(--surface);padding:.1rem .4rem;border-radius:4px;font-size:.85rem;color:var(--accent2)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">🎸 NCL Gigs</div>
+  <button class="tab active" id="tab-add" onclick="showPage('add')">Add a Gig</button>
+  <button class="tab" id="tab-list" onclick="showPage('list')">Gig List</button>
+  <button class="tab" id="tab-calendar" onclick="showPage('calendar')">Calendar</button>
+  <div class="sync-status">
+    <div class="sync-dot" id="syncDot"></div>
+    <span id="syncLabel">No sheet</span>
+  </div>
+</nav>
+<main>
+
+  <!-- ── ADD ── -->
+  <div class="page active" id="page-add">
+    <div id="setupBanner" class="setup-banner" style="display:none">
+      <strong>📋 Connect your Google Sheet</strong><br>
+      Paste your Apps Script Web App URL below to enable live sync. See the setup guide for instructions.<br>
+      <div style="display:flex;gap:.75rem;margin-top:.75rem;flex-wrap:wrap;align-items:center">
+        <input type="url" id="sheetUrlInput" placeholder="https://script.google.com/macros/s/…/exec" style="flex:1;min-width:220px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.45rem .75rem;font-size:.88rem;font-family:var(--font)"/>
+        <button class="btn btn-primary btn-sm" onclick="connectSheet()">Connect</button>
+        <button class="btn btn-secondary btn-sm" onclick="disconnectSheet()">Disconnect</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Add a Gig <button class="btn btn-secondary btn-sm" style="float:right;margin-top:-.2rem" onclick="toggleSetup()">⚙ Sheet Settings</button></h2>
+      <div id="add-msg"></div>
+      <div class="form-grid">
+        <div class="field"><label for="f-artist">Artist / Act *</label><input type="text" id="f-artist" placeholder="e.g. The Unthanks"/></div>
+        <div class="field"><label for="f-date">Date *</label><input type="date" id="f-date"/></div>
+        <div class="field"><label for="f-venue">Venue *</label><input type="text" id="f-venue" placeholder="e.g. Sage Gateshead"/></div>
+        <div class="field"><label for="f-cost">Cost (£) *</label><input type="number" id="f-cost" placeholder="0" min="0" step="0.01"/></div>
+        <div class="field"><label for="f-link">Ticket / Event Link</label><input type="url" id="f-link" placeholder="https://..."/></div>
+        <div class="field"><label for="f-submittedBy">Your Name (optional)</label><input type="text" id="f-submittedBy" placeholder="Anonymous"/></div>
+        <div class="field full"><label for="f-notes">Notes</label><textarea id="f-notes" placeholder="Doors, support acts, age restrictions…"></textarea></div>
+      </div>
+      <div style="margin-top:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap">
+        <button class="btn btn-primary" id="addBtn">＋ Add Gig</button>
+        <button class="btn btn-secondary" onclick="resetAddForm()">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LIST ── -->
+  <div class="page" id="page-list">
+    <div class="card">
+      <h2>Gig List</h2>
+      <div class="controls">
+        <input type="search" id="searchBox" placeholder="🔍 Search artist or venue…" oninput="renderList()" style="flex:1;min-width:160px"/>
+        <button class="btn btn-secondary btn-sm" onclick="shiftListMonth(-1)">‹ Prev</button>
+        <span id="listMonthLabel" style="font-size:.9rem;white-space:nowrap">All dates</span>
+        <button class="btn btn-secondary btn-sm" onclick="shiftListMonth(1)">Next ›</button>
+        <button class="btn btn-secondary btn-sm" onclick="clearMonthFilter()">All Dates</button>
+        <button class="btn btn-secondary btn-sm" onclick="toggleSort()">Sort: <span id="sortLabel">Date ↑</span></button>
+      </div>
+      <div class="controls" style="margin-bottom:1.25rem">
+        <button class="btn btn-secondary btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('importFile').click()">⬆ Import CSV</button>
+        <button class="btn btn-secondary btn-sm" onclick="fetchFromSheet()">↻ Refresh from Sheet</button>
+        <input type="file" id="importFile" accept=".csv,text/csv" onchange="importCSV(this)"/>
+      </div>
+      <div id="import-msg"></div>
+      <div class="table-wrap">
+        <table id="gigTable">
+          <thead><tr><th>Date</th><th>Artist</th><th>Venue</th><th>Cost</th><th>Link</th><th>Notes</th><th>Actions</th></tr></thead>
+          <tbody id="gigTableBody"></tbody>
+        </table>
+        <div id="listEmpty" class="empty-state" style="display:none">No gigs found. Add one!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CALENDAR ── -->
+  <div class="page" id="page-calendar">
+    <div class="card">
+      <div class="month-nav">
+        <button class="btn btn-secondary btn-sm" onclick="shiftCalMonth(-1)">‹</button>
+        <h3 id="calMonthLabel"></h3>
+        <button class="btn btn-secondary btn-sm" onclick="shiftCalMonth(1)">›</button>
+        <button class="btn btn-secondary btn-sm" onclick="jumpToday()">Today</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Detail Modal -->
+<div class="modal-bg" id="modalBg" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+    <h2 id="modalTitle" style="margin-bottom:1rem"></h2>
+    <div id="modalBody"></div>
+    <div style="margin-top:1.25rem;display:flex;gap:.75rem">
+      <button class="btn btn-secondary btn-sm" id="modalEditBtn">Edit</button>
+      <button class="btn btn-danger btn-sm" id="modalDelBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-bg" id="editModalBg" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="modal-close" onclick="closeEditModal()" aria-label="Close">×</button>
+    <h2 style="margin-bottom:1rem">Edit Gig</h2>
+    <div id="edit-msg"></div>
+    <div class="form-grid">
+      <input type="hidden" id="e-id"/>
+      <div class="field"><label for="e-artist">Artist *</label><input type="text" id="e-artist"/></div>
+      <div class="field"><label for="e-date">Date *</label><input type="date" id="e-date"/></div>
+      <div class="field"><label for="e-venue">Venue *</label><input type="text" id="e-venue"/></div>
+      <div class="field"><label for="e-cost">Cost (£) *</label><input type="number" id="e-cost" min="0" step="0.01"/></div>
+      <div class="field"><label for="e-link">Link</label><input type="url" id="e-link"/></div>
+      <div class="field"><label for="e-submittedBy">Your Name</label><input type="text" id="e-submittedBy"/></div>
+      <div class="field full"><label for="e-notes">Notes</label><textarea id="e-notes"></textarea></div>
+    </div>
+    <div style="margin-top:1.25rem;display:flex;gap:.75rem">
+      <button class="btn btn-primary" id="editSaveBtn">Save Changes</button>
+      <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONFIGURATION — paste your Apps Script URL here OR use the
+// ⚙ Sheet Settings button in the UI to set it interactively.
+// ═══════════════════════════════════════════════════════════════
+const CONFIG_KEY = 'ncl_gigs_sheet_url';
+let SHEET_URL = ''; // populated from in-memory config on init
+
+// ═══════════════════════════════════════════════════════════════
+// IN-MEMORY STATE
+// ═══════════════════════════════════════════════════════════════
+let gigs = [];
+let pendingDup = null;
+let listSortAsc = true;
+let listMonthFilter = null;
+let listNavDate = new Date();
+let calDate = new Date();
+let currentPage = 'add';
+let sheetConnected = false;
+
+// ═══════════════════════════════════════════════════════════════
+// SYNC STATUS INDICATOR
+// ═══════════════════════════════════════════════════════════════
+function setSync(state, label) {
+  const dot = document.getElementById('syncDot');
+  const lbl = document.getElementById('syncLabel');
+  dot.className = 'sync-dot ' + state; // ok | busy | err | (blank=no sheet)
+  lbl.textContent = label;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SHEET URL MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+function toggleSetup() {
+  const b = document.getElementById('setupBanner');
+  b.style.display = b.style.display === 'none' ? '' : 'none';
+  if (b.style.display !== 'none' && SHEET_URL) {
+    document.getElementById('sheetUrlInput').value = SHEET_URL;
+  }
+}
+
+function connectSheet() {
+  const url = document.getElementById('sheetUrlInput').value.trim();
+  if (!url.startsWith('https://script.google.com')) {
+    return showMsg('add-msg', 'That doesn\'t look like a valid Apps Script URL.', 'err');
+  }
+  SHEET_URL = url;
+  sheetConnected = true;
+  document.getElementById('setupBanner').style.display = 'none';
+  showMsg('add-msg', '✓ Sheet URL saved. Fetching gigs…', 'success');
+  fetchFromSheet();
+}
+
+function disconnectSheet() {
+  SHEET_URL = '';
+  sheetConnected = false;
+  setSync('', 'No sheet');
+  showMsg('add-msg', 'Disconnected from Google Sheet. Data remains in memory.', 'warn');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SHEET API CALLS
+// All calls go to the Apps Script web app as JSON.
+// Action types: GET (load all), add, update, delete
+// ═══════════════════════════════════════════════════════════════
+
+// Route all requests through corsproxy.io to bypass sandbox restrictions
+const PROXY = 'https://corsproxy.io/?';
+
+// Load all gigs from sheet via proxied GET
+async function fetchFromSheet() {
+  if (!SHEET_URL) return;
+  setSync('busy', 'Syncing…');
+  try {
+    const res = await fetch(PROXY + encodeURIComponent(SHEET_URL), { method: 'GET' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    gigs = data.gigs || [];
+    sortGigs(gigs);
+    setSync('ok', 'Synced');
+    sheetConnected = true;
+    if (currentPage === 'list') renderList();
+    if (currentPage === 'calendar') renderCalendar();
+  } catch (err) {
+    setSync('err', 'Sync error');
+    showMsg('add-msg', '⚠️ Could not reach Google Sheet: ' + err.message, 'err');
+  }
+}
+
+// Write to sheet via proxied POST
+async function syncToSheet(action, gig) {
+  if (!SHEET_URL) return;
+  setSync('busy', 'Saving…');
+  try {
+    const res = await fetch(PROXY + encodeURIComponent(SHEET_URL), {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action, gig })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    setSync('ok', 'Saved ✓');
+    setTimeout(() => setSync('ok', 'Synced'), 2000);
+  } catch (err) {
+    setSync('err', 'Save failed');
+    showMsg('add-msg', '⚠️ Sheet sync failed: ' + err.message + '. Data saved in app only.', 'warn');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════════
+const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function friendlyDate(iso) {
+  const [y,m,d] = iso.split('-').map(Number);
+  return new Date(y,m-1,d).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+}
+function fmtCost(n) { return n===0 ? 'Free' : '£'+Number(n).toFixed(2).replace(/\.00$/,''); }
+function toISO(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function sortGigs(arr) { return arr.sort((a,b) => a.date.localeCompare(b.date)); }
+
+function showMsg(id, text, type) {
+  const el = document.getElementById(id); if (!el) return;
+  el.innerHTML = `<div class="alert alert-${type}">${text}</div>`;
+  if (type==='success') setTimeout(()=>{ if(el) el.innerHTML=''; },4000);
+}
+function clearMsg(id) { const el=document.getElementById(id); if(el) el.innerHTML=''; }
+const gv = id => (document.getElementById(id)||{}).value||'';
+const sv = (id,val) => { const el=document.getElementById(id); if(el) el.value=val??''; };
+
+// ═══════════════════════════════════════════════════════════════
+// PAGE NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  currentPage = id;
+  if (id==='list') renderList();
+  if (id==='calendar') renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ADD GIG
+// ═══════════════════════════════════════════════════════════════
+document.getElementById('addBtn').addEventListener('click', async function() {
+  clearMsg('add-msg');
+  const artist   = gv('f-artist').trim();
+  const date     = gv('f-date').trim();
+  const venue    = gv('f-venue').trim();
+  const costRaw  = gv('f-cost');
+  if (!artist||!date||!venue||costRaw==='')
+    return showMsg('add-msg','Please fill in all required fields (Artist, Date, Venue, Cost).','err');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date))
+    return showMsg('add-msg','Please enter a valid date.','err');
+  const cost = parseFloat(costRaw);
+  if (isNaN(cost)||cost<0)
+    return showMsg('add-msg','Cost must be 0 or more.','err');
+
+  const candidate = {
+    id: uid(), artist, date, venue, cost,
+    link: gv('f-link').trim(), notes: gv('f-notes').trim(),
+    submittedBy: gv('f-submittedBy').trim(),
+    createdAt: new Date().toISOString()
+  };
+
+  const isDup = gigs.some(g =>
+    g.artist.toLowerCase()===artist.toLowerCase() &&
+    g.date===date && g.venue.toLowerCase()===venue.toLowerCase()
+  );
+  if (isDup) {
+    if (pendingDup && pendingDup.artist===artist && pendingDup.date===date && pendingDup.venue===venue) {
+      pendingDup = null; // confirmed override
+    } else {
+      pendingDup = {artist,date,venue};
+      return showMsg('add-msg','⚠️ A gig with this artist, date and venue already exists. Click "Add Gig" again to add anyway.','warn');
+    }
+  } else { pendingDup = null; }
+
+  gigs.push(candidate);
+  sortGigs(gigs);
+  await syncToSheet('add', candidate);
+  resetAddForm();
+  showMsg('add-msg',`✓ "${esc(artist)}" on ${friendlyDate(date)} added!`,'success');
+});
+
+function resetAddForm() {
+  ['f-artist','f-date','f-venue','f-cost','f-link','f-notes','f-submittedBy'].forEach(id=>sv(id,''));
+  pendingDup = null; clearMsg('add-msg');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GIG LIST
+// ═══════════════════════════════════════════════════════════════
+function renderList() {
+  let filtered = [...gigs];
+  const q = gv('searchBox').toLowerCase();
+  if (q) filtered = filtered.filter(g =>
+    g.artist.toLowerCase().includes(q)||g.venue.toLowerCase().includes(q)
+  );
+  if (listMonthFilter) {
+    const {year,month} = listMonthFilter;
+    filtered = filtered.filter(g=>{ const [y,m]=g.date.split('-').map(Number); return y===year&&m===month; });
+    document.getElementById('listMonthLabel').textContent =
+      new Date(year,month-1,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  } else {
+    document.getElementById('listMonthLabel').textContent = 'All dates';
+  }
+  if (!listSortAsc) filtered.reverse();
+
+  const tbody = document.getElementById('gigTableBody');
+  tbody.innerHTML = '';
+  if (!filtered.length) {
+    document.getElementById('listEmpty').style.display='';
+    document.getElementById('gigTable').style.display='none'; return;
+  }
+  document.getElementById('listEmpty').style.display='none';
+  document.getElementById('gigTable').style.display='';
+
+  filtered.forEach(g => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="white-space:nowrap">${friendlyDate(g.date)}</td>
+      <td><strong>${esc(g.artist)}</strong>${g.submittedBy?`<br><small style="color:var(--muted)">by ${esc(g.submittedBy)}</small>`:''}</td>
+      <td>${esc(g.venue)}</td>
+      <td><span class="cost-badge${g.cost>0?' paid':''}">${fmtCost(g.cost)}</span></td>
+      <td>${g.link?`<a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Tickets ↗</a>`:''}</td>
+      <td class="note-cell" title="${esc(g.notes)}">${esc(g.notes)}</td>
+      <td><div class="action-btns">
+        <button class="btn btn-secondary btn-sm" data-edit="${g.id}">Edit</button>
+        <button class="btn btn-danger btn-sm" data-del="${g.id}">Del</button>
+      </div></td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>openEdit(b.dataset.edit)));
+  tbody.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>deleteGig(b.dataset.del)));
+}
+
+function toggleSort() {
+  listSortAsc = !listSortAsc;
+  document.getElementById('sortLabel').textContent = listSortAsc?'Date ↑':'Date ↓';
+  renderList();
+}
+function shiftListMonth(dir) {
+  listNavDate = new Date(listNavDate.getFullYear(),listNavDate.getMonth()+dir,1);
+  listMonthFilter = {year:listNavDate.getFullYear(),month:listNavDate.getMonth()+1};
+  renderList();
+}
+function clearMonthFilter() { listMonthFilter=null; listNavDate=new Date(); renderList(); }
+
+// ═══════════════════════════════════════════════════════════════
+// EDIT GIG
+// ═══════════════════════════════════════════════════════════════
+function openEdit(id) {
+  const g = gigs.find(x=>x.id===id); if (!g) return;
+  sv('e-id',id); sv('e-artist',g.artist); sv('e-date',g.date);
+  sv('e-venue',g.venue); sv('e-cost',g.cost);
+  sv('e-link',g.link||''); sv('e-notes',g.notes||''); sv('e-submittedBy',g.submittedBy||'');
+  clearMsg('edit-msg');
+  document.getElementById('editModalBg').classList.add('open');
+}
+function closeEditModal() { document.getElementById('editModalBg').classList.remove('open'); }
+
+document.getElementById('editSaveBtn').addEventListener('click', async function() {
+  const id = gv('e-id');
+  const artist = gv('e-artist').trim(), date = gv('e-date').trim();
+  const venue  = gv('e-venue').trim(), costRaw = gv('e-cost');
+  if (!artist||!date||!venue||costRaw==='') return showMsg('edit-msg','Fill in all required fields.','err');
+  const cost = parseFloat(costRaw);
+  if (isNaN(cost)||cost<0) return showMsg('edit-msg','Cost must be ≥ 0.','err');
+
+  const idx = gigs.findIndex(g=>g.id===id); if (idx===-1) return;
+  gigs[idx] = {...gigs[idx], artist, date, venue, cost,
+    link:gv('e-link').trim(), notes:gv('e-notes').trim(), submittedBy:gv('e-submittedBy').trim()};
+  sortGigs(gigs);
+  await syncToSheet('update', gigs[idx]);
+  closeEditModal(); closeModal();
+  if (currentPage==='list') renderList();
+  if (currentPage==='calendar') renderCalendar();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// DELETE GIG
+// ═══════════════════════════════════════════════════════════════
+async function deleteGig(id, fromModal=false) {
+  if (!confirm('Delete this gig?')) return;
+  const gig = gigs.find(g=>g.id===id);
+  gigs = gigs.filter(g=>g.id!==id);
+  if (gig) await syncToSheet('delete', gig);
+  if (fromModal) closeModal();
+  if (currentPage==='list') renderList();
+  if (currentPage==='calendar') renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════════════════════════════
+function jumpToday() { calDate=new Date(); renderCalendar(); }
+function shiftCalMonth(dir) { calDate=new Date(calDate.getFullYear(),calDate.getMonth()+dir,1); renderCalendar(); }
+
+function renderCalendar() {
+  const yr=calDate.getFullYear(), mo=calDate.getMonth();
+  document.getElementById('calMonthLabel').textContent =
+    new Date(yr,mo,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  const byDate = {};
+  gigs.forEach(g=>{ const [gy,gm]=g.date.split('-').map(Number);
+    if(gy===yr&&gm===mo+1)(byDate[g.date]=byDate[g.date]||[]).push(g); });
+
+  const grid=document.getElementById('calGrid'); grid.innerHTML='';
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d=>{
+    const h=document.createElement('div'); h.className='cal-header'; h.textContent=d; grid.appendChild(h);
+  });
+  const firstDow=(new Date(yr,mo,1).getDay()+6)%7;
+  const daysInMo=new Date(yr,mo+1,0).getDate();
+  const prevDays=new Date(yr,mo,0).getDate();
+  const todayISO=toISO(new Date());
+  for(let i=firstDow-1;i>=0;i--) grid.appendChild(buildCalDay(prevDays-i,false,null,[]));
+  for(let d=1;d<=daysInMo;d++){
+    const iso=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    grid.appendChild(buildCalDay(d,true,iso,byDate[iso]||[],iso===todayISO));
+  }
+  const tail=(7-((firstDow+daysInMo)%7))%7;
+  for(let d=1;d<=tail;d++) grid.appendChild(buildCalDay(d,false,null,[]));
+}
+
+function buildCalDay(num,inMonth,iso,dayGigs,isToday=false){
+  const cell=document.createElement('div');
+  cell.className='cal-day'+(!inMonth?' other-month':'')+(isToday?' today':'')+(dayGigs.length?' has-gigs':'');
+  const numRow=document.createElement('div'); numRow.className='cal-day-num';
+  numRow.innerHTML=`<span>${num}</span>`+(dayGigs.length?`<span class="badge">${dayGigs.length}</span>`:'');
+  cell.appendChild(numRow);
+  dayGigs.forEach(g=>{
+    const chip=document.createElement('div'); chip.className='cal-gig';
+    chip.textContent=`${g.artist} @ ${g.venue}`;
+    chip.setAttribute('role','button'); chip.setAttribute('tabindex','0');
+    chip.addEventListener('click',()=>openModal(g.id));
+    chip.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')openModal(g.id);});
+    cell.appendChild(chip);
+  });
+  return cell;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DETAIL MODAL
+// ═══════════════════════════════════════════════════════════════
+function openModal(id){
+  const g=gigs.find(x=>x.id===id); if(!g) return;
+  document.getElementById('modalTitle').textContent=g.artist;
+  document.getElementById('modalBody').innerHTML=`
+    <div class="detail-row"><span class="detail-label">Date</span><span>${friendlyDate(g.date)}</span></div>
+    <div class="detail-row"><span class="detail-label">Venue</span><span>${esc(g.venue)}</span></div>
+    <div class="detail-row"><span class="detail-label">Cost</span><span>${fmtCost(g.cost)}</span></div>
+    ${g.link?`<div class="detail-row"><span class="detail-label">Link</span><a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Open ↗</a></div>`:''}
+    ${g.notes?`<div class="detail-row"><span class="detail-label">Notes</span><span>${esc(g.notes)}</span></div>`:''}
+    ${g.submittedBy?`<div class="detail-row"><span class="detail-label">Added by</span><span>${esc(g.submittedBy)}</span></div>`:''}`;
+  document.getElementById('modalEditBtn').onclick=()=>{closeModal();openEdit(id);};
+  document.getElementById('modalDelBtn').onclick=()=>deleteGig(id,true);
+  document.getElementById('modalBg').classList.add('open');
+}
+function closeModal(){ document.getElementById('modalBg').classList.remove('open'); }
+
+document.getElementById('modalBg').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+document.getElementById('editModalBg').addEventListener('click',e=>{if(e.target===e.currentTarget)closeEditModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeEditModal();}});
+
+// ═══════════════════════════════════════════════════════════════
+// CSV EXPORT
+// ═══════════════════════════════════════════════════════════════
+function exportCSV(){
+  let data=[...gigs];
+  const q=gv('searchBox').toLowerCase();
+  if(q) data=data.filter(g=>g.artist.toLowerCase().includes(q)||g.venue.toLowerCase().includes(q));
+  if(listMonthFilter){const{year,month}=listMonthFilter;data=data.filter(g=>{const[y,m]=g.date.split('-').map(Number);return y===year&&m===month;});}
+  if(!listSortAsc) data.reverse();
+  const cols=['artist','date','venue','cost','link','notes','submittedBy','createdAt'];
+  const rows=[cols.join(','),...data.map(g=>cols.map(c=>csvCell(g[c]??'')).join(','))];
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([rows.join('\r\n')],{type:'text/csv'}));
+  a.download='newcastle_gigs.csv'; a.click();
+}
+function csvCell(val){const s=String(val);return/[,"\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:`${s}`;}
+
+// ═══════════════════════════════════════════════════════════════
+// CSV IMPORT
+// ═══════════════════════════════════════════════════════════════
+function importCSV(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    const lines=e.target.result.split(/\r?\n/).filter(l=>l.trim());
+    if(!lines.length) return showMsg('import-msg','Empty file.','err');
+    const headers=parseCSVRow(lines[0]).map(h=>h.trim().toLowerCase());
+    const col=key=>headers.indexOf(key);
+    let added=0,skipped=0;
+    const newGigs=[];
+    for(let i=1;i<lines.length;i++){
+      const row=parseCSVRow(lines[i]);
+      const get=key=>col(key)>=0?(row[col(key)]||'').trim():'';
+      const artist=get('artist'),date=get('date'),venue=get('venue'),costRaw=get('cost');
+      if(!artist||!date||!venue){skipped++;continue;}
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){skipped++;continue;}
+      const cost=parseFloat(costRaw);
+      if(isNaN(cost)||cost<0){skipped++;continue;}
+      const dup=gigs.some(g=>g.artist.toLowerCase()===artist.toLowerCase()&&g.date===date&&g.venue.toLowerCase()===venue.toLowerCase());
+      if(dup){skipped++;continue;}
+      const ng={id:uid(),artist,date,venue,cost,link:get('link'),notes:get('notes'),
+        submittedBy:get('submittedby')||get('submitted_by'),createdAt:new Date().toISOString()};
+      gigs.push(ng); newGigs.push(ng); added++;
+    }
+    sortGigs(gigs);
+    // Sync all new gigs to sheet
+    for(const g of newGigs) await syncToSheet('add',g);
+    showMsg('import-msg',`Import complete: ${added} added, ${skipped} skipped.`,added>0?'success':'warn');
+    renderList();
+  };
+  reader.readAsText(file); input.value='';
+}
+
+function parseCSVRow(line){
+  const cells=[]; let cur=''; let inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+    else if(c===','&&!inQ){cells.push(cur);cur='';}
+    else cur+=c;
+  }
+  cells.push(cur); return cells;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+(function init(){
+  setSync('','No sheet');
+  renderList();
+  // If a URL was hardcoded above, connect automatically
+  if(SHEET_URL) { sheetConnected=true; fetchFromSheet(); }
+})();
+</script>
+</body>
+</html>
