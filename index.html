@@ -25,6 +25,7 @@
   .page{display:none}.page.active{display:block}
   .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem}
   h2{font-size:1.25rem;font-weight:700;margin-bottom:1.25rem;color:var(--text)}
+  h3{font-size:1rem;font-weight:700;color:var(--text)}
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
   @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
   .field{display:flex;flex-direction:column;gap:.4rem}
@@ -123,6 +124,8 @@
   #importFile{display:none}
   .setup-banner{background:rgba(124,106,247,.1);border:1px solid var(--accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem;font-size:.9rem;line-height:1.6}
   .setup-banner strong{color:var(--accent)}
+  .blurb-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1.25rem}
+  @media(max-width:600px){.blurb-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -233,30 +236,21 @@
     <div class="card">
       <div class="month-nav">
         <button class="btn btn-secondary btn-sm" onclick="shiftCalMonth(-1)">‹</button>
-        <h3 id="calMonthLabel"></h3>
+        <h3 id="calMonthLabel" style="flex:1;text-align:center;font-size:1.1rem"></h3>
         <button class="btn btn-secondary btn-sm" onclick="shiftCalMonth(1)">›</button>
         <button class="btn btn-secondary btn-sm" onclick="jumpToday()">Today</button>
       </div>
       <div class="cal-grid" id="calGrid"></div>
     </div>
-    <div class="card" style="margin-top:1.25rem">
-      <h2>Get Notified</h2>
-      <p style="color:var(--muted);font-size:.92rem;margin-bottom:1rem;line-height:1.6">Enter your email address below to receive a notification whenever a new gig is added to NCL Gigs.</p>
-      <div id="sub-msg"></div>
-      <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
-        <div class="field" style="flex:1;min-width:200px">
-          <label for="subEmail">Email Address</label>
-          <input type="email" id="subEmail" placeholder="your@email.com"/>
-        </div>
-        <button class="btn btn-primary" id="subBtn" style="margin-bottom:.05rem">Subscribe</button>
-      </div>
-    </div>
-        <div style="grid-column:1/-1">
-          <h2 style="margin-bottom:.6rem">🎸 Newcastle Gigs</h2>
-          <p style="color:var(--muted);line-height:1.7;font-size:.95rem">A community-maintained guide to live music happening in and around Newcastle upon Tyne. From headline acts to local heroes, this is your one-stop calendar for what's on, where, and how much it'll cost you.</p>
-        </div>
+
+    <!-- INFO BLURB -->
+    <div class="card">
+      <h2 style="margin-bottom:.6rem">🎸 Newcastle Gigs</h2>
+      <p style="color:var(--muted);line-height:1.7;font-size:.95rem">A community-maintained guide to live music happening in and around Newcastle upon Tyne. From headline acts to local heroes, this is your one-stop calendar for what's on, where, and how much it'll cost you.</p>
+
+      <div class="blurb-grid">
         <div>
-          <h3 style="font-size:1rem;font-weight:700;margin-bottom:.75rem;color:var(--text)">📖 How to use</h3>
+          <h3 style="margin-bottom:.75rem">📖 How to use</h3>
           <ul style="color:var(--muted);font-size:.9rem;line-height:1.8;padding-left:1.1rem">
             <li>Browse the <strong style="color:var(--text)">Calendar</strong> to see what's on each day</li>
             <li>Tap or click a date to see all gigs that day</li>
@@ -265,7 +259,7 @@
           </ul>
         </div>
         <div>
-          <h3 style="font-size:1rem;font-weight:700;margin-bottom:.75rem;color:var(--text)">🎨 Colour key</h3>
+          <h3 style="margin-bottom:.75rem">🎨 Colour key</h3>
           <div style="display:flex;flex-direction:column;gap:.6rem">
             <div style="display:flex;align-items:center;gap:.75rem">
               <div style="width:14px;height:14px;border-radius:3px;background:rgba(124,106,247,.18);border-left:3px solid var(--accent);flex-shrink:0"></div>
@@ -276,6 +270,19 @@
               <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Green</strong> — Local / mates band worth supporting!</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--border);margin-top:1.5rem;padding-top:1.5rem">
+        <h3 style="margin-bottom:.5rem">Get Notified</h3>
+        <p style="color:var(--muted);font-size:.92rem;margin-bottom:1rem;line-height:1.6">Enter your email address below to receive a notification whenever a new gig is added to NCL Gigs.</p>
+        <div id="sub-msg"></div>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
+          <div class="field" style="flex:1;min-width:200px">
+            <label for="subEmail">Email Address</label>
+            <input type="email" id="subEmail" placeholder="your@email.com"/>
+          </div>
+          <button class="btn btn-primary" id="subBtn">Subscribe</button>
         </div>
       </div>
     </div>
@@ -391,13 +398,9 @@ function disconnectSheet() {
 }
 
 // ── FETCH FROM SHEET ──────────────────────────────────────────
-// On mobile, direct fetch often fails silently causing delays.
-// We start JSONP immediately and give direct fetch 800ms to respond first.
-// Whichever resolves first wins.
 function fetchFromSheet() {
   if (!SHEET_URL) return;
   setSync('busy','Syncing…');
-
   function applyData(data) {
     gigs = data.gigs || [];
     genres = data.genres || [];
@@ -408,10 +411,7 @@ function fetchFromSheet() {
     if (currentPage==='list') renderList();
     if (currentPage==='calendar') renderCalendar();
   }
-
   let settled = false;
-
-  // JSONP — starts immediately, works on all browsers
   const jsonpPromise = new Promise((resolve, reject) => {
     const cbName = 'nclCb' + Date.now();
     const script = document.createElement('script');
@@ -422,18 +422,12 @@ function fetchFromSheet() {
     script.onerror = () => { cleanup(); reject(new Error('JSONP failed')); };
     document.head.appendChild(script);
   });
-
-  // Direct fetch — gets an 800ms head start before JSONP can win
-  // This means desktop (where fetch works) stays fast
-  const directPromise = fetch(SHEET_URL, {method:'GET', redirect:'follow'})
-    .then(res => { if (!res.ok) throw new Error('HTTP '+res.status); return res.json(); });
-
-  // Direct fetch wins if it resolves within 800ms, otherwise JSONP takes over
   const timedDirect = new Promise((resolve, reject) => {
-    directPromise.then(resolve).catch(reject);
+    fetch(SHEET_URL, {method:'GET',redirect:'follow'})
+      .then(res => { if (!res.ok) throw new Error('HTTP '+res.status); return res.json(); })
+      .then(resolve).catch(reject);
     setTimeout(() => reject(new Error('direct fetch too slow')), 800);
   });
-
   timedDirect
     .then(data => { settled=true; applyData(data); })
     .catch(() => {
@@ -638,8 +632,7 @@ function clearAllFilters() {
   const gf=document.getElementById('genreFilter'); if(gf) gf.value='';
   const mp=document.getElementById('maxPrice'); if(mp) mp.value='';
   const lo=document.getElementById('localOnly'); if(lo) lo.checked=false;
-  listMonthFilter=null; listNavDate=new Date();
-  renderList();
+  listMonthFilter=null; listNavDate=new Date(); renderList();
 }
 
 // ── EDIT GIG ──────────────────────────────────────────────────
@@ -772,6 +765,17 @@ document.getElementById('modalBg').addEventListener('click',e=>{ if(e.target===e
 document.getElementById('editModalBg').addEventListener('click',e=>{ if(e.target===e.currentTarget)closeEditModal(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeModal();closeEditModal();closeDayModal();} });
 
+// ── EMAIL SUBSCRIBE ───────────────────────────────────────────
+document.getElementById('subBtn').addEventListener('click', async function() {
+  const email=(document.getElementById('subEmail').value||'').trim();
+  if (!email||!email.includes('@')) return showMsg('sub-msg','Please enter a valid email address.','err');
+  this.disabled=true;
+  await syncToSheet('subscribe', null, null, email);
+  showMsg('sub-msg','✓ You\'re subscribed! You\'ll receive an email when new gigs are added.','success');
+  document.getElementById('subEmail').value='';
+  this.disabled=false;
+});
+
 // ── CSV EXPORT ────────────────────────────────────────────────
 function exportCSV(){
   let data=[...gigs];
@@ -831,19 +835,7 @@ function parseCSVRow(line){
   cells.push(cur); return cells;
 }
 
-// ── EMAIL SUBSCRIBE ───────────────────────────────────────────
-document.getElementById('subBtn').addEventListener('click', async function() {
-  const email = (document.getElementById('subEmail').value||'').trim();
-  if (!email || !email.includes('@'))
-    return showMsg('sub-msg','Please enter a valid email address.','err');
-  this.disabled = true;
-  await syncToSheet('subscribe', null, null, email);
-  showMsg('sub-msg','✓ You\'re subscribed! You\'ll receive an email when new gigs are added.','success');
-  document.getElementById('subEmail').value = '';
-  this.disabled = false;
-});
-
-
+// ── INIT ──────────────────────────────────────────────────────
 (function init(){
   try { const saved=localStorage.getItem('ncl_gigs_sheet_url'); if(saved) SHEET_URL=saved; } catch(e) {}
   if (SHEET_URL) { sheetConnected=true; fetchFromSheet(); }
