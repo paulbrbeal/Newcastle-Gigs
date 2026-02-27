@@ -85,9 +85,11 @@
     .cal-day-num .badge{font-size:.7rem;padding:.1rem .45rem}
   }
   .day-modal-list{list-style:none;padding:0;margin:0}
-  .day-modal-item{padding:.75rem 0;border-bottom:1px solid var(--border);cursor:pointer}
+  .day-modal-item{padding:.75rem;border-bottom:1px solid var(--border);cursor:pointer;border-radius:6px;border-left:3px solid transparent;margin-bottom:.25rem}
   .day-modal-item:last-child{border-bottom:none}
   .day-modal-item:hover .dmi-artist{color:var(--accent)}
+  .day-modal-item.is-local{background:rgba(76,175,130,.08);border-left:3px solid var(--success)}
+  .day-modal-item.is-local .dmi-artist{color:var(--success)}
   .dmi-artist{font-weight:700;font-size:.95rem;margin-bottom:.2rem}
   .dmi-meta{font-size:.82rem;color:var(--muted)}
   .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:1rem}
@@ -191,6 +193,44 @@
         <button class="btn btn-secondary btn-sm" onclick="jumpToday()">Today</button>
       </div>
       <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <!-- BLURB -->
+    <div class="card" style="margin-top:1.25rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem">
+
+        <div style="grid-column:1/-1">
+          <h2 style="margin-bottom:.6rem">🎸 Newcastle Gigs</h2>
+          <p style="color:var(--muted);line-height:1.7;font-size:.95rem">A community-maintained guide to live music happening in and around Newcastle upon Tyne. From headline acts to local heroes, this is your one-stop calendar for what's on, where, and how much it'll cost you.</p>
+        </div>
+
+        <div>
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:.75rem;color:var(--text)">📖 How to use</h3>
+          <ul style="color:var(--muted);font-size:.9rem;line-height:1.8;padding-left:1.1rem">
+            <li>Browse the <strong style="color:var(--text)">Calendar</strong> to see what's on each day</li>
+            <li>Tap or click a date to see all gigs that day</li>
+            <li>Use the <strong style="color:var(--text)">Gig List</strong> to search, filter by month, or export</li>
+            <li>Hit <strong style="color:var(--text)">Add a Gig</strong> to submit something we've missed</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:.75rem;color:var(--text)">🎨 Colour key</h3>
+          <div style="display:flex;flex-direction:column;gap:.6rem">
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <div style="width:14px;height:14px;border-radius:3px;background:rgba(124,106,247,.18);border-left:3px solid var(--accent);flex-shrink:0"></div>
+              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Purple</strong> — Standard gig listing</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <div style="width:14px;height:14px;border-radius:3px;background:rgba(76,175,130,.2);border-left:3px solid var(--success);flex-shrink:0"></div>
+              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Green</strong> — Local / mates band worth supporting!</span>
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
     </div>
   </div>
 
@@ -609,7 +649,7 @@ function openDayModal(iso, dayGigs) {
   list.innerHTML = '';
   dayGigs.forEach(g => {
     const li = document.createElement('li');
-    li.className = 'day-modal-item';
+    li.className = 'day-modal-item' + (g.isLocal ? ' is-local' : '');
     li.innerHTML = `<div class="dmi-artist">${esc(g.artist)}${g.isLocal?'<span class="local-badge">Local</span>':''}</div>
       <div class="dmi-meta">${esc(g.venue)} · ${fmtCost(g.cost)}</div>`;
     li.addEventListener('click', () => { closeDayModal(); openModal(g.id); });
