@@ -295,11 +295,9 @@ function disconnectSheet() {
 async function fetchFromSheet() {
   if (!SHEET_URL) return;
   setSync('busy', 'Syncing…');
+  // Try direct fetch first, fall back to JSONP if it fails
   try {
-    const res = await fetch(SHEET_URL, {
-      method: 'GET',
-      redirect: 'follow'
-    });
+    const res = await fetch(SHEET_URL, { method: 'GET', redirect: 'follow' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     if (data.error) throw new Error(data.error);
@@ -310,9 +308,50 @@ async function fetchFromSheet() {
     if (currentPage === 'list') renderList();
     if (currentPage === 'calendar') renderCalendar();
   } catch (err) {
-    setSync('err', 'Sync error');
-    showMsg('add-msg', '⚠️ Could not reach Google Sheet: ' + err.message, 'err');
+    // Fall back to JSONP
+    fetchFromSheetJSONP();
   }
+}
+
+function fetchFromSheetJSONP() {
+  return new Promise((resolve) => {
+    const cbName = 'nclCb' + Date.now();
+    const script = document.createElement('script');
+    const tid = setTimeout(() => {
+      cleanup();
+      setSync('err', 'Timeout');
+      showMsg('add-msg', '⚠️ Sheet request timed out. Check your URL.', 'err');
+      resolve();
+    }, 12000);
+    window[cbName] = (data) => {
+      cleanup();
+      if (data.error) {
+        setSync('err', 'Error');
+        showMsg('add-msg', '⚠️ Sheet error: ' + data.error, 'err');
+      } else {
+        gigs = data.gigs || [];
+        sortGigs(gigs);
+        setSync('ok', 'Synced');
+        sheetConnected = true;
+        if (currentPage === 'list') renderList();
+        if (currentPage === 'calendar') renderCalendar();
+      }
+      resolve();
+    };
+    function cleanup() {
+      clearTimeout(tid);
+      delete window[cbName];
+      try { document.head.removeChild(script); } catch(e) {}
+    }
+    script.src = SHEET_URL + '?callback=' + cbName;
+    script.onerror = () => {
+      cleanup();
+      setSync('err', 'Failed');
+      showMsg('add-msg', '⚠️ Could not load from Sheet.', 'err');
+      resolve();
+    };
+    document.head.appendChild(script);
+  });
 }
     function cleanup() {
       clearTimeout(tid);
