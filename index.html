@@ -601,7 +601,7 @@ function openDayModal(iso, dayGigs) {
   // On mobile, tapping a day with gigs opens the day summary modal
   if (dayGigs.length) {
     cell.addEventListener('click', (e) => {
-      if (window.innerWidth <= 700 && !e.target.closest('.cal-gig')) {
+      if (!e.target.closest('.cal-gig')) {
         openDayModal(iso, dayGigs);
       }
     });
