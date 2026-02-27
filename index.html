@@ -63,7 +63,18 @@
   .cal-day-num .badge{background:var(--accent);color:#fff;border-radius:20px;font-size:.65rem;padding:.05rem .4rem}
   .cal-gig{background:rgba(124,106,247,.18);border-left:2px solid var(--accent);border-radius:3px;padding:.2rem .35rem;font-size:.72rem;margin-bottom:.25rem;cursor:pointer;line-height:1.3;transition:.15s}
   .cal-gig:hover{background:rgba(124,106,247,.35)}
-  @media(max-width:700px){.cal-day{min-height:60px;padding:.3rem}.cal-gig{display:none}}
+  @media(max-width:700px){
+    .cal-day{min-height:60px;padding:.3rem;cursor:pointer}
+    .cal-day.has-gigs:hover{border-color:var(--accent)}
+    .cal-gig{display:none}
+    .cal-day-num .badge{font-size:.7rem;padding:.1rem .45rem}
+  }
+  .day-modal-list{list-style:none;padding:0;margin:0}
+  .day-modal-item{padding:.75rem 0;border-bottom:1px solid var(--border);cursor:pointer}
+  .day-modal-item:last-child{border-bottom:none}
+  .day-modal-item:hover .dmi-artist{color:var(--accent)}
+  .dmi-artist{font-weight:700;font-size:.95rem;margin-bottom:.2rem}
+  .dmi-meta{font-size:.82rem;color:var(--muted)}
   .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:1rem}
   .modal-bg.open{display:flex}
   .modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto}
@@ -103,7 +114,7 @@
       </div>
     </div>
     <div class="card">
-      <h2>Add a Gig</h2>
+      <h2>Add a Gig <button class="btn btn-secondary btn-sm" style="float:right;margin-top:-.2rem" onclick="toggleSetup()">⚙ Sheet Settings</button></h2>
       <div id="add-msg"></div>
       <div class="form-grid">
         <div class="field"><label for="f-artist">Artist / Act *</label><input type="text" id="f-artist" placeholder="e.g. The Unthanks"/></div>
@@ -165,6 +176,15 @@
 
 </main>
 
+<!-- Day Modal (mobile calendar tap) -->
+<div class="modal-bg" id="dayModalBg" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="modal-close" onclick="closeDayModal()" aria-label="Close">×</button>
+    <h2 id="dayModalTitle" style="margin-bottom:1rem"></h2>
+    <ul class="day-modal-list" id="dayModalList"></ul>
+  </div>
+</div>
+
 <!-- Detail Modal -->
 <div class="modal-bg" id="modalBg" role="dialog" aria-modal="true">
   <div class="modal">
@@ -207,7 +227,7 @@
 // ⚙ Sheet Settings button in the UI to set it interactively.
 // ═══════════════════════════════════════════════════════════════
 const CONFIG_KEY = 'ncl_gigs_sheet_url';
-let SHEET_URL = 'https://script.google.com/macros/s/AKfycbxD-cwiXgPJL4wBGWWUWxtINfwTPfSrrPwL60WRlDufyC_vDbehTJz31MkZuhr9vwTfMg/exec'; // populated from in-memory config on init
+let SHEET_URL = ''; // populated from in-memory config on init
 
 // ═══════════════════════════════════════════════════════════════
 // IN-MEMORY STATE
@@ -578,7 +598,35 @@ function buildCalDay(num,inMonth,iso,dayGigs,isToday=false){
 // ═══════════════════════════════════════════════════════════════
 // DETAIL MODAL
 // ═══════════════════════════════════════════════════════════════
-function openModal(id){
+function openDayModal(iso, dayGigs) {
+  if (!dayGigs.length) return;
+  const [y,m,d] = iso.split('-').map(Number);
+  document.getElementById('dayModalTitle').textContent =
+    new Date(y,m-1,d).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  const list = document.getElementById('dayModalList');
+  list.innerHTML = '';
+  // On mobile, tapping a day with gigs opens the day summary modal
+  if (dayGigs.length) {
+    cell.addEventListener('click', (e) => {
+      if (window.innerWidth <= 700 && !e.target.closest('.cal-gig')) {
+        openDayModal(iso, dayGigs);
+      }
+    });
+  }
+  dayGigs.forEach(g => {
+    const li = document.createElement('li');
+    li.className = 'day-modal-item';
+    li.innerHTML = `
+      <div class="dmi-artist">${esc(g.artist)}</div>
+      <div class="dmi-meta">${esc(g.venue)} · ${fmtCost(g.cost)}</div>`;
+    li.addEventListener('click', () => { closeDayModal(); openModal(g.id); });
+    list.appendChild(li);
+  });
+  document.getElementById('dayModalBg').classList.add('open');
+}
+function closeDayModal() { document.getElementById('dayModalBg').classList.remove('open'); }
+
+
   const g=gigs.find(x=>x.id===id); if(!g) return;
   document.getElementById('modalTitle').textContent=g.artist;
   document.getElementById('modalBody').innerHTML=`
@@ -594,6 +642,7 @@ function openModal(id){
 }
 function closeModal(){ document.getElementById('modalBg').classList.remove('open'); }
 
+document.getElementById('dayModalBg').addEventListener('click', e => { if(e.target===e.currentTarget) closeDayModal(); });
 document.getElementById('modalBg').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
 document.getElementById('editModalBg').addEventListener('click',e=>{if(e.target===e.currentTarget)closeEditModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeEditModal();}});
