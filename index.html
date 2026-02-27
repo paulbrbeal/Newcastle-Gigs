@@ -146,7 +146,7 @@
 
   <div class="page" id="page-add">
     <div id="setupBanner" class="setup-banner" style="display:none">
-      <strong>📋 Connect your Google Sheet</strong><br>
+      <strong>Connect your Google Sheet</strong><br>
       Paste your Apps Script Web App URL below to enable live sync.<br>
       <div style="display:flex;gap:.75rem;margin-top:.75rem;flex-wrap:wrap;align-items:center">
         <input type="url" id="sheetUrlInput" placeholder="https://script.google.com/macros/s/…/exec" style="flex:1;min-width:220px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.45rem .75rem;font-size:.88rem;font-family:var(--font)"/>
@@ -184,7 +184,7 @@
         <div class="field full"><label for="f-notes">Notes</label><textarea id="f-notes" placeholder="Doors, support acts, age restrictions…"></textarea></div>
       </div>
       <div style="margin-top:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap">
-        <button class="btn btn-primary" id="addBtn">＋ Add Gig</button>
+        <button class="btn btn-primary" id="addBtn">+ Add Gig</button>
         <button class="btn btn-secondary" onclick="resetAddForm()">Clear</button>
       </div>
     </div>
@@ -196,7 +196,7 @@
     <div class="card">
       <h2>Gig List</h2>
       <div class="controls">
-        <input type="search" id="searchBox" placeholder="🔍 Artist or venue…" oninput="renderList()" style="flex:1;min-width:140px"/>
+        <input type="search" id="searchBox" placeholder="Search artist or venue…" oninput="renderList()" style="flex:1;min-width:140px"/>
         <select id="genreFilter" onchange="renderList()" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.45rem .75rem;font-size:.9rem;font-family:var(--font);-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22%3E%3Cpath fill=%22%238890a8%22 d=%22M6 8L1 3h10z%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right .75rem center;padding-right:2rem">
           <option value="">All Genres</option>
         </select>
@@ -246,53 +246,46 @@
       </div>
       <div class="cal-grid" id="calGrid"></div>
     </div>
-
-```
-<!-- INFO BLURB -->
-<div class="card">
-  <h2 style="margin-bottom:.6rem">North East Gigs</h2>
-  <p style="color:var(--muted);line-height:1.7;font-size:.95rem">A community-maintained guide to live music happening in and around the North East of England. From headline acts to local heroes, this is your one-stop calendar for what's on, where, and how much it'll cost you.</p>
-
-  <div class="blurb-grid">
-    <div>
-      <h3 style="margin-bottom:.75rem">How to use</h3>
-      <ul style="color:var(--muted);font-size:.9rem;line-height:1.8;padding-left:1.1rem">
-        <li>Browse the <strong style="color:var(--text)">Calendar</strong> to see what's on each day</li>
-        <li>Tap or click a date to see all gigs that day</li>
-        <li>Use the <strong style="color:var(--text)">Gig List</strong> to search, filter by month, or export</li>
-        <li>Hit <strong style="color:var(--text)">Add a Gig</strong> to submit something we've missed</li>
-      </ul>
-    </div>
-    <div>
-      <h3 style="margin-bottom:.75rem">Colour key</h3>
-      <div style="display:flex;flex-direction:column;gap:.6rem">
-        <div style="display:flex;align-items:center;gap:.75rem">
-          <div style="width:14px;height:14px;border-radius:3px;background:rgba(124,106,247,.18);border-left:3px solid var(--accent);flex-shrink:0"></div>
-          <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Purple</strong> — Standard gig listing</span>
+    <div class="card">
+      <h2 style="margin-bottom:.6rem">North East Gigs</h2>
+      <p style="color:var(--muted);line-height:1.7;font-size:.95rem">A community-maintained guide to live music happening in and around the North East of England. From headline acts to local heroes, this is your one-stop calendar for what's on, where, and how much it'll cost you.</p>
+      <div class="blurb-grid">
+        <div>
+          <h3 style="margin-bottom:.75rem">How to use</h3>
+          <ul style="color:var(--muted);font-size:.9rem;line-height:1.8;padding-left:1.1rem">
+            <li>Browse the <strong style="color:var(--text)">Calendar</strong> to see what's on each day</li>
+            <li>Tap or click a date to see all gigs that day</li>
+            <li>Use the <strong style="color:var(--text)">Gig List</strong> to search, filter by month, or export</li>
+            <li>Hit <strong style="color:var(--text)">Add a Gig</strong> to submit something we've missed</li>
+          </ul>
         </div>
-        <div style="display:flex;align-items:center;gap:.75rem">
-          <div style="width:14px;height:14px;border-radius:3px;background:rgba(76,175,130,.2);border-left:3px solid var(--success);flex-shrink:0"></div>
-          <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Green</strong> — Local / mates band worth supporting!</span>
+        <div>
+          <h3 style="margin-bottom:.75rem">Colour key</h3>
+          <div style="display:flex;flex-direction:column;gap:.6rem">
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <div style="width:14px;height:14px;border-radius:3px;background:rgba(124,106,247,.18);border-left:3px solid var(--accent);flex-shrink:0"></div>
+              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Purple</strong> — Standard gig listing</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <div style="width:14px;height:14px;border-radius:3px;background:rgba(76,175,130,.2);border-left:3px solid var(--success);flex-shrink:0"></div>
+              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Green</strong> — Local / mates band worth supporting!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--border);margin-top:1.5rem;padding-top:1.5rem">
+        <h3 style="margin-bottom:.5rem">Get Notified</h3>
+        <p style="color:var(--muted);font-size:.92rem;margin-bottom:1rem;line-height:1.6">Enter your email address to receive a weekly round-up every Friday, including new gigs recently added, as well as shows coming up next week.</p>
+        <div id="sub-msg"></div>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
+          <div class="field" style="flex:1;min-width:200px">
+            <label for="subEmail">Email Address</label>
+            <input type="email" id="subEmail" placeholder="your@email.com"/>
+          </div>
+          <button class="btn btn-primary" id="subBtn">Subscribe</button>
         </div>
       </div>
     </div>
-  </div>
-
-  <div style="border-top:1px solid var(--border);margin-top:1.5rem;padding-top:1.5rem">
-    <h3 style="margin-bottom:.5rem">Get Notified</h3>
-    <p style="color:var(--muted);font-size:.92rem;margin-bottom:1rem;line-height:1.6">Enter your email address below to receive a notification whenever a new gig is added to North East Gigs.</p>
-    <div id="sub-msg"></div>
-    <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
-      <div class="field" style="flex:1;min-width:200px">
-        <label for="subEmail">Email Address</label>
-        <input type="email" id="subEmail" placeholder="your@email.com"/>
-      </div>
-      <button class="btn btn-primary" id="subBtn">Subscribe</button>
-    </div>
-  </div>
-</div>
-```
-
   </div>
 
 </main>
@@ -338,7 +331,7 @@
       <div class="field"><label for="e-image">Image URL</label><input type="url" id="e-image" placeholder="https://... (optional)"/></div>
       <div class="field" style="justify-content:flex-end">
         <label style="visibility:hidden;font-size:.85rem">spacer</label>
-                  <label class="toggle-field" for="e-isLocal"><input type="checkbox" id="e-isLocal"/><span>Local / Mates Band</span></label>
+        <label class="toggle-field" for="e-isLocal"><input type="checkbox" id="e-isLocal"/><span>Local / Mates Band</span></label>
       </div>
       <div class="field"><label for="e-submittedBy">Your Name</label><input type="text" id="e-submittedBy"/></div>
       <div class="field full">
@@ -387,17 +380,15 @@ function setSync(state, label) {
 function toggleSetup() {
   const b = document.getElementById('setupBanner');
   b.style.display = b.style.display === 'none' ? '' : 'none';
-  if (b.style.display !== 'none' && SHEET_URL)
-    document.getElementById('sheetUrlInput').value = SHEET_URL;
+  if (b.style.display !== 'none' && SHEET_URL) document.getElementById('sheetUrlInput').value = SHEET_URL;
 }
 function connectSheet() {
   const url = document.getElementById('sheetUrlInput').value.trim();
-  if (!url.startsWith('https://script.google.com'))
-    return showMsg('add-msg','That doesn\'t look like a valid Apps Script URL.','err');
+  if (!url.startsWith('https://script.google.com')) return showMsg('add-msg','That doesn\'t look like a valid Apps Script URL.','err');
   SHEET_URL = url; sheetConnected = true;
   try { localStorage.setItem('ncl_gigs_sheet_url', url); } catch(e) {}
   document.getElementById('setupBanner').style.display = 'none';
-  showMsg('add-msg','✓ Sheet URL saved. Fetching gigs…','success');
+  showMsg('add-msg','Sheet URL saved. Fetching gigs…','success');
   fetchFromSheet();
 }
 function disconnectSheet() {
@@ -440,13 +431,7 @@ function fetchFromSheet() {
   });
   timedDirect
     .then(data => { settled=true; applyData(data); })
-    .catch(() => {
-      if (!settled) {
-        jsonpPromise
-          .then(data => { settled=true; applyData(data); })
-          .catch(() => { setSync('err','Failed'); showMsg('add-msg','⚠️ Could not load from Sheet.','err'); });
-      }
-    });
+    .catch(() => { if (!settled) { jsonpPromise.then(data => { settled=true; applyData(data); }).catch(() => { setSync('err','Failed'); showMsg('add-msg','Could not load from Sheet.','err'); }); } });
 }
 
 // ── SYNC TO SHEET ─────────────────────────────────────────────
@@ -454,17 +439,10 @@ async function syncToSheet(action, gig, genre, email) {
   if (!SHEET_URL) return;
   setSync('busy','Saving…');
   try {
-    await fetch(SHEET_URL, {
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'text/plain'},
-      body: JSON.stringify({action, gig, genre, email})
-    });
-    setSync('ok','Saved ✓');
+    await fetch(SHEET_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({action, gig, genre, email}) });
+    setSync('ok','Saved');
     setTimeout(() => setSync('ok','Synced'), 2000);
-  } catch(err) {
-    setSync('err','Save failed');
-    showMsg('add-msg','⚠️ Save failed: ' + err.message,'warn');
-  }
+  } catch(err) { setSync('err','Save failed'); showMsg('add-msg','Save failed: ' + err.message,'warn'); }
 }
 
 // ── UTILITIES ─────────────────────────────────────────────────
@@ -577,12 +555,12 @@ document.getElementById('addBtn').addEventListener('click', async function() {
   const isDup=gigs.some(g=>g.artist.toLowerCase()===artist.toLowerCase()&&g.date===date&&g.venue.toLowerCase()===venue.toLowerCase());
   if (isDup) {
     if (pendingDup&&pendingDup.artist===artist&&pendingDup.date===date&&pendingDup.venue===venue) { pendingDup=null; }
-    else { pendingDup={artist,date,venue}; return showMsg('add-msg','⚠️ This gig already exists. Click "Add Gig" again to add anyway.','warn'); }
+    else { pendingDup={artist,date,venue}; return showMsg('add-msg','This gig already exists. Click "Add Gig" again to add anyway.','warn'); }
   } else { pendingDup=null; }
   gigs.push(candidate); sortGigs(gigs);
   await syncToSheet('add', candidate);
   resetAddForm();
-  showMsg('add-msg',`✓ "${esc(artist)}" on ${friendlyDate(date)} added!`,'success');
+  showMsg('add-msg','Added "'+esc(artist)+'" on '+friendlyDate(date)+'!','success');
 });
 
 function resetAddForm() {
@@ -622,7 +600,7 @@ function renderList() {
       <td><strong>${esc(g.artist)}</strong>${g.isLocal?'<span class="local-badge">Local</span>':''}${g.genres?g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join(''):''}${g.submittedBy?`<br><small style="color:var(--muted)">by ${esc(g.submittedBy)}</small>`:''}</td>
       <td>${esc(g.venue)}</td>
       <td><span class="cost-badge${g.cost>0?' paid':''}">${fmtCost(g.cost)}</span></td>
-      <td>${g.link?`<a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Tickets ↗</a>`:''}</td>
+      <td>${g.link?`<a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Tickets</a>`:''}</td>
       <td class="note-cell" title="${esc(g.notes)}">${esc(g.notes)}</td>
       <td><div class="action-btns">
         <button class="btn btn-secondary btn-sm" data-edit="${g.id}">Edit</button>
@@ -664,7 +642,7 @@ document.getElementById('editSaveBtn').addEventListener('click', async function(
   const venue=gv('e-venue').trim(), costRaw=gv('e-cost');
   if (!artist||!date||!venue||costRaw==='') return showMsg('edit-msg','Fill in all required fields.','err');
   const cost=parseFloat(costRaw);
-  if (isNaN(cost)||cost<0) return showMsg('edit-msg','Cost must be ≥ 0.','err');
+  if (isNaN(cost)||cost<0) return showMsg('edit-msg','Cost must be 0 or more.','err');
   const idx=gigs.findIndex(g=>g.id===id); if(idx===-1) return;
   gigs[idx]={...gigs[idx], artist, date, venue, cost,
     link:gv('e-link').trim(), image:gv('e-image').trim(),
@@ -751,24 +729,25 @@ function openDayModal(iso, dayGigs) {
 function closeDayModal() { document.getElementById('dayModalBg').classList.remove('open'); }
 
 // ── DETAIL MODAL ──────────────────────────────────────────────
-function openModal(id){
-  const g=gigs.find(x=>x.id===id); if(!g) return;
-  document.getElementById('modalTitle').textContent=g.artist;
-  document.getElementById('modalBody').innerHTML=`
-    ${g.image?`<img class="modal-img" src="${esc(g.image)}" alt="${esc(g.artist)}" onerror="this.style.display='none'"/>`:''}
-    <div class="detail-row"><span class="detail-label">Date</span><span>${friendlyDate(g.date)}</span></div>
-    <div class="detail-row"><span class="detail-label">Venue</span><span>${esc(g.venue)}</span></div>
-    <div class="detail-row"><span class="detail-label">Cost</span><span>${fmtCost(g.cost)}</span></div>
-    ${g.isLocal?'<div class="detail-row"><span class="detail-label">Type</span><span><span class="local-badge">Local Band</span></span></div>':''}
-    ${g.genres?`<div class="detail-row"><span class="detail-label">Genres</span><span>${g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join('')}</span></div>`:''}
-    ${g.link?`<div class="detail-row"><span class="detail-label">Link</span><a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Open ↗</a></div>`:''}
-    ${g.notes?`<div class="detail-row"><span class="detail-label">Notes</span><span>${esc(g.notes)}</span></div>`:''}
-    ${g.submittedBy?`<div class="detail-row"><span class="detail-label">Added by</span><span>${esc(g.submittedBy)}</span></div>`:''}`;
-  document.getElementById('modalEditBtn').onclick=()=>{ closeModal(); openEdit(id); };
-  document.getElementById('modalDelBtn').onclick=()=>deleteGig(id,true);
+function openModal(id) {
+  const g = gigs.find(x => x.id === id); if (!g) return;
+  document.getElementById('modalTitle').textContent = g.artist;
+  let html = '';
+  if (g.image) html += `<img class="modal-img" src="${esc(g.image)}" alt="${esc(g.artist)}" onerror="this.style.display='none'"/>`;
+  html += `<div class="detail-row"><span class="detail-label">Date</span><span>${friendlyDate(g.date)}</span></div>`;
+  html += `<div class="detail-row"><span class="detail-label">Venue</span><span>${esc(g.venue)}</span></div>`;
+  html += `<div class="detail-row"><span class="detail-label">Cost</span><span>${fmtCost(g.cost)}</span></div>`;
+  if (g.isLocal) html += `<div class="detail-row"><span class="detail-label">Type</span><span><span class="local-badge">Local Band</span></span></div>`;
+  if (g.genres) html += `<div class="detail-row"><span class="detail-label">Genres</span><span>${g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join('')}</span></div>`;
+  if (g.notes) html += `<div class="detail-row"><span class="detail-label">Notes</span><span>${esc(g.notes)}</span></div>`;
+  if (g.submittedBy) html += `<div class="detail-row"><span class="detail-label">Added by</span><span>${esc(g.submittedBy)}</span></div>`;
+  if (g.link) html += `<div style="margin-top:1.25rem"><a href="${esc(g.link)}" target="_blank" rel="noopener" class="btn btn-primary" style="width:100%;justify-content:center;display:flex;text-decoration:none">Get Tickets</a></div>`;
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalEditBtn').onclick = () => { closeModal(); openEdit(id); };
+  document.getElementById('modalDelBtn').onclick = () => deleteGig(id, true);
   document.getElementById('modalBg').classList.add('open');
 }
-function closeModal(){ document.getElementById('modalBg').classList.remove('open'); }
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
 
 document.getElementById('dayModalBg').addEventListener('click',e=>{ if(e.target===e.currentTarget)closeDayModal(); });
 document.getElementById('modalBg').addEventListener('click',e=>{ if(e.target===e.currentTarget)closeModal(); });
@@ -781,7 +760,7 @@ document.getElementById('subBtn').addEventListener('click', async function() {
   if (!email||!email.includes('@')) return showMsg('sub-msg','Please enter a valid email address.','err');
   this.disabled=true;
   await syncToSheet('subscribe', null, null, email);
-  showMsg('sub-msg','✓ You\'re subscribed! You\'ll receive an email when new gigs are added.','success');
+  showMsg('sub-msg','You\'re subscribed! You\'ll receive an email when new gigs are added.','success');
   document.getElementById('subEmail').value='';
   this.disabled=false;
 });
