@@ -715,18 +715,17 @@ function parseCSVRow(line){
 // INIT
 // ═══════════════════════════════════════════════════════════════
 (function init(){
-  // Restore saved Sheet URL from localStorage on every page load
   try {
     const saved = localStorage.getItem('ncl_gigs_sheet_url');
-    if (saved) {
-      SHEET_URL = saved;
-      sheetConnected = true;
-      fetchFromSheet(); // auto-load gigs immediately
-      return;
-    }
+    if (saved) SHEET_URL = saved;
   } catch(e) {}
-  setSync('', 'No sheet');
-  renderList();
+  if (SHEET_URL) {
+    sheetConnected = true;
+    fetchFromSheet();
+  } else {
+    setSync('', 'No sheet');
+    renderList();
+  }
 })();
 </script>
 </body>
