@@ -719,8 +719,14 @@ function openDayModal(iso, dayGigs) {
   dayGigs.forEach(g=>{
     const li=document.createElement('li');
     li.className='day-modal-item'+(g.isLocal?' is-local':'');
-    li.innerHTML=`<div class="dmi-artist">${esc(g.artist)}${g.isLocal?'<span class="local-badge">Local</span>':''}</div>
-      <div class="dmi-meta">${esc(g.venue)} · ${fmtCost(g.cost)}${g.genres?` · ${g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join('')}`:''}</div>`;
+    li.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem">
+        <div>
+          <div class="dmi-artist">${esc(g.artist)}${g.isLocal?'<span class="local-badge">Local</span>':''}</div>
+          <div class="dmi-meta">${esc(g.venue)} · ${fmtCost(g.cost)}${g.genres?` · ${g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join('')}`:''}</div>
+        </div>
+        <button class="btn btn-secondary btn-sm" style="white-space:nowrap;flex-shrink:0">More info</button>
+      </div>`;
     li.addEventListener('click',()=>{ closeDayModal(); openModal(g.id); });
     list.appendChild(li);
   });
@@ -829,6 +835,15 @@ function parseCSVRow(line){
   try { const saved=localStorage.getItem('ncl_gigs_sheet_url'); if(saved) SHEET_URL=saved; } catch(e) {}
   if (SHEET_URL) { sheetConnected=true; fetchFromSheet(); }
   else { setSync('','No sheet'); renderCalendar(); }
+
+  // Swipe to change month — attached once only to avoid stacking listeners
+  let touchStartX = 0;
+  const grid = document.getElementById('calGrid');
+  grid.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive:true });
+  grid.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) shiftCalMonth(dx < 0 ? 1 : -1);
+  }, { passive:true });
 }());
 </script>
 
