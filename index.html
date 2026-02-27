@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -142,6 +143,7 @@
 <main>
 
   <!-- ADD -->
+
   <div class="page" id="page-add">
     <div id="setupBanner" class="setup-banner" style="display:none">
       <strong>📋 Connect your Google Sheet</strong><br>
@@ -189,6 +191,7 @@
   </div>
 
   <!-- LIST -->
+
   <div class="page" id="page-list">
     <div class="card">
       <h2>Gig List</h2>
@@ -232,6 +235,7 @@
   </div>
 
   <!-- CALENDAR -->
+
   <div class="page active" id="page-calendar">
     <div class="card">
       <div class="month-nav">
@@ -243,54 +247,58 @@
       <div class="cal-grid" id="calGrid"></div>
     </div>
 
-    <!-- INFO BLURB -->
-    <div class="card">
-      <h2 style="margin-bottom:.6rem">North East Gigs</h2>
-      <p style="color:var(--muted);line-height:1.7;font-size:.95rem">A community-maintained guide to live music happening in and around the North East of England. From headline acts to local heroes, this is your one-stop calendar for what's on, where, and how much it'll cost you.</p>
+```
+<!-- INFO BLURB -->
+<div class="card">
+  <h2 style="margin-bottom:.6rem">North East Gigs</h2>
+  <p style="color:var(--muted);line-height:1.7;font-size:.95rem">A community-maintained guide to live music happening in and around the North East of England. From headline acts to local heroes, this is your one-stop calendar for what's on, where, and how much it'll cost you.</p>
 
-      <div class="blurb-grid">
-        <div>
-          <h3 style="margin-bottom:.75rem">How to use</h3>
-          <ul style="color:var(--muted);font-size:.9rem;line-height:1.8;padding-left:1.1rem">
-            <li>Browse the <strong style="color:var(--text)">Calendar</strong> to see what's on each day</li>
-            <li>Tap or click a date to see all gigs that day</li>
-            <li>Use the <strong style="color:var(--text)">Gig List</strong> to search, filter by month, or export</li>
-            <li>Hit <strong style="color:var(--text)">Add a Gig</strong> to submit something we've missed</li>
-          </ul>
+  <div class="blurb-grid">
+    <div>
+      <h3 style="margin-bottom:.75rem">How to use</h3>
+      <ul style="color:var(--muted);font-size:.9rem;line-height:1.8;padding-left:1.1rem">
+        <li>Browse the <strong style="color:var(--text)">Calendar</strong> to see what's on each day</li>
+        <li>Tap or click a date to see all gigs that day</li>
+        <li>Use the <strong style="color:var(--text)">Gig List</strong> to search, filter by month, or export</li>
+        <li>Hit <strong style="color:var(--text)">Add a Gig</strong> to submit something we've missed</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-bottom:.75rem">Colour key</h3>
+      <div style="display:flex;flex-direction:column;gap:.6rem">
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <div style="width:14px;height:14px;border-radius:3px;background:rgba(124,106,247,.18);border-left:3px solid var(--accent);flex-shrink:0"></div>
+          <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Purple</strong> — Standard gig listing</span>
         </div>
-        <div>
-          <h3 style="margin-bottom:.75rem">Colour key</h3>
-          <div style="display:flex;flex-direction:column;gap:.6rem">
-            <div style="display:flex;align-items:center;gap:.75rem">
-              <div style="width:14px;height:14px;border-radius:3px;background:rgba(124,106,247,.18);border-left:3px solid var(--accent);flex-shrink:0"></div>
-              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Purple</strong> — Standard gig listing</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:.75rem">
-              <div style="width:14px;height:14px;border-radius:3px;background:rgba(76,175,130,.2);border-left:3px solid var(--success);flex-shrink:0"></div>
-              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Green</strong> — Local / mates band worth supporting!</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div style="border-top:1px solid var(--border);margin-top:1.5rem;padding-top:1.5rem">
-        <h3 style="margin-bottom:.5rem">Get Notified</h3>
-        <p style="color:var(--muted);font-size:.92rem;margin-bottom:1rem;line-height:1.6">Enter your email address below to receive a weekly update every Friday with the next weeks upcoming gigs, and a list of new shows added to North East Gigs.</p>
-        <div id="sub-msg"></div>
-        <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
-          <div class="field" style="flex:1;min-width:200px">
-            <label for="subEmail">Email Address</label>
-            <input type="email" id="subEmail" placeholder="your@email.com"/>
-          </div>
-          <button class="btn btn-primary" id="subBtn">Subscribe</button>
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <div style="width:14px;height:14px;border-radius:3px;background:rgba(76,175,130,.2);border-left:3px solid var(--success);flex-shrink:0"></div>
+          <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Green</strong> — Local / mates band worth supporting!</span>
         </div>
       </div>
     </div>
   </div>
 
+  <div style="border-top:1px solid var(--border);margin-top:1.5rem;padding-top:1.5rem">
+    <h3 style="margin-bottom:.5rem">Get Notified</h3>
+    <p style="color:var(--muted);font-size:.92rem;margin-bottom:1rem;line-height:1.6">Enter your email address below to receive a notification whenever a new gig is added to North East Gigs.</p>
+    <div id="sub-msg"></div>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
+      <div class="field" style="flex:1;min-width:200px">
+        <label for="subEmail">Email Address</label>
+        <input type="email" id="subEmail" placeholder="your@email.com"/>
+      </div>
+      <button class="btn btn-primary" id="subBtn">Subscribe</button>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
 </main>
 
 <!-- Day Modal -->
+
 <div class="modal-bg" id="dayModalBg" role="dialog" aria-modal="true">
   <div class="modal">
     <button class="modal-close" onclick="closeDayModal()" aria-label="Close">×</button>
@@ -300,6 +308,7 @@
 </div>
 
 <!-- Detail Modal -->
+
 <div class="modal-bg" id="modalBg" role="dialog" aria-modal="true">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
@@ -313,6 +322,7 @@
 </div>
 
 <!-- Edit Modal -->
+
 <div class="modal-bg" id="editModalBg" role="dialog" aria-modal="true">
   <div class="modal">
     <button class="modal-close" onclick="closeEditModal()" aria-label="Close">×</button>
@@ -842,5 +852,6 @@ function parseCSVRow(line){
   else { setSync('','No sheet'); renderCalendar(); }
 }());
 </script>
+
 </body>
 </html>
