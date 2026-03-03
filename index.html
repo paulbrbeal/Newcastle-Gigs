@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>North East Gigs</title>
 <style>
-  :root{--bg:#0f1117;--surface:#1a1d27;--card:#22263a;--accent:#7c6af7;--accent2:#f7a26a;--text:#e8eaf0;--muted:#8890a8;--border:#2e3248;--danger:#e05c6e;--success:#4caf82;--radius:10px;--font:'Segoe UI',system-ui,sans-serif}
+  /* Area colour tokens */
+  :root{
+    --area-newcastle:#7c6af7;
+    --area-newcastle-bg:rgba(124,106,247,.18);
+    --area-sunderland:#e05c6e;
+    --area-sunderland-bg:rgba(224,92,110,.18);
+    --area-middlesbrough:#4a9eda;
+    --area-middlesbrough-bg:rgba(74,158,218,.18);
+    --area-darlington:#f7a26a;
+    --area-darlington-bg:rgba(247,162,106,.18);
+  }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
   nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;flex-wrap:wrap;gap:0;padding:0 1rem;position:sticky;top:0;z-index:50}
@@ -21,7 +31,37 @@
     .tab{padding:.65rem .6rem;font-size:.8rem}
     .sync-status{width:100%;padding:.3rem .25rem .4rem;border-top:1px solid var(--border);justify-content:flex-end}
   }
-  /* Area/City filter strip */
+  :root{
+    --bg:#0f1117;--surface:#1a1d27;--card:#22263a;--accent:#7c6af7;--accent2:#f7a26a;
+    --text:#e8eaf0;--muted:#8890a8;--border:#2e3248;--danger:#e05c6e;--success:#4caf82;
+    --radius:10px;--font:'Segoe UI',system-ui,sans-serif;
+    --newcastle:#7c6af7;--newcastle-bg:rgba(124,106,247,.18);
+    --sunderland:#e05c6e;--sunderland-bg:rgba(224,92,110,.18);
+    --middlesbrough:#4a9eda;--middlesbrough-bg:rgba(74,158,218,.18);
+    --darlington:#f7a26a;--darlington-bg:rgba(247,162,106,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  .area-badge{display:inline-block;padding:.1rem .45rem;border-radius:20px;font-size:.72rem;font-weight:700;margin-left:.3rem;vertical-align:middle}
+  .area-Newcastle{background:var(--newcastle-bg);color:var(--newcastle)}
+  .area-Sunderland{background:var(--sunderland-bg);color:var(--sunderland)}
+  .area-Middlesbrough{background:var(--middlesbrough-bg);color:var(--middlesbrough)}
+  .area-Darlington{background:var(--darlington-bg);color:var(--darlington)}
+  /* Calendar chips — area coloured */
+  .cal-gig.area-Newcastle{background:var(--newcastle-bg);border-left-color:var(--newcastle)}
+  .cal-gig.area-Sunderland{background:var(--sunderland-bg);border-left-color:var(--sunderland)}
+  .cal-gig.area-Middlesbrough{background:var(--middlesbrough-bg);border-left-color:var(--middlesbrough)}
+  .cal-gig.area-Darlington{background:var(--darlington-bg);border-left-color:var(--darlington)}
+  /* Local gig — bold left border + diagonal stamp watermark via pseudo */
+  .cal-gig.local{border-left-width:3px;font-weight:700;position:relative}
+  .cal-gig.local::after{content:'★';position:absolute;right:2px;top:0;font-size:.6rem;opacity:.6}
+  /* Day modal local item — extra stamp */
+  .day-modal-item.is-local{position:relative;overflow:hidden}
+  .day-modal-item.is-local::before{content:'LOCAL';position:absolute;top:50%;right:.75rem;transform:translateY(-50%) rotate(-12deg);font-size:.65rem;font-weight:900;letter-spacing:.08em;opacity:.18;color:var(--success);pointer-events:none}
+  /* Area-coloured left border on day modal items */
+  .day-modal-item.area-Newcastle{border-left-color:var(--newcastle)}
+  .day-modal-item.area-Sunderland{border-left-color:var(--sunderland)}
+  .day-modal-item.area-Middlesbrough{border-left-color:var(--middlesbrough)}
+  .day-modal-item.area-Darlington{border-left-color:var(--darlington)}
   .filter-strip{background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem 1rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
   .filter-strip select{background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.4rem .75rem;font-size:.88rem;font-family:var(--font);-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238890a8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .6rem center;padding-right:1.75rem}
   .filter-strip select:focus{outline:none;border-color:var(--accent)}
@@ -322,14 +362,26 @@
         </div>
         <div>
           <h3 style="margin-bottom:.75rem">Colour key</h3>
-          <div style="display:flex;flex-direction:column;gap:.6rem">
+          <div style="display:flex;flex-direction:column;gap:.5rem">
             <div style="display:flex;align-items:center;gap:.75rem">
-              <div style="width:14px;height:14px;border-radius:3px;background:rgba(124,106,247,.18);border-left:3px solid var(--accent);flex-shrink:0"></div>
-              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Purple</strong> — Standard gig listing</span>
+              <div style="width:14px;height:14px;border-radius:3px;background:var(--newcastle-bg);border-left:3px solid var(--newcastle);flex-shrink:0"></div>
+              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--newcastle)">Purple</strong> — Newcastle area</span>
             </div>
             <div style="display:flex;align-items:center;gap:.75rem">
+              <div style="width:14px;height:14px;border-radius:3px;background:var(--sunderland-bg);border-left:3px solid var(--sunderland);flex-shrink:0"></div>
+              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--sunderland)">Red</strong> — Sunderland area</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <div style="width:14px;height:14px;border-radius:3px;background:var(--middlesbrough-bg);border-left:3px solid var(--middlesbrough);flex-shrink:0"></div>
+              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--middlesbrough)">Blue</strong> — Middlesbrough area</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <div style="width:14px;height:14px;border-radius:3px;background:var(--darlington-bg);border-left:3px solid var(--darlington);flex-shrink:0"></div>
+              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--darlington)">Orange</strong> — Darlington area</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;margin-top:.25rem;padding-top:.5rem;border-top:1px solid var(--border)">
               <div style="width:14px;height:14px;border-radius:3px;background:rgba(76,175,130,.2);border-left:3px solid var(--success);flex-shrink:0"></div>
-              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--text)">Green</strong> — Local / mates band worth supporting!</span>
+              <span style="font-size:.9rem;color:var(--muted)"><strong style="color:var(--success)">★ Bold border</strong> — Local / mates band</span>
             </div>
           </div>
         </div>
@@ -469,7 +521,21 @@ function setSync(state, label) {
   document.getElementById('syncLabel').textContent = label;
 }
 
-// ── AREA / CITY FILTER ────────────────────────────────────────
+// Helper — returns area CSS class
+function areaClass(area) {
+  if (!area) return '';
+  const a = String(area).trim();
+  if (a === 'Newcastle') return 'area-Newcastle';
+  if (a === 'Sunderland') return 'area-Sunderland';
+  if (a === 'Middlesbrough') return 'area-Middlesbrough';
+  if (a === 'Darlington') return 'area-Darlington';
+  return '';
+}
+function areaBadge(area) {
+  const cls = areaClass(area);
+  return cls ? `<span class="area-badge ${cls}">${esc(area)}</span>` : '';
+}
+
 function onAreaChange() {
   calAreaFilter = document.getElementById('areaFilter').value;
   calCityFilter = '';
@@ -722,7 +788,7 @@ function renderList() {
     const tr=document.createElement('tr');
     tr.innerHTML=`
       <td style="white-space:nowrap">${friendlyDate(g.date)}</td>
-      <td><strong>${esc(g.artist)}</strong>${g.isLocal?'<span class="local-badge">Local</span>':''}${g.genres?g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join(''):''}${g.submittedBy?`<br><small style="color:var(--muted)">by ${esc(g.submittedBy)}</small>`:''}</td>
+      <td><strong>${esc(g.artist)}</strong>${g.isLocal?'<span class="local-badge">Local</span>':''}${areaBadge(g.area)}${g.genres?g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join(''):''}${g.submittedBy?`<br><small style="color:var(--muted)">by ${esc(g.submittedBy)}</small>`:''}</td>
       <td>${esc(g.venue)}</td>
       <td>${esc(g.city||'')}${g.area?`<br><small style="color:var(--muted)">${esc(g.area)}</small>`:''}</td>
       <td><span class="cost-badge${g.cost>0?' paid':''}">${fmtCost(g.cost)}</span></td>
@@ -850,7 +916,8 @@ function buildCalDay(num,inMonth,iso,dayGigs,isToday=false){
 
   function renderChips(gigsToShow) {
     gigsToShow.forEach(g=>{
-      const chip=document.createElement('div'); chip.className='cal-gig'+(g.isLocal?' local':'');
+      const chip=document.createElement('div');
+    chip.className='cal-gig'+(g.isLocal?' local':'')+' '+(areaClass(g.area)||'');
       chip.textContent=`${g.artist} @ ${g.venue}`;
       chip.setAttribute('role','button'); chip.setAttribute('tabindex','0');
       chip.addEventListener('click',(e)=>{ e.stopPropagation(); openModal(g.id); });
@@ -893,7 +960,7 @@ function openDayModal(iso, dayGigs) {
   const list=document.getElementById('dayModalList'); list.innerHTML='';
   dayGigs.forEach(g=>{
     const li=document.createElement('li');
-    li.className='day-modal-item'+(g.isLocal?' is-local':'');
+    li.className='day-modal-item'+(g.isLocal?' is-local':'')+' '+(areaClass(g.area)||'');
     li.innerHTML=`
       <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem">
         <div>
@@ -933,7 +1000,7 @@ function openModal(id, dir) {
   }
 
   function populate() {
-    document.getElementById('modalTitle').innerHTML = esc(g.artist) + (g.isLocal ? ' <span class="local-badge" style="font-size:.8rem;vertical-align:middle">Local Band</span>' : '');
+    document.getElementById('modalTitle').innerHTML = esc(g.artist) + (g.isLocal ? ' <span class="local-badge" style="font-size:.8rem;vertical-align:middle">Local Band</span>' : '') + areaBadge(g.area);
     let html = '';
     if (g.image) html += `<img class="modal-img" src="${esc(g.image)}" alt="${esc(g.artist)}" onerror="this.style.display='none'"/>`;
     html += `<div class="detail-row"><span class="detail-label">Date</span><span>${friendlyDate(g.date)}</span></div>`;
