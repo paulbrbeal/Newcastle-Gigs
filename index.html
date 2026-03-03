@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -22,6 +21,11 @@
     .tab{padding:.65rem .6rem;font-size:.8rem}
     .sync-status{width:100%;padding:.3rem .25rem .4rem;border-top:1px solid var(--border);justify-content:flex-end}
   }
+  /* Area/City filter strip */
+  .filter-strip{background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem 1rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
+  .filter-strip select{background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.4rem .75rem;font-size:.88rem;font-family:var(--font);-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238890a8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .6rem center;padding-right:1.75rem}
+  .filter-strip select:focus{outline:none;border-color:var(--accent)}
+  .filter-strip label{font-size:.82rem;color:var(--muted);white-space:nowrap}
   main{max-width:1100px;margin:0 auto;padding:1.5rem 1rem}
   .page{display:none}.page.active{display:block}
   .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem}
@@ -92,24 +96,27 @@
   .cal-grid.slide-in-left{transform:translateX(60px);opacity:0}
   .cal-grid.slide-in-right{transform:translateX(-60px);opacity:0}
   .cal-header{text-align:center;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;padding:.4rem 0}
-  .cal-day{background:var(--card);border:1px solid var(--border);border-radius:6px;min-height:90px;padding:.5rem;cursor:pointer}
+  .cal-day{background:var(--card);border:1px solid var(--border);border-radius:6px;min-height:90px;padding:.4rem;cursor:pointer;overflow:hidden}
   .cal-day.other-month{opacity:.35}.cal-day.today{border-color:var(--accent)}
   .cal-day.has-gigs:hover{border-color:var(--accent)}
   .cal-day.has-local{border-color:var(--success)}
+  .cal-day-num{font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:.25rem;display:flex;justify-content:space-between;align-items:center}
+  .cal-day-num .badge{background:var(--accent);color:#fff;border-radius:20px;font-size:.62rem;padding:.05rem .35rem;flex-shrink:0}
+  .cal-gig{background:rgba(124,106,247,.18);border-left:2px solid var(--accent);border-radius:3px;padding:.15rem .3rem;font-size:.68rem;margin-bottom:.2rem;cursor:pointer;line-height:1.3;transition:.15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .cal-gig:hover{background:rgba(124,106,247,.35)}
+  .cal-gig.local{background:rgba(76,175,130,.2);border-left-color:var(--success)}
+  .cal-gig.local:hover{background:rgba(76,175,130,.38)}
+  .cal-more{font-size:.68rem;color:var(--accent);cursor:pointer;padding:.1rem .3rem;text-align:center;border-radius:3px;background:rgba(124,106,247,.1);margin-top:.1rem}
+  .cal-more:hover{background:rgba(124,106,247,.2)}
   @media(max-width:700px){
-    .cal-day{min-height:60px;padding:.3rem}
+    .cal-day{min-height:52px;padding:.25rem}
     .cal-gig{display:none}
-    .cal-day-num .badge{font-size:.7rem;padding:.1rem .45rem}
+    .cal-more{display:none}
+    .cal-day-num .badge{font-size:.62rem;padding:.05rem .35rem}
     .cal-day.has-local{background:rgba(76,175,130,.12);border-color:var(--success)}
     .cal-day.has-local .cal-day-num{color:var(--success)}
     .cal-day.has-local .badge{background:var(--success)}
   }
-  .cal-day-num{font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:.3rem;display:flex;justify-content:space-between;align-items:center}
-  .cal-day-num .badge{background:var(--accent);color:#fff;border-radius:20px;font-size:.65rem;padding:.05rem .4rem}
-  .cal-gig{background:rgba(124,106,247,.18);border-left:2px solid var(--accent);border-radius:3px;padding:.2rem .35rem;font-size:.72rem;margin-bottom:.25rem;cursor:pointer;line-height:1.3;transition:.15s}
-  .cal-gig:hover{background:rgba(124,106,247,.35)}
-  .cal-gig.local{background:rgba(76,175,130,.2);border-left-color:var(--success)}
-  .cal-gig.local:hover{background:rgba(76,175,130,.38)}
   .day-modal-list{list-style:none;padding:0;margin:0}
   .day-modal-item{padding:.75rem;border-bottom:1px solid var(--border);cursor:pointer;border-radius:6px;border-left:3px solid transparent;margin-bottom:.25rem}
   .day-modal-item:last-child{border-bottom:none}
@@ -120,14 +127,12 @@
   .dmi-meta{font-size:.82rem;color:var(--muted)}
   .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:1rem}
   .modal-bg.open{display:flex}
-  /* Modal stack with peek arrows */
   .modal-stack{position:relative;max-width:480px;width:100%}
   .modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto;transition:transform .25s ease,opacity .25s ease;z-index:1}
   .modal.slide-out-left{transform:translateX(-80px);opacity:0}
   .modal.slide-out-right{transform:translateX(80px);opacity:0}
   .modal.slide-in-left{transform:translateX(80px);opacity:0}
   .modal.slide-in-right{transform:translateX(-80px);opacity:0}
-  /* Chevron peek arrows — pure CSS > and < shapes */
   .modal-peek-right{position:absolute;top:50%;right:-16px;transform:translateY(-50%) translateX(-16px);opacity:0;pointer-events:none;z-index:0;transition:transform .3s ease .22s,opacity .3s ease .22s;display:flex;align-items:center;justify-content:center;width:16px;height:32px}
   .modal-peek-left{position:absolute;top:50%;left:-16px;transform:translateY(-50%) translateX(16px);opacity:0;pointer-events:none;z-index:0;transition:transform .3s ease .22s,opacity .3s ease .22s;display:flex;align-items:center;justify-content:center;width:16px;height:32px}
   .modal-peek-right::before{content:'';display:block;width:10px;height:10px;border-top:2.5px solid var(--accent);border-right:2.5px solid var(--accent);transform:rotate(45deg);margin-left:-4px}
@@ -159,10 +164,27 @@
     <span id="syncLabel">No sheet</span>
   </div>
 </nav>
+
+<!-- Area/City filter strip — shown on calendar page only -->
+<div class="filter-strip" id="filterStrip">
+  <label>Area:</label>
+  <select id="areaFilter" onchange="onAreaChange()">
+    <option value="">All Areas</option>
+    <option>Newcastle</option>
+    <option>Sunderland</option>
+    <option>Middlesbrough</option>
+    <option>Darlington</option>
+  </select>
+  <label>City:</label>
+  <select id="cityFilter" onchange="renderCalendar()">
+    <option value="">All Cities</option>
+  </select>
+  <button class="btn btn-secondary btn-sm" onclick="clearAreaFilters()">Clear</button>
+</div>
+
 <main>
 
   <!-- ADD -->
-
   <div class="page" id="page-add">
     <div id="setupBanner" class="setup-banner" style="display:none">
       <strong>Connect your Google Sheet</strong><br>
@@ -180,6 +202,27 @@
         <div class="field"><label for="f-artist">Artist / Act *</label><input type="text" id="f-artist" placeholder="e.g. The Unthanks"/></div>
         <div class="field"><label for="f-date">Date *</label><input type="date" id="f-date"/></div>
         <div class="field"><label for="f-venue">Venue *</label><input type="text" id="f-venue" placeholder="e.g. Sage Gateshead"/></div>
+        <div class="field"><label for="f-city">City *</label>
+          <select id="f-city">
+            <option value="">— Select city —</option>
+            <option>Newcastle Upon Tyne</option><option>Gateshead</option><option>Whitley Bay</option>
+            <option>Cramlington</option><option>North Shields</option><option>Tynemouth</option>
+            <option>Alnwick</option><option>Consett</option><option>Jarrow</option><option>Blyth</option>
+            <option>Ryton</option><option>Morpeth</option><option>Northumberland</option><option>Hexham</option>
+            <option>Wallsend</option><option>Blaydon</option><option>Sunderland</option><option>Durham</option>
+            <option>Southwick</option><option>South Shields</option><option>Chester le Street</option>
+            <option>Washington</option><option>Stockton-on-Tees</option><option>Redcar</option>
+            <option>Middlesbrough</option><option>Hartlepool</option><option>Saltburn-by-the-Sea</option>
+            <option>Darlington</option><option>Northallerton</option><option>Masham</option>
+            <option>Barnard Castle</option><option>Reeth</option><option>Richmond (North Yorkshire)</option>
+          </select>
+        </div>
+        <div class="field"><label for="f-area">Area *</label>
+          <select id="f-area">
+            <option value="">— Select area —</option>
+            <option>Newcastle</option><option>Sunderland</option><option>Middlesbrough</option><option>Darlington</option>
+          </select>
+        </div>
         <div class="field"><label for="f-cost">Cost (£) *</label><input type="number" id="f-cost" placeholder="0" min="0" step="0.01"/></div>
         <div class="field"><label for="f-link">Ticket / Event Link</label><input type="url" id="f-link" placeholder="https://..."/></div>
         <div class="field"><label for="f-image">Image URL <span style="font-weight:400;text-transform:none;letter-spacing:0">(auto-filled from link)</span></label><input type="url" id="f-image" placeholder="https://... (optional)"/></div>
@@ -210,7 +253,6 @@
   </div>
 
   <!-- LIST -->
-
   <div class="page" id="page-list">
     <div class="card">
       <h2>Gig List</h2>
@@ -246,7 +288,7 @@
       <div id="import-msg"></div>
       <div class="table-wrap">
         <table id="gigTable">
-          <thead><tr><th>Date</th><th>Artist</th><th>Venue</th><th>Cost</th><th>Link</th><th>Notes</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Date</th><th>Artist</th><th>Venue</th><th>City</th><th>Cost</th><th>Link</th><th>Notes</th><th>Actions</th></tr></thead>
           <tbody id="gigTableBody"></tbody>
         </table>
         <div id="listEmpty" class="empty-state" style="display:none">No gigs found. Add one!</div>
@@ -255,7 +297,6 @@
   </div>
 
   <!-- CALENDAR -->
-
   <div class="page active" id="page-calendar">
     <div class="card">
       <div class="month-nav">
@@ -311,7 +352,6 @@
 </main>
 
 <!-- Day Modal -->
-
 <div class="modal-bg" id="dayModalBg" role="dialog" aria-modal="true">
   <div class="modal">
     <button class="modal-close" onclick="closeDayModal()" aria-label="Close">×</button>
@@ -321,7 +361,6 @@
 </div>
 
 <!-- Detail Modal -->
-
 <div class="modal-bg" id="modalBg" role="dialog" aria-modal="true">
   <div class="modal-stack">
     <div class="modal-peek-left" id="modalPeekLeft"></div>
@@ -339,7 +378,6 @@
 </div>
 
 <!-- Edit Modal -->
-
 <div class="modal-bg" id="editModalBg" role="dialog" aria-modal="true">
   <div class="modal">
     <button class="modal-close" onclick="closeEditModal()" aria-label="Close">×</button>
@@ -350,6 +388,27 @@
       <div class="field"><label for="e-artist">Artist *</label><input type="text" id="e-artist"/></div>
       <div class="field"><label for="e-date">Date *</label><input type="date" id="e-date"/></div>
       <div class="field"><label for="e-venue">Venue *</label><input type="text" id="e-venue"/></div>
+      <div class="field"><label for="e-city">City</label>
+        <select id="e-city">
+          <option value="">— Select city —</option>
+          <option>Newcastle Upon Tyne</option><option>Gateshead</option><option>Whitley Bay</option>
+          <option>Cramlington</option><option>North Shields</option><option>Tynemouth</option>
+          <option>Alnwick</option><option>Consett</option><option>Jarrow</option><option>Blyth</option>
+          <option>Ryton</option><option>Morpeth</option><option>Northumberland</option><option>Hexham</option>
+          <option>Wallsend</option><option>Blaydon</option><option>Sunderland</option><option>Durham</option>
+          <option>Southwick</option><option>South Shields</option><option>Chester le Street</option>
+          <option>Washington</option><option>Stockton-on-Tees</option><option>Redcar</option>
+          <option>Middlesbrough</option><option>Hartlepool</option><option>Saltburn-by-the-Sea</option>
+          <option>Darlington</option><option>Northallerton</option><option>Masham</option>
+          <option>Barnard Castle</option><option>Reeth</option><option>Richmond (North Yorkshire)</option>
+        </select>
+      </div>
+      <div class="field"><label for="e-area">Area</label>
+        <select id="e-area">
+          <option value="">— Select area —</option>
+          <option>Newcastle</option><option>Sunderland</option><option>Middlesbrough</option><option>Darlington</option>
+        </select>
+      </div>
       <div class="field"><label for="e-cost">Cost (£) *</label><input type="number" id="e-cost" min="0" step="0.01"/></div>
       <div class="field"><label for="e-link">Link</label><input type="url" id="e-link"/></div>
       <div class="field"><label for="e-image">Image URL</label><input type="url" id="e-image" placeholder="https://... (optional)"/></div>
@@ -383,6 +442,14 @@
 // ── CONFIGURATION ─────────────────────────────────────────────
 let SHEET_URL = 'https://script.google.com/macros/s/AKfycbxD-cwiXgPJL4wBGWWUWxtINfwTPfSrrPwL60WRlDufyC_vDbehTJz31MkZuhr9vwTfMg/exec';
 
+// ── AREA → CITY MAPPING ───────────────────────────────────────
+const AREA_CITIES = {
+  'Newcastle': ['Newcastle Upon Tyne','Gateshead','Whitley Bay','Cramlington','North Shields','Tynemouth','Alnwick','Consett','Jarrow','Blyth','Ryton','Morpeth','Northumberland','Hexham','Wallsend','Blaydon'],
+  'Sunderland': ['Sunderland','Durham','Southwick','South Shields','Chester le Street','Washington'],
+  'Middlesbrough': ['Stockton-on-Tees','Redcar','Middlesbrough','Hartlepool','Saltburn-by-the-Sea'],
+  'Darlington': ['Darlington','Northallerton','Masham','Barnard Castle','Reeth','Richmond (North Yorkshire)']
+};
+
 // ── STATE ─────────────────────────────────────────────────────
 let gigs = [];
 let genres = [];
@@ -393,11 +460,42 @@ let listNavDate = new Date();
 let calDate = new Date();
 let currentPage = 'calendar';
 let sheetConnected = false;
+let calAreaFilter = '';
+let calCityFilter = '';
 
 // ── SYNC INDICATOR ────────────────────────────────────────────
 function setSync(state, label) {
   document.getElementById('syncDot').className = 'sync-dot ' + state;
   document.getElementById('syncLabel').textContent = label;
+}
+
+// ── AREA / CITY FILTER ────────────────────────────────────────
+function onAreaChange() {
+  calAreaFilter = document.getElementById('areaFilter').value;
+  calCityFilter = '';
+  const citySelect = document.getElementById('cityFilter');
+  citySelect.innerHTML = '<option value="">All Cities</option>';
+  if (calAreaFilter && AREA_CITIES[calAreaFilter]) {
+    AREA_CITIES[calAreaFilter].forEach(c => {
+      const o = document.createElement('option'); o.value = c; o.textContent = c; citySelect.appendChild(o);
+    });
+  }
+  renderCalendar();
+}
+
+function clearAreaFilters() {
+  calAreaFilter = ''; calCityFilter = '';
+  document.getElementById('areaFilter').value = '';
+  document.getElementById('cityFilter').innerHTML = '<option value="">All Cities</option>';
+  renderCalendar();
+}
+
+function getFilteredGigs() {
+  let filtered = [...gigs];
+  if (calAreaFilter) filtered = filtered.filter(g => g.area === calAreaFilter);
+  const city = document.getElementById('cityFilter')?.value || '';
+  if (city) filtered = filtered.filter(g => g.city === city);
+  return filtered;
 }
 
 // ── SHEET URL MANAGEMENT ──────────────────────────────────────
@@ -494,6 +592,7 @@ function showPage(id) {
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
+  document.getElementById('filterStrip').style.display = id === 'calendar' ? '' : 'none';
   currentPage = id;
   if (id==='list') renderList();
   if (id==='calendar') renderCalendar();
@@ -568,8 +667,9 @@ document.getElementById('addBtn').addEventListener('click', async function() {
   const cost=parseFloat(costRaw);
   if (isNaN(cost)||cost<0) return showMsg('add-msg','Cost must be 0 or more.','err');
   const candidate={
-    id:uid(), artist, date, venue, cost,
-    link:gv('f-link').trim(), notes:gv('f-notes').trim(),
+    id:uid(), artist, date, venue,
+    city:gv('f-city').trim(), area:gv('f-area').trim(),
+    cost, link:gv('f-link').trim(), notes:gv('f-notes').trim(),
     submittedBy:gv('f-submittedBy').trim(),
     isLocal:document.getElementById('f-isLocal').checked,
     genres:getGenrePills('f').join(','),
@@ -589,6 +689,7 @@ document.getElementById('addBtn').addEventListener('click', async function() {
 
 function resetAddForm() {
   ['f-artist','f-date','f-venue','f-cost','f-link','f-image','f-notes','f-submittedBy'].forEach(id=>sv(id,''));
+  sv('f-city',''); sv('f-area','');
   document.getElementById('f-isLocal').checked=false;
   document.getElementById('f-genre-pills').innerHTML='';
   document.getElementById('f-genre-hint').textContent='';
@@ -623,6 +724,7 @@ function renderList() {
       <td style="white-space:nowrap">${friendlyDate(g.date)}</td>
       <td><strong>${esc(g.artist)}</strong>${g.isLocal?'<span class="local-badge">Local</span>':''}${g.genres?g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join(''):''}${g.submittedBy?`<br><small style="color:var(--muted)">by ${esc(g.submittedBy)}</small>`:''}</td>
       <td>${esc(g.venue)}</td>
+      <td>${esc(g.city||'')}${g.area?`<br><small style="color:var(--muted)">${esc(g.area)}</small>`:''}</td>
       <td><span class="cost-badge${g.cost>0?' paid':''}">${fmtCost(g.cost)}</span></td>
       <td>${g.link?`<a class="link-out" href="${esc(g.link)}" target="_blank" rel="noopener">Tickets</a>`:''}</td>
       <td class="note-cell" title="${esc(g.notes)}">${esc(g.notes)}</td>
@@ -652,6 +754,7 @@ function openEdit(id) {
   const g=gigs.find(x=>x.id===id); if(!g) return;
   sv('e-id',id); sv('e-artist',g.artist); sv('e-date',g.date);
   sv('e-venue',g.venue); sv('e-cost',g.cost);
+  sv('e-city',g.city||''); sv('e-area',g.area||'');
   sv('e-link',g.link||''); sv('e-image',g.image||'');
   sv('e-notes',g.notes||''); sv('e-submittedBy',g.submittedBy||'');
   document.getElementById('e-isLocal').checked=!!g.isLocal;
@@ -669,6 +772,7 @@ document.getElementById('editSaveBtn').addEventListener('click', async function(
   if (isNaN(cost)||cost<0) return showMsg('edit-msg','Cost must be 0 or more.','err');
   const idx=gigs.findIndex(g=>g.id===id); if(idx===-1) return;
   gigs[idx]={...gigs[idx], artist, date, venue, cost,
+    city:gv('e-city').trim(), area:gv('e-area').trim(),
     link:gv('e-link').trim(), image:gv('e-image').trim(),
     notes:gv('e-notes').trim(), submittedBy:gv('e-submittedBy').trim(),
     isLocal:document.getElementById('e-isLocal').checked,
@@ -692,6 +796,8 @@ async function deleteGig(id, fromModal=false) {
 }
 
 // ── CALENDAR ──────────────────────────────────────────────────
+const CAL_MAX_CHIPS = 3; // max chips shown before collapse
+
 function jumpToday() { calDate=new Date(); renderCalendar(); }
 
 function shiftCalMonth(dir) {
@@ -710,8 +816,9 @@ function shiftCalMonth(dir) {
 function renderCalendar() {
   const yr=calDate.getFullYear(), mo=calDate.getMonth();
   document.getElementById('calMonthLabel').textContent=new Date(yr,mo,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  const filtered = getFilteredGigs();
   const byDate={};
-  gigs.forEach(g=>{ const [gy,gm]=g.date.split('-').map(Number); if(gy===yr&&gm===mo+1)(byDate[g.date]=byDate[g.date]||[]).push(g); });
+  filtered.forEach(g=>{ const [gy,gm]=g.date.split('-').map(Number); if(gy===yr&&gm===mo+1)(byDate[g.date]=byDate[g.date]||[]).push(g); });
   const grid=document.getElementById('calGrid'); grid.innerHTML='';
   ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d=>{ const h=document.createElement('div'); h.className='cal-header'; h.textContent=d; grid.appendChild(h); });
   const firstDow=(new Date(yr,mo,1).getDay()+6)%7;
@@ -734,15 +841,47 @@ function buildCalDay(num,inMonth,iso,dayGigs,isToday=false){
   const numRow=document.createElement('div'); numRow.className='cal-day-num';
   numRow.innerHTML=`<span>${num}</span>`+(dayGigs.length?`<span class="badge">${dayGigs.length}</span>`:'');
   cell.appendChild(numRow);
-  if (dayGigs.length) cell.addEventListener('click',(e)=>{ if(!e.target.closest('.cal-gig')) openDayModal(iso,dayGigs); });
-  dayGigs.forEach(g=>{
-    const chip=document.createElement('div'); chip.className='cal-gig'+(g.isLocal?' local':'');
-    chip.textContent=`${g.artist} @ ${g.venue}`;
-    chip.setAttribute('role','button'); chip.setAttribute('tabindex','0');
-    chip.addEventListener('click',(e)=>{ e.stopPropagation(); openModal(g.id); });
-    chip.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ')openModal(g.id); });
-    cell.appendChild(chip);
-  });
+  if (dayGigs.length) cell.addEventListener('click',(e)=>{ if(!e.target.closest('.cal-gig')&&!e.target.closest('.cal-more')) openDayModal(iso,dayGigs); });
+
+  // Show up to CAL_MAX_CHIPS chips, then a "+ X more" button
+  const visible = dayGigs.slice(0, CAL_MAX_CHIPS);
+  const hidden = dayGigs.slice(CAL_MAX_CHIPS);
+  let expanded = false;
+
+  function renderChips(gigsToShow) {
+    gigsToShow.forEach(g=>{
+      const chip=document.createElement('div'); chip.className='cal-gig'+(g.isLocal?' local':'');
+      chip.textContent=`${g.artist} @ ${g.venue}`;
+      chip.setAttribute('role','button'); chip.setAttribute('tabindex','0');
+      chip.addEventListener('click',(e)=>{ e.stopPropagation(); openModal(g.id); });
+      chip.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ')openModal(g.id); });
+      cell.appendChild(chip);
+    });
+  }
+
+  renderChips(visible);
+
+  if (hidden.length) {
+    const more = document.createElement('div');
+    more.className='cal-more';
+    more.textContent=`+ ${hidden.length} more`;
+    more.addEventListener('click', e => {
+      e.stopPropagation();
+      if (!expanded) {
+        expanded = true;
+        renderChips(hidden);
+        more.textContent='Show less';
+      } else {
+        expanded = false;
+        // Remove extra chips
+        const chips = cell.querySelectorAll('.cal-gig');
+        chips.forEach((c,i)=>{ if(i >= CAL_MAX_CHIPS) c.remove(); });
+        more.textContent=`+ ${hidden.length} more`;
+      }
+    });
+    cell.appendChild(more);
+  }
+
   return cell;
 }
 
@@ -759,7 +898,7 @@ function openDayModal(iso, dayGigs) {
       <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem">
         <div>
           <div class="dmi-artist">${esc(g.artist)}${g.isLocal?'<span class="local-badge">Local</span>':''}</div>
-          <div class="dmi-meta">${esc(g.venue)} · ${fmtCost(g.cost)}${g.genres?` · ${g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join('')}`:''}</div>
+          <div class="dmi-meta">${esc(g.venue)}${g.city?' · '+esc(g.city):''} · ${fmtCost(g.cost)}${g.genres?` · ${g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join('')}`:''}</div>
         </div>
         <button class="btn btn-secondary btn-sm" style="white-space:nowrap;flex-shrink:0">More info</button>
       </div>`;
@@ -799,6 +938,8 @@ function openModal(id, dir) {
     if (g.image) html += `<img class="modal-img" src="${esc(g.image)}" alt="${esc(g.artist)}" onerror="this.style.display='none'"/>`;
     html += `<div class="detail-row"><span class="detail-label">Date</span><span>${friendlyDate(g.date)}</span></div>`;
     html += `<div class="detail-row"><span class="detail-label">Venue</span><span>${esc(g.venue)}</span></div>`;
+    if (g.city) html += `<div class="detail-row"><span class="detail-label">City</span><span>${esc(g.city)}</span></div>`;
+    if (g.area) html += `<div class="detail-row"><span class="detail-label">Area</span><span>${esc(g.area)}</span></div>`;
     html += `<div class="detail-row"><span class="detail-label">Cost</span><span>${fmtCost(g.cost)}</span></div>`;
     if (g.genres) html += `<div class="detail-row"><span class="detail-label">Genres</span><span>${g.genres.split(',').map(x=>`<span class="genre-badge">${esc(x.trim())}</span>`).join('')}</span></div>`;
     if (g.notes) html += `<div class="detail-row"><span class="detail-label">Notes</span><span>${esc(g.notes)}</span></div>`;
@@ -831,7 +972,6 @@ function openModal(id, dir) {
     updatePeeks();
   }
 
-  // Swipe handler
   let swipeStartX = 0;
   modal.ontouchstart = e => { swipeStartX = e.touches[0].clientX; };
   modal.ontouchend = e => {
@@ -844,11 +984,10 @@ function openModal(id, dir) {
 
   document.getElementById('modalBg').classList.add('open');
 }
+
 function closeModal() {
-  const peekLeft = document.getElementById('modalPeekLeft');
-  const peekRight = document.getElementById('modalPeekRight');
-  peekLeft.classList.remove('visible');
-  peekRight.classList.remove('visible');
+  document.getElementById('modalPeekLeft').classList.remove('visible');
+  document.getElementById('modalPeekRight').classList.remove('visible');
   document.getElementById('modalBg').classList.remove('open');
 }
 
@@ -859,62 +998,36 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeModal();close
 
 // ── ICAL EXPORT ───────────────────────────────────────────────
 function toICalDate(iso) { return iso.replace(/-/g,''); }
-
 function buildVEvent(gig) {
   const [y,m,d] = gig.date.split('-').map(Number);
   const dateStr = toICalDate(gig.date);
   const end = new Date(y,m-1,d+1);
   const endStr = `${end.getFullYear()}${String(end.getMonth()+1).padStart(2,'0')}${String(end.getDate()).padStart(2,'0')}`;
   const cost = parseFloat(gig.cost)||0;
-  const costStr = cost===0 ? 'Free' : '£'+cost.toFixed(2).replace(/\.00$/,'');
+  const costStr = cost===0?'Free':'£'+cost.toFixed(2).replace(/\.00$/,'');
   const desc = [
     `Venue: ${gig.venue}`,
+    gig.city?`City: ${gig.city}`:null,
+    gig.area?`Area: ${gig.area}`:null,
     `Cost: ${costStr}`,
-    gig.genres ? `Genres: ${gig.genres}` : null,
-    gig.notes ? `Notes: ${gig.notes}` : null,
-    gig.link ? `Tickets: ${gig.link}` : null,
+    gig.genres?`Genres: ${gig.genres}`:null,
+    gig.notes?`Notes: ${gig.notes}`:null,
+    gig.link?`Tickets: ${gig.link}`:null,
   ].filter(Boolean).join('\\n');
-  return [
-    'BEGIN:VEVENT',
-    `UID:${gig.id}@northeastgigs`,
-    `DTSTART;VALUE=DATE:${dateStr}`,
-    `DTEND;VALUE=DATE:${endStr}`,
-    `SUMMARY:${gig.artist} @ ${gig.venue}`,
-    `DESCRIPTION:${desc}`,
-    gig.link ? `URL:${gig.link}` : null,
-    `LOCATION:${gig.venue}`,
-    'END:VEVENT',
-  ].filter(Boolean).join('\r\n');
+  return ['BEGIN:VEVENT',`UID:${gig.id}@northeastgigs`,`DTSTART;VALUE=DATE:${dateStr}`,`DTEND;VALUE=DATE:${endStr}`,`SUMMARY:${gig.artist} @ ${gig.venue}`,`DESCRIPTION:${desc}`,gig.link?`URL:${gig.link}`:null,`LOCATION:${gig.venue}${gig.city?', '+gig.city:''}${gig.area?', '+gig.area:''}`, 'END:VEVENT'].filter(Boolean).join('\r\n');
 }
-
-function buildICal(events) {
-  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//North East Gigs//northeastgigs//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH',...events,'END:VCALENDAR'].join('\r\n');
-}
-
-function downloadICal(filename, icalContent) {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([icalContent],{type:'text/calendar;charset=utf-8'}));
-  a.download = filename; a.click();
-}
-
+function buildICal(events) { return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//North East Gigs//northeastgigs//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH',...events,'END:VCALENDAR'].join('\r\n'); }
+function downloadICal(filename, content) { const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([content],{type:'text/calendar;charset=utf-8'})); a.download=filename; a.click(); }
 function exportICal() {
-  let data = [...gigs];
+  let data=[...gigs];
   const q=(document.getElementById('searchBox')?.value||'').toLowerCase();
   if(q) data=data.filter(g=>g.artist.toLowerCase().includes(q)||g.venue.toLowerCase().includes(q));
-  const genreFilter=document.getElementById('genreFilter')?.value||'';
-  if(genreFilter) data=data.filter(g=>g.genres&&g.genres.split(',').map(x=>x.trim()).includes(genreFilter));
-  const maxPriceVal=document.getElementById('maxPrice')?.value;
-  if(maxPriceVal!==''&&maxPriceVal!==null){const max=parseFloat(maxPriceVal);if(!isNaN(max))data=data.filter(g=>g.cost<=max);}
-  if(document.getElementById('localOnly')?.checked) data=data.filter(g=>g.isLocal);
-  if(listMonthFilter){const{year,month}=listMonthFilter;data=data.filter(g=>{const[y,m]=g.date.split('-').map(Number);return y===year&&m===month;});}
+  const gf=document.getElementById('genreFilter')?.value||'';
+  if(gf) data=data.filter(g=>g.genres&&g.genres.split(',').map(x=>x.trim()).includes(gf));
   if(!data.length) return;
   downloadICal('north_east_gigs.ics', buildICal(data.map(buildVEvent)));
 }
-
-function exportSingleICal(id) {
-  const g = gigs.find(x=>x.id===id); if (!g) return;
-  downloadICal(`${g.artist.replace(/\s+/g,'_')}.ics`, buildICal([buildVEvent(g)]));
-}
+function exportSingleICal(id) { const g=gigs.find(x=>x.id===id); if(!g) return; downloadICal(`${g.artist.replace(/\s+/g,'_')}.ics`, buildICal([buildVEvent(g)])); }
 
 // ── CSV EXPORT ────────────────────────────────────────────────
 function exportCSV(){
@@ -923,7 +1036,7 @@ function exportCSV(){
   if(q) data=data.filter(g=>g.artist.toLowerCase().includes(q)||g.venue.toLowerCase().includes(q));
   if(listMonthFilter){const{year,month}=listMonthFilter;data=data.filter(g=>{const[y,m]=g.date.split('-').map(Number);return y===year&&m===month;});}
   if(!listSortAsc) data.reverse();
-  const cols=['artist','date','venue','cost','link','notes','submittedBy','isLocal','image','genres','createdAt'];
+  const cols=['artist','date','venue','city','area','cost','link','notes','submittedBy','isLocal','image','genres','createdAt'];
   const rows=[cols.join(','),...data.map(g=>cols.map(c=>csvCell(g[c]??'')).join(','))];
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([rows.join('\r\n')],{type:'text/csv'}));
@@ -950,7 +1063,7 @@ function importCSV(input){
       const cost=parseFloat(costRaw); if(isNaN(cost)||cost<0){skipped++;continue;}
       const dup=gigs.some(g=>g.artist.toLowerCase()===artist.toLowerCase()&&g.date===date&&g.venue.toLowerCase()===venue.toLowerCase());
       if(dup){skipped++;continue;}
-      const ng={id:uid(),artist,date,venue,cost,link:get('link'),notes:get('notes'),
+      const ng={id:uid(),artist,date,venue,city:get('city'),area:get('area'),cost,link:get('link'),notes:get('notes'),
         submittedBy:get('submittedby')||get('submitted_by'),
         isLocal:get('islocal')==='true', genres:get('genres'), image:get('image'),
         createdAt:new Date().toISOString()};
@@ -981,7 +1094,7 @@ document.getElementById('subBtn').addEventListener('click', async function() {
   if (!email||!email.includes('@')) return showMsg('sub-msg','Please enter a valid email address.','err');
   this.disabled=true;
   await syncToSheet('subscribe', null, null, email);
-  showMsg('sub-msg','You\'re subscribed! You\'ll receive an email when new gigs are added.','success');
+  showMsg('sub-msg','You\'re subscribed! You\'ll receive a weekly round-up every Friday.','success');
   document.getElementById('subEmail').value='';
   this.disabled=false;
 });
@@ -991,8 +1104,10 @@ document.getElementById('subBtn').addEventListener('click', async function() {
   try { const saved=localStorage.getItem('ncl_gigs_sheet_url'); if(saved) SHEET_URL=saved; } catch(e) {}
   if (SHEET_URL) { sheetConnected=true; fetchFromSheet(); }
   else { setSync('','No sheet'); renderCalendar(); }
+  // Show filter strip only on calendar
+  document.getElementById('filterStrip').style.display = '';
 
-  // Calendar swipe — attached once only
+  // Calendar swipe
   let touchStartX = 0;
   const grid = document.getElementById('calGrid');
   grid.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
@@ -1002,6 +1117,5 @@ document.getElementById('subBtn').addEventListener('click', async function() {
   }, {passive:true});
 }());
 </script>
-
 </body>
 </html>
