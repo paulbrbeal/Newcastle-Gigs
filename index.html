@@ -923,11 +923,13 @@ function buildCalDay(num,inMonth,iso,dayGigs,isToday=false){
       e.stopPropagation();
       if (!expanded) {
         expanded = true;
+        // Remove the button, add hidden chips, re-add button at bottom
+        more.remove();
         renderChips(hidden);
         more.textContent='Show less';
+        cell.appendChild(more);
       } else {
         expanded = false;
-        // Remove extra chips
         const chips = cell.querySelectorAll('.cal-gig');
         chips.forEach((c,i)=>{ if(i >= CAL_MAX_CHIPS) c.remove(); });
         more.textContent=`+ ${hidden.length} more`;
